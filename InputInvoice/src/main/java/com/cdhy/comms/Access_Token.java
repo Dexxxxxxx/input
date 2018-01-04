@@ -3,7 +3,7 @@ package com.cdhy.comms;
 import com.cdhy.util.WeChatUtils;
 
 public class Access_Token {
-    private String ACCSEE_TOKEN = "";
+    private String ACCSEE_TOKEN = "" ;
 
     public String getAccess_token() {
 	if ("".equals(ACCSEE_TOKEN)) {
