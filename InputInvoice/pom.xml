@@ -4,7 +4,7 @@
 	<groupId>cdhy</groupId>
 	<artifactId>InputInvoice</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>InputInvoice</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
