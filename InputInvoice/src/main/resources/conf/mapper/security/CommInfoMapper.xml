@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.security.CommInfoMapper">
+	<sql id="list_where">
+		<if test="name !=null and name !=''">
+			AND T.NAME LIKE CONCAT(CONCAT('%', #{name}), '%')
+		</if>
+		<if test="code!=null and code!=''">
+			AND T.CODE LIKE CONCAT(CONCAT('%', #{code}), '%')
+		</if>
+		<if test="status!=null and status!=''">
+			AND STATUS = #{status}
+		</if>
+		<if test="search_key!=null and search_key!=''">
+			AND 
+			(
+				T.NAME LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+				OR
+				T.CODE LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)	
+		</if>
+	</sql>
+
+	<!-- 查询所有接口信息 -->
+	<select id="list" parameterType="map" resultType="map">
+		SELECT NSRSBH, OPENID, APP_SECRET, ACCESS_TOKEN
+		FROM COMM_INFO
+		WHERE 1=1
+		<include refid="list_where"></include>
+	</select>
+<!-- 查询接口的公共信息 -->
+	<select id="getInfo" parameterType="map" resultType="map">
+		SELECT NSRSBH, OPENID, APP_SECRET, ACCESS_TOKEN 
+		FROM COMM_INFO
+		WHERE 1=1
+		<if test="nsrsbh !=null and nsrsbh !=''">
+       		AND  NSRSBH=#{nsrsbh}
+		</if>
+		<if test="openid !=null and openid !=''">
+			AND OPENID=#{openid}
+		</if>
+	</select>
+	<delete id="deleteByIds" parameterType="map">
+		delete comm_info
+		where 
+		NSRSBH IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+<!-- 修改接口信息 -->
+	<update id="update" parameterType="map">
+		update comm_info
+   		set 
+   		nsrsbh =#{nsrsbh}
+   		<if test="access_token !=null and access_token !=''">
+       		,access_token=#{access_token}
+		</if>
+		<if test="openid !=null and openid !=''">
+       		,openid=#{openid}
+		</if>
+		<if test="app_secret !=null and app_secret !=''">
+       		,app_secret=#{app_secret}
+		</if>
+		<if test="status !=null and status !=''">
+       		,status=#{status}
+		</if>
+ 		where  nsrsbh =#{nsrsbh}
+	</update>
+	<insert id="add" parameterType="map">
+		insert into comm_info
+  		(nsrsbh, openid, app_secret, access_token, status)
+		values
+  		(#{nsrsbh}, #{openid}, #{app_secret}, #{access_token}, #{status})
+	</insert>
+<!-- 获取纳税人及接口信息-->
+	<select id="getById" parameterType="map" resultType="map">
+		select * from BASE_NSRINFO t 
+		left join comm_info t1 on t.nsrsbh = t1.nsrsbh
+		where 
+		t.nsrsbh=#{nsrsbh}
+	</select>
+</mapper>

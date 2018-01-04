@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.security.NsrInfoMapper">
+	<sql id="list_where">
+		<if test="search_key!=null and search_key!=''">
+			AND 
+			(
+				t1.NSRSBH LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+				OR
+				t1.NAME LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)	
+		</if>
+	</sql>
+	<select id="list" parameterType="map" resultType="map">
+		SELECT *
+		FROM (SELECT ROWNUM RN, T.* FROM (
+		SELECT T1.*,T2.STATUS FROM BASE_NSRINFO T1 LEFT JOIN COMM_INFO T2 ON T1.NSRSBH = T2.NSRSBH
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+	</select>
+	
+	<select id="listCount" parameterType="map" resultType="int">
+		select count(*) from BASE_NSRINFO t1
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+	</select>
+
+	<select id="getById" parameterType="map" resultType="map">
+		select id, nsrsbh, name, dzdh, yhzh 
+		from base_nsrinfo
+		where 
+		<if test="id!=null and id!=''">
+	 		id = #{id}
+ 		</if>
+ 		<if test="nsrsbh!=null and nsrsbh!=''">
+	 		nsrsbh = #{nsrsbh}
+ 		</if>
+	</select>
+	<update id="update" parameterType="map">
+		UPDATE BASE_NSRINFO
+		SET
+       	NAME = #{name},
+       	DZDH = #{dzdh},
+       	YHZH = #{yhzh}
+ 		where 
+ 		<if test="id!=null and id!=''">
+	 		ID = #{id}
+ 		</if>
+ 		<if test="nsrsbh!=null and nsrsbh!=''">
+	 		NSRSBH = #{nsrsbh}
+ 		</if>
+	</update>
+	<insert id="add" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into base_nsrinfo
+  		(id, nsrsbh, name, dzdh, yhzh, pid)
+		values
+  		(#{id}, #{nsrsbh}, #{name}, #{dzdh}, #{yhzh}, #{pid})
+	</insert>
+	<delete id="deleteByIds" parameterType="map">
+		delete base_nsrinfo
+		where 
+		NSRSBH IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="hasDept" parameterType="map" resultType="int">
+		select count(*) from BASE_DEPART
+		where 
+		nsrid=#{nsrid}
+	</select>
+</mapper>

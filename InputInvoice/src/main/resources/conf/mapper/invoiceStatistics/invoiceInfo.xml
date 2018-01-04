@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.invoiceStatistics.IInvoiceInfoMapper">
+
+	<!-- 查询分页总条数 -->
+	<select id="listCount" resultType="int" parameterType="map">
+
+		select count(*)
+		from (select * from DI_INVOICE where indate like
+		'%-%-%' or
+		length(indate)=8 or length(indate)=14) t
+
+		left join goods tt
+		on t.id=tt.invoiceid
+		left join base_user ttt on t.cuser=ttt.phone
+		left
+		join BASE_DEPART c on ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				<!-- SELECT U.username FROM BASE_USER U WHERE U.DEPARTID IN -->
+				<!-- ( -->
+				SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY
+				C.PID = PRIOR C.id
+				<!-- ) -->
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="check_state != null and check_state != ''">
+				AND ISCHECK = #{check_state}
+			</if>
+			<if test="emp_name!= null and emp_name!= ''">
+				AND (ttt.NAME like '%${emp_name}%' or ttt.username
+				=#{emp_name} )
+			</if>
+			<if test="username!= null and username!= ''">
+				AND CUSER=#{username}
+			</if>
+		</where>
+
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="list" resultType="map" parameterType="map">
+		select
+		s.invoice_id,s.cuser,s.name,s.cuser_name,s.CREATE_ENTERPRISE,s.dpname,s.drawerunit,s.purchaseunit,s.INAMOUNTS,s.INDATE,s.ischeck,s.CHECKDATE,s.SYSTEM_NUM,s.num,s.code,s.id,s.xmmc,s.xmje,s.se,
+		s.xmje+s.se jshj ,s.shuilv,s.shuliang from
+
+		(select rownum rn,t.id
+		invoice_id,
+		t.cuser,ttt.name,t.CUSER_NAME,t.CREATE_ENTERPRISE,c.name
+		dpname,t.drawerunit,t.purchaseunit,
+		t.INAMOUNTS, t.INDATE,
+		case when
+		t.ISCHECK='0' then '已查验' when t.ISCHECK='1' then '未查验' when
+		t.ISCHECK='2' then '创建报销未验证'
+		else '未知' end ischeck,
+
+		t.CHECKDATE,t.SYSTEM_NUM,
+		t.num,t.code,tt.id,tt.xmmc,tt.xmje,tt.se,tt.xmje+tt.se jshj
+		,tt.invoiceid,
+		tt.sl shuilv,
+		tt.xmsl shuliang
+		from (select * from
+		DI_INVOICE where indate like '%-%-%' or
+		length(indate)=8 or
+		length(indate)=14) t
+		left join goods tt on t.id=tt.invoiceid
+		left join
+		base_user ttt on t.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				<!-- SELECT U.username FROM BASE_USER U WHERE U.DEPARTID IN -->
+				<!-- ( -->
+				SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY
+				C.PID = PRIOR C.id
+				<!-- ) -->
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="check_state != null and check_state != ''">
+				AND ISCHECK = #{check_state}
+			</if>
+			<if test="emp_name!= null and emp_name!= ''">
+				AND (ttt.NAME like '%${emp_name}%' or ttt.username
+				=#{emp_name} )
+			</if>
+			<if test="username!= null and username!= ''">
+				AND CUSER=#{username}
+			</if>
+			<if test="end !=null and end !=''">
+				AND ROWNUM &lt;= #{end}
+			</if>
+		</where>
+		order by t.inputdate desc
+		)s
+		where
+		<if test="start !=null and start !=''">
+			s.RN &gt;= #{start}
+		</if>
+
+	</select>
+
+	<select id="listCount2" resultType="int" parameterType="map">
+
+
+		select count(distinct invoiceid) count from goods g
+		left join
+		DI_INVOICE t on g.invoiceid=t.id
+		left join base_user ttt on
+		t.cuser=ttt.phone
+		left join BASE_DEPART c on ttt.departid=c.id
+
+
+		<!-- select count(*) -->
+		<!-- from (select * from DI_INVOICE where indate like '%-%-%' or length(indate)=8 
+			or length(indate)=14) t -->
+
+
+		<!-- left join base_user ttt on t.cuser=ttt.phone -->
+		<!-- left join BASE_DEPART c on ttt.departid=c.id -->
+		<where>
+			g.id is not null
+			<if test="dpid != null and dpid !=''">
+				AND ENTERPRISE in (
+				<!-- SELECT U.username FROM BASE_USER U WHERE U.DEPARTID IN -->
+				<!-- ( -->
+				SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY
+				C.PID = PRIOR C.id
+				<!-- ) -->
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="check_state != null and check_state != ''">
+				AND ISCHECK = #{check_state}
+			</if>
+			<if test="emp_name!= null and emp_name!= ''">
+				AND (ttt.NAME like '%${emp_name}%' or ttt.username
+				=#{emp_name} )
+			</if>
+			<if test="username!= null and username!= ''">
+				AND CUSER=#{username}
+			</if>
+		</where>
+
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="list2" resultType="map" parameterType="map">
+		select
+		s.invoice_id,s.cuser,s.name,s.cuser_name,s.CREATE_ENTERPRISE,s.dpname,s.drawerunit,s.purchaseunit,s.INAMOUNTS,s.INDATE,s.ischeck,s.CHECKDATE,s.SYSTEM_NUM,s.num,s.code,
+		s.hjse
+		from
+
+		(select rownum rn,t.id invoice_id,
+		t.cuser,ttt.name,t.CUSER_NAME,t.CREATE_ENTERPRISE,c.name
+		dpname,t.drawerunit,t.purchaseunit,
+		t.INAMOUNTS, t.INDATE,
+		case when
+		t.ISCHECK='0' then '已查验' when t.ISCHECK='1' then '未查验' when
+		t.ISCHECK='2' then '创建报销未验证'
+		else '未知' end ischeck,
+
+		t.CHECKDATE,t.SYSTEM_NUM,
+		t.num,t.code,t.hjse
+		from (
+		select
+		gg.id,gg.cuser,gg.CUSER_NAME,gg.CREATE_ENTERPRISE,gg.drawerunit,gg.purchaseunit,gg.INAMOUNTS,gg.INDATE,
+		gg.ISCHECK,gg.CHECKDATE,gg.SYSTEM_NUM,gg.num,gg.code
+		,gg.inputdate,gg.ENTERPRISE,gg.INVOICE_TYPE,gg.hjse
+		from goods g
+		left
+		join DI_INVOICE gg on g.invoiceid=gg.id
+		) t
+		left join base_user ttt on
+		t.cuser=ttt.phone
+		left join BASE_DEPART c on ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				<!-- SELECT U.username FROM BASE_USER U WHERE U.DEPARTID IN -->
+				<!-- ( -->
+				SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY
+				C.PID = PRIOR C.id
+				<!-- ) -->
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="check_state != null and check_state != ''">
+				AND ISCHECK = #{check_state}
+			</if>
+			<if test="emp_name!= null and emp_name!= ''">
+				AND (ttt.NAME like '%${emp_name}%' or ttt.username
+				=#{emp_name} )
+			</if>
+			<if test="username!= null and username!= ''">
+				AND CUSER=#{username}
+			</if>
+			<if test="end !=null and end !=''">
+				AND ROWNUM &lt;= #{end}
+			</if>
+		</where>
+		order by t.inputdate desc
+		)s
+		where
+		<if test="start !=null and start !=''">
+			s.RN &gt;= #{start}
+		</if>
+
+	</select>
+
+	<select id="detailList" resultType="map" parameterType="map">
+		select * from(
+		select rownum rn,s.* from (
+		select t.cuser,ttt.name,
+		t.num,t.code,tt.id,tt.xmdj,tt.dw,tt.xmje,tt.xmmc,tt.ggxh,tt.se,tt.invoiceid,
+		tt.sl shuilv,
+		tt.xmsl shuliang,
+		<!-- tt.xmje+tt.se jshj -->
+		to_char(nvl(trim(tt.xmje),'0')+ nvl(trim(tt.se),'0')) jshj
+		from (select
+		* from DI_INVOICE where indate like '%-%-%' or length(indate)=8 or
+		length(indate)=14) t
+		left join goods tt on t.id=tt.invoiceid
+		left join
+		base_user ttt on t.cuser=ttt.phone
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				<!-- SELECT U.username FROM BASE_USER U WHERE U.DEPARTID IN -->
+				<!-- ( -->
+				SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY
+				C.PID = PRIOR C.id
+				<!-- ) -->
+				)
+			</if>
+			<if test="username!= null and username!= ''">
+				AND CUSER=#{username}
+			</if>
+
+
+		</where>
+		order by t.inputdate desc
+		) s
+		<where>
+			<if test="sl != null and sl != ''">
+				AND shuilv = #{sl}
+			</if>
+			<if test="xmmc != null and xmmc != ''">
+				AND xmmc like '%${xmmc}%'
+			</if>
+			<if test="end !=null and end !=''">
+				AND ROWNUM &lt;= #{end}
+			</if>
+		</where>
+		)ss where
+		<if test="start !=null and start !=''">
+			ss.RN &gt;= #{start}
+		</if>
+	</select>
+
+	<select id="detailListCount" resultType="int" parameterType="map">
+
+		select count(*) from (
+		select t.cuser,ttt.name,
+		t.num,t.code,tt.id,tt.xmdj,tt.dw,tt.xmje,tt.xmmc,tt.ggxh,tt.se,tt.invoiceid,
+		tt.sl shuilv,
+		tt.xmsl shuliang,
+		tt.xmje+tt.se jshj
+		from (select * from
+		DI_INVOICE where indate like '%-%-%' or
+		length(indate)=8 or
+		length(indate)=14) t
+		left join goods tt on t.id=tt.invoiceid
+		left join
+		base_user ttt on t.cuser=ttt.phone
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				<!-- SELECT U.username FROM BASE_USER U WHERE U.DEPARTID IN -->
+				<!-- ( -->
+				SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY
+				C.PID = PRIOR C.id
+				<!-- ) -->
+				)
+			</if>
+			<if test="username!= null and username!= ''">
+				AND CUSER=#{username}
+			</if>
+
+
+
+		</where>
+		order by t.inputdate desc
+		)
+		<where>
+			<if test="sl != null and sl != ''">
+				AND shuilv = #{sl}
+			</if>
+			<if test="xmmc != null and xmmc != ''">
+				AND xmmc like '%${xmmc}%'
+			</if>
+
+		</where>
+
+	</select>
+
+	<select id="exportList" resultType="map" parameterType="map">
+
+		select t.id invoice_id,
+		t.cuser,ttt.name,t.CUSER_NAME,t.CREATE_ENTERPRISE,c.name
+		dpname,t.drawerunit,t.purchaseunit,
+		t.INAMOUNTS, t.INDATE,
+		case when
+		t.ISCHECK='0' then '已查验' when t.ISCHECK='1' then '未查验' when
+		t.ISCHECK='2' then '创建报销未验证'
+		else '未知' end ischeck,
+
+		t.CHECKDATE,t.SYSTEM_NUM,
+		t.num,t.code,tt.id,tt.xmmc,tt.xmje,tt.se,
+		<!-- to_char(tt.xmje+tt.se) jshj , -->
+		to_char(nvl(trim(tt.xmje),'0')+ nvl(trim(tt.se),'0')) jshj,
+		tt.invoiceid,
+		tt.sl shuilv,
+
+		tt.xmsl shuliang
+		from (select * from
+		DI_INVOICE where indate like '%-%-%' or
+		length(indate)=8 or
+		length(indate)=14) t
+		left join goods tt on t.id=tt.invoiceid
+		left join
+		base_user ttt on t.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				<!-- SELECT U.username FROM BASE_USER U WHERE U.DEPARTID IN -->
+				<!-- ( -->
+				SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY
+				C.PID = PRIOR C.id
+				<!-- ) -->
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="check_state != null and check_state != ''">
+				AND ISCHECK = #{check_state}
+			</if>
+			<if test="emp_name!= null and emp_name!= ''">
+				AND (ttt.NAME like '%${emp_name}%' or ttt.username
+				=#{emp_name} )
+			</if>
+			<if test="username!= null and username!= ''">
+				AND CUSER=#{username}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="exportList2" resultType="map" parameterType="map">
+		select t.id invoice_id,
+		t.cuser,ttt.name,t.CUSER_NAME,t.CREATE_ENTERPRISE,c.name
+		dpname,t.drawerunit,t.purchaseunit,
+		t.INAMOUNTS, t.INDATE,
+		case when
+		t.ISCHECK='0' then '已查验' when t.ISCHECK='1' then '未查验' when
+		t.ISCHECK='2' then '创建报销未验证'
+		else '未知' end ischeck,
+
+		t.CHECKDATE,t.SYSTEM_NUM,
+		t.num,t.code,t.hjse
+		from (
+		select
+		gg.id,gg.cuser,gg.CUSER_NAME,gg.CREATE_ENTERPRISE,gg.drawerunit,gg.purchaseunit,gg.INAMOUNTS,gg.INDATE,
+		gg.ISCHECK,gg.CHECKDATE,gg.SYSTEM_NUM,gg.num,gg.code
+		,gg.inputdate,gg.ENTERPRISE,gg.INVOICE_TYPE,gg.hjse
+		from goods g
+		left
+		join DI_INVOICE gg on g.invoiceid=gg.id
+		) t
+		left join base_user ttt on
+		t.cuser=ttt.phone
+		left join BASE_DEPART c on ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				<!-- SELECT U.username FROM BASE_USER U WHERE U.DEPARTID IN -->
+				<!-- ( -->
+				SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY
+				C.PID = PRIOR C.id
+				<!-- ) -->
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="check_state != null and check_state != ''">
+				AND ISCHECK = #{check_state}
+			</if>
+			<if test="emp_name!= null and emp_name!= ''">
+				AND (ttt.NAME like '%${emp_name}%' or ttt.username
+				=#{emp_name} )
+			</if>
+			<if test="username!= null and username!= ''">
+				AND CUSER=#{username}
+			</if>
+
+		</where>
+		order by t.inputdate desc
+
+
+	</select>
+
+	<select id="exportDetailList" resultType="map" parameterType="map">
+
+		select rownum rn,s.* from (
+		select t.cuser,ttt.name,
+		t.num,t.code,tt.id,tt.xmdj,tt.dw,tt.xmje,tt.xmmc,tt.ggxh,tt.se,tt.invoiceid,
+		tt.sl shuilv,
+		tt.xmsl shuliang,
+		<!-- tt.xmje+tt.se jshj -->
+		to_char(nvl(trim(tt.xmje),'0')+ nvl(trim(tt.se),'0')) jshj
+		from (select
+		* from DI_INVOICE where indate like '%-%-%' or length(indate)=8 or
+		length(indate)=14) t
+		left join goods tt on t.id=tt.invoiceid
+		left join
+		base_user ttt on t.cuser=ttt.phone
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				<!-- SELECT U.username FROM BASE_USER U WHERE U.DEPARTID IN -->
+				<!-- ( -->
+				SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY
+				C.PID = PRIOR C.id
+				<!-- ) -->
+				)
+			</if>
+			<if test="username!= null and username!= ''">
+				AND CUSER=#{username}
+			</if>
+
+
+		</where>
+		order by t.inputdate desc
+		) s
+		<where>
+			<if test="sl != null and sl != ''">
+				AND shuilv = #{sl}
+			</if>
+			<if test="xmmc != null and xmmc != ''">
+				AND xmmc like '%${xmmc}%'
+			</if>
+
+		</where>
+
+	</select>
+	<!-- 进项发票查询 -->
+	<select id="listAllCount" resultType="int" parameterType="map">
+
+		select count(*)
+		from (select * from DI_INVOICE where indate like
+		'%-%-%' or
+		length(indate)=8 or length(indate)=14) t
+		left join base_user
+		ttt on t.cuser=ttt.phone
+		left join BASE_DEPART c on ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				SELECT C.ID FROM BASE_DEPART C START WITH
+				C.ID=#{dpid} CONNECT BY C.PID =
+				PRIOR C.id
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="check_state != null and check_state != ''">
+				AND ISCHECK = #{check_state}
+			</if>
+			<if test="drawerunit!= null and drawerunit!= ''">
+				AND drawerunit like '%${drawerunit}%'
+			</if>
+			<if test="fpdm != null and fpdm != ''">
+				AND code =#{fpdm}
+			</if>
+			<if test="fphm != null and fphm != ''">
+				AND num =#{fphm}
+			</if>
+
+		</where>
+
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="listAll" resultType="map" parameterType="map">
+		select
+		s.invoice_id,s.cuser,s.name,s.cuser_name,s.CREATE_ENTERPRISE,s.dpname,s.drawerunit,
+		s.purchaseunit,s.INAMOUNTS,s.INDATE,s.ischeck,s.CHECKDATE,s.SYSTEM_NUM,s.num,s.code,
+		s.hjje,s.hjse,s.hjje+s.hjse jshj,s.invoice_type
+		from
+
+		(select rownum
+		rn,t.id invoice_id,
+		t.cuser,ttt.name,t.CUSER_NAME,t.CREATE_ENTERPRISE,c.name
+		dpname,t.drawerunit,t.purchaseunit,
+		t.INAMOUNTS, t.INDATE,
+		case when
+		t.ISCHECK='0' then '已查验' when t.ISCHECK='1' then '未查验' when
+		t.ISCHECK='2' then '创建报销未验证'
+		else '未知' end ischeck,
+		case when
+		t.invoice_type='01' then '增值税专票' when t.invoice_type='03' then
+		'机动车发票'
+		when t.invoice_type='04' then '增值税普票' when t.invoice_type='10' then
+		'增值税电子发票'
+		when t.invoice_type='11' then '增值税普通卷票'
+		else '未知' end
+		invoice_type,
+
+
+		t.hjje,t.hjse,
+
+		t.CHECKDATE,t.SYSTEM_NUM,
+		t.num,t.code
+		<!-- tt.id,tt.xmmc,tt.xmje,tt.se,tt.xmje+tt.se jshj ,tt.invoiceid, -->
+		<!-- case when (t.invoice_type='01' or t.invoice_type='04') then tt.xmsl -->
+		<!-- else tt.sl end shuilv, -->
+		<!-- case when (t.invoice_type='01' or t.invoice_type='04') then tt.sl 
+			else -->
+		<!-- tt.xmsl end shuliang -->
+		from (select * from DI_INVOICE where indate like '%-%-%' or
+		length(indate)=8 or length(indate)=14) t
+		left join base_user ttt on
+		t.cuser=ttt.phone
+		left join BASE_DEPART c on ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				SELECT C.ID FROM BASE_DEPART C START WITH
+				C.ID=#{dpid} CONNECT BY C.PID =
+				PRIOR C.id
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="check_state != null and check_state != ''">
+				AND ISCHECK = #{check_state}
+			</if>
+			<if test="drawerunit!= null and drawerunit!= ''">
+				AND drawerunit like '%${drawerunit}%'
+			</if>
+			<if test="fpdm != null and fpdm != ''">
+				AND code =#{fpdm}
+			</if>
+			<if test="fphm != null and fphm != ''">
+				AND num =#{fphm}
+			</if>
+			<if test="end !=null and end !=''">
+				AND ROWNUM &lt;= #{end}
+			</if>
+		</where>
+		order by t.inputdate desc
+		)s
+		where
+		<if test="start !=null and start !=''">
+			s.RN &gt;= #{start}
+		</if>
+
+	</select>
+
+	<select id="listAllCollect" resultType="map" parameterType="map">
+
+		select count(distinct invoiceid) count,sum(xmje) hjje,sum(se)
+		hjse,sum(xmje)+sum(se)jshj from goods g
+		left join DI_INVOICE t on
+		g.invoiceid=t.id
+		left join base_user ttt on t.cuser=ttt.phone
+		left join
+		BASE_DEPART c on ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				SELECT C.ID FROM BASE_DEPART C START WITH
+				C.ID=#{dpid} CONNECT BY C.PID =
+				PRIOR C.id
+				)
+			</if>
+
+		</where>
+	</select>
+
+	<sql id="listCollect_where">
+		<if test="dpid != null and dpid !=''">
+			AND ENTERPRISE in (
+			SELECT C.ID FROM BASE_DEPART C START
+			WITH C.ID=#{dpid} CONNECT BY C.PID =
+			PRIOR C.id
+			)
+		</if>
+		<if test="start_date!= null and start_date!=''">
+			AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+			to_date(#{start_date},'yyyy-MM-dd')
+		</if>
+		<if test="end_date != null and end_date!=''">
+			AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+			to_date(#{end_date},'yyyy-MM-dd')+1
+		</if>
+	</sql>
+
+	<select id="listCollect" resultType="map" parameterType="map">
+		select 'all' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) se from goods
+		t
+		left join (select * from di_invoice where indate like '%-%-%' or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where 1=1
+		<include refid="listCollect_where"></include>
+		union
+		select '17' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) se from
+		goods t
+		left join (select * from di_invoice where indate like '%-%-%'
+		or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where t.sl='17'
+		<include refid="listCollect_where"></include>
+		union
+		select '13' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) se from
+		goods t
+		left join (select * from di_invoice where indate like '%-%-%'
+		or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where t.sl='13'
+		<include refid="listCollect_where"></include>
+		union
+		select '11' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) se from
+		goods t
+		left join (select * from di_invoice where indate like '%-%-%'
+		or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where t.sl='11'
+		<include refid="listCollect_where"></include>
+		union
+		select '6' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) se from
+		goods t
+		left join (select * from di_invoice where indate like '%-%-%'
+		or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where t.sl='6'
+		union
+		select '5'
+		sl ,nvl(sum(t.xmje),0)
+		je,nvl(sum(t.se),0) se from goods t
+		left join (select * from di_invoice
+		where indate like '%-%-%' or
+		length(indate)=8 or length(indate)=14) tt
+		on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left
+		join BASE_DEPART c on ttt.departid=c.id
+		where t.sl='5'
+		<include refid="listCollect_where"></include>
+		union
+		select '4' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) se from
+		goods t
+		left join (select * from di_invoice where indate like '%-%-%'
+		or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where t.sl='4'
+		<include refid="listCollect_where"></include>
+		union
+		select '3' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) se from
+		goods t
+		left join (select * from di_invoice where indate like '%-%-%'
+		or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where t.sl='3'
+		<include refid="listCollect_where"></include>
+		union
+		select '1.5' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) se from
+		goods t
+		left join (select * from di_invoice where indate like '%-%-%'
+		or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where t.sl='1.5'
+		<include refid="listCollect_where"></include>
+		union
+		select '0' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) se from
+		goods t
+		left join (select * from di_invoice where indate like '%-%-%'
+		or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where t.sl='0'
+		<include refid="listCollect_where"></include>
+		union
+		select 'qt' sl ,nvl(sum(t.xmje),0) je,nvl(sum(t.se),0) from goods
+		t
+		left join (select * from di_invoice where indate like '%-%-%' or
+		length(indate)=8 or length(indate)=14) tt on t.invoiceid=tt.id
+		left
+		join base_user ttt on tt.cuser=ttt.phone
+		left join BASE_DEPART c on
+		ttt.departid=c.id
+		where sl not in
+		('17','13','11','6','5','4','3','1.5','0')
+		<include refid="listCollect_where"></include>
+	</select>
+	<!-- 组织业务分析 -->
+	<select id="listDep" resultType="map" parameterType="map">
+		select * from(
+		select k.*,rownum rn from (
+		select
+		s.*,nvl(ss.name,'无关联部门') depname from (
+		select c.id
+		depid,count(distinct invoiceid) count,sum(xmje)
+		hjje,sum(se)
+		hjse,sum(xmje)+sum(se)jshj from goods g
+		left join (select * from
+		di_invoice where indate like '%-%-%' or
+		length(indate)=8 or
+		length(indate)=14) t on g.invoiceid=t.id
+		left join base_user ttt on
+		t.cuser=ttt.phone
+		left join BASE_DEPART c on ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				SELECT C.ID FROM BASE_DEPART C START WITH
+				C.ID=#{dpid} CONNECT BY C.PID =
+				PRIOR C.id
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+
+		</where>
+		group by c.id
+		)s left join BASE_DEPART ss on s.depid=ss.id
+		)k
+		<where>
+			<if test="end !=null and end !=''">
+				AND rownum &lt;= #{end}
+			</if>
+		</where>
+		)sss where
+		<if test="start !=null and start !=''">
+			sss.RN &gt;= #{start}
+		</if>
+	</select>
+
+	<select id="listDepCount" resultType="int" parameterType="map">
+		select count(*) from(
+		select c.id depid,count(distinct invoiceid)
+		count,sum(xmje)
+		hjje,sum(se)
+		hjse,sum(xmje)+sum(se)jshj from goods g
+		left join (select * from di_invoice where indate like '%-%-%' or
+		length(indate)=8 or length(indate)=14)
+		t on g.invoiceid=t.id
+		left join
+		base_user ttt on t.cuser=ttt.phone
+		left
+		join BASE_DEPART c on
+		ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				SELECT C.ID FROM BASE_DEPART C START WITH
+				C.ID=#{dpid} CONNECT BY C.PID =
+				PRIOR C.id
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+
+		</where>
+		group by c.id
+		)
+	</select>
+
+	<!-- 供应商分析 -->
+	<select id="listSupplier" resultType="map" parameterType="map">
+		select * from(
+		select k.*,rownum rn from (
+		select t.drawerunit
+		name,count(distinct invoiceid) count,sum(xmje)
+		hjje,sum(se)
+		hjse,sum(xmje)+sum(se)jshj from goods g
+		left join (select * from
+		di_invoice where indate like '%-%-%' or
+		length(indate)=8 or
+		length(indate)=14) t on g.invoiceid=t.id
+		left join base_user ttt on
+		t.cuser=ttt.phone
+		left join BASE_DEPART c on ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				SELECT C.ID FROM BASE_DEPART C START WITH
+				C.ID=#{dpid} CONNECT BY C.PID =
+				PRIOR C.id
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="drawerunit !=null and drawerunit != ''">
+				AND drawerunit like '%${drawerunit}%'
+			</if>
+
+		</where>
+		group by t.drawerunit
+		)k
+		<where>
+			<if test="end !=null and end !=''">
+				AND rownum &lt;= #{end}
+			</if>
+		</where>
+		)sss where
+		<if test="start !=null and start !=''">
+			sss.RN &gt;= #{start}
+		</if>
+	</select>
+
+	<select id="listSupplierCount" resultType="int" parameterType="map">
+		select count(*) from(
+		select t.drawerunit ,count(distinct invoiceid)
+		count,sum(xmje)
+		hjje,sum(se)
+		hjse,sum(xmje)+sum(se)jshj from goods g
+		left join (select * from di_invoice where indate like '%-%-%' or
+		length(indate)=8 or length(indate)=14)
+		t on g.invoiceid=t.id
+		left join
+		base_user ttt on t.cuser=ttt.phone
+		left
+		join BASE_DEPART c on
+		ttt.departid=c.id
+		<where>
+			<if test="dpid != null and dpid !=''">
+				ENTERPRISE in (
+				SELECT C.ID FROM BASE_DEPART C START WITH
+				C.ID=#{dpid} CONNECT BY C.PID =
+				PRIOR C.id
+				)
+			</if>
+			<if test="start_date!= null and start_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &gt; =
+				to_date(#{start_date},'yyyy-MM-dd')
+			</if>
+			<if test="end_date != null and end_date!=''">
+				AND to_date(INDATE,'yyyy-MM-dd hh24:mi:ss') &lt;
+				to_date(#{end_date},'yyyy-MM-dd')+1
+			</if>
+			<if test="invoice_type!= null and invoice_type != ''">
+				AND INVOICE_TYPE = #{invoice_type}
+			</if>
+			<if test="drawerunit !=null and drawerunit != ''">
+				AND drawerunit like '%${drawerunit}%'
+			</if>
+
+		</where>
+		group by t.drawerunit
+		)
+	</select>
+
+</mapper>

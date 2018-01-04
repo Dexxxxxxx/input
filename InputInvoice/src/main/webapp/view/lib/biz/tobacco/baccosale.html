@@ -1,0 +1,267 @@
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase"> 烟草转售</span>
+			</div>
+		</div>
+		<!-- <button id="testbuyer" class="btn sbold green">
+						测试购方信息模态&nbsp;<i class="glyphicon glyphicon-search"></i>
+		</button>
+		<button id="testitems" class="btn sbold green">
+						测试商品信息模态&nbsp;<i class="glyphicon glyphicon-search"></i>
+		</button> -->
+		<div class="table-toolbar">
+		<span class="caption-subject bold uppercase" id="title">购方信息</span>
+		<div class="dataTables_wrapper no-footer">
+				<div class="table-scrollable">
+					<table class="table  table-bordered table-hover  order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">购方名称</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12%;">纳税人识别号</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12%;">地址</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">电话</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">开户行</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">银行账号</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 20%;">操作</th>
+							</tr>
+						</thead>
+						<tbody id="data-tbody">
+						<tr>
+							<input type="hidden" id="buyerid">
+							<td id="buyername"></td>
+							<td id="buyernsrsbh"></td>
+							<td id="buyeraddress"></td>
+							<td id="buyerphone"></td>
+							<td id="buyerkhh"></td>
+							<td id="buyeryhzh"></td>
+							<td>
+								<div>
+									<button id="addBuyer" class="btn sbold green">
+									检索&nbsp;<i class="fa fa-search"></i>
+									</button>
+									<button id="addNewBuyer" class="btn sbold green">
+									新增&nbsp;<i class="fa fa-edit"></i>
+									</button>
+									</div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<span class="caption-subject bold uppercase" id="title">商品信息</span>
+		<div class="dataTables_wrapper no-footer">
+				<div class="table-scrollable">
+					<table class="table  table-bordered table-hover  order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">商品编码</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">商品名称</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">单位</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">数量</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">单价</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">金额</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">税率(%)</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">税额</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 8%;">操作</th>
+							</tr>
+						</thead>
+						<tbody id="data-tbody-itemsList"></tbody>
+					</table>
+				</div>
+			</div>
+			<div>
+				<button id="addItems" class="btn sbold green">
+					检索&nbsp;<i class="fa fa-search"></i>
+				</button>
+				<button id="doInvoice" class="btn sbold green">
+					开票&nbsp;<i class="fa fa-print"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	<!-- <button id="TEST" class="btn sbold green">
+					测试&nbsp;<i class="fa fa-print"></i>
+				</button> -->
+<!-- 模态正文 选择购方信息 开始 -->
+<div aria-hidden="true" id="modal-buyer" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <span id="lblAddTitle" style="font-weight:bold" class="show_tittle">购方信息选择</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+			<form id="subm_buyer" method="post">
+				<input type="hidden" name="dept1"><input type="hidden" name="tamid">
+				<input class="now_time" type="hidden" name="time">
+				<div class="col-md-10 col-sm-10">
+					<label>搜索: <input type="search" name="search_key" id="searkey"
+							class="form-control input-sm input-sm input-inline reset_1"
+							placeholder="公司名称，纳税人识别号">
+					</label>
+				</div>
+				<div class="col-md-2 col-sm-2">
+					<button id="sample_editable_1_seach" class="btn sbold green">
+						查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+					</button>
+				</div>
+			</form>
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<div class="table-scrollable">
+							<table
+								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+								id="sample_buyer" role="grid" aria-describedby="sample_1_info"
+								style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+								<thead>
+									<tr role="row">
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 30%;">购方单位名称</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 30%;">纳税人识别号</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 40%;">地址</th>
+									</tr>
+								</thead>
+								<tbody id="data-tbody-buyer"></tbody>
+							</table>
+						</div>
+						<div class="row" id="page-div-buyer"></div>
+					</div>
+				</div>
+		
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 模态正文  选择购方信息  结束 -->
+<!-- 模态正文 选择商品信息  开始-->
+<div aria-hidden="true" id="modal-items" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <span id="lblAddTitle" style="font-weight:bold" class="show_tittle">商品信息选择</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+			<form id="subm_items" method="post">
+				<input type="hidden" name="dept1"><input type="hidden" name="tamid">
+				<input class="now_time" type="hidden" name="time">
+				<div class="col-md-10 col-sm-10">
+					<label>搜索: <input type="search" name="search_key" id="searkey"
+							class="form-control input-sm input-sm input-inline reset_1"
+							placeholder="商品名称，商品编码">
+					</label>
+				</div>
+				<div class="col-md-2 col-sm-2">
+					<button id="sample_editable_1_seach" class="btn sbold green">
+						查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+					</button>
+				</div>
+			</form>
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<div class="table-scrollable">
+							<table
+								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+								id="sample_2" role="grid" aria-describedby="sample_1_info"
+								style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+								<thead>
+									<tr role="row">
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" >商品名称</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" >商品编码</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" >商品单位</th>
+									</tr>
+								</thead>
+								<tbody id="data-tbody-items"></tbody>
+							</table>
+						</div>
+						<div class="row" id="page-div-items"></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 模态正文 选择商品信息  结束 -->
+<div aria-hidden="true" id="ajax-modal-newBuyer" class="modal fade" tabIndex="-1" role="dialog">
+			<div class="modal-dialog">
+				<form method="post" id="buyer_form" class="form-horizontal">
+					<div class="modal-content">
+						<div class="modal-header">
+							<div class="caption">
+								<i class="icon-settings font-red"></i> 
+								<span class="caption-subject font-red sbold uppercase" id="fn_tittle">新增购方信息</span>
+							</div>
+						</div>
+						<div class="modal-body">
+							<div class="form-body">
+								<div class="form-group">
+									<label class="control-label col-md-3">购方名称 <span class="required"> * </span>
+									</label>
+									<div class="col-md-6">
+										<input type="text" name="newbuyername" class="form-control" id="newbuyername" />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="control-label col-md-3">纳税人识别号<span class="required"> * </span>
+									</label>
+									<div class="col-md-6">
+										<input type="text" name="newbuyernsrsbh" class="form-control" id="newbuyernsrsbh" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">地址 <span class="required"> * </span></label>
+									<div class="col-md-6">
+										<input  type="text" name="newbuyeraddress" class="form-control" id="newbuyeraddress" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">电话 <span class="required"> * </span></label>
+									<div class="col-md-6">
+										<input  type="text" name="newbuyerphone" class="form-control" id="newbuyerphone" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">开户行<span class="required"> * </span></label>
+									<div class="col-md-6">
+										<input  type="text" name="newbuyerkhh" class="form-control" id="newbuyerkhh" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-3">银行账号<span class="required"> * </span></label>
+									<div class="col-md-6">
+										<input  type="text" name="newbuyeryhzh" class="form-control" id="newbuyeryhzh" />
+									</div>
+								</div>
+								<div class="form-group text-center">
+									<div class="text-left" style="margin: 0 auto;width: 475px;color:#ff0000;">
+										本页面只提供新增购方信息，如果系统中已包含该条数据（纳税人识别号），请执行检索操作，如需修改原购方信息，请在购方信息模块进行操作。
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<span id="submit-error" class='span-text text-danger'></span>
+							<button type="button" class="btn default" data-dismiss="modal" id="backpage"> 返 回 </button>
+							<button type="submit" class="btn blue" id="save"> 保 存 </button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>

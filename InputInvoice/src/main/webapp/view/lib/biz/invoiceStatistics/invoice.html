@@ -1,0 +1,219 @@
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span class="caption-subject bold uppercase">发票信息查询</span>
+			</div>
+		</div>
+		
+		<div class="portlet-body">
+			<div id="row" class="row">
+			
+				<form id="search-form" method="post">
+					<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter">
+						     <label>日期:
+								<input class="datePicker date-picker-cst" name="start_date" type="text" 
+							id="start_date" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+							-
+								<input class="datePicker date-picker-cst" name="end_date" type="text" 
+							id="end_date" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})">
+							</label>
+							<label>发票类别:
+
+							<select id="invoice_type" name="invoice_type"  style="width: 150px;height:30px">
+							<option value=''>-全部-</option>
+							<option value='01'>增值税专票</option>
+							<option value='04'>增值税普票</option>
+							<option value='10'>增值税电子发票</option>
+							<option value='11'>增值税普通卷票</option>
+							<option value='03'>机动车发票</option>
+						</select>
+							</label>
+							<label>查验状态:
+							<select id="check_state" name="check_state" style="width: 120px;height:30px" >
+							<option value=''>全部</option>
+							<option value='0'>已查验</option>
+							<option value='1'>未查验</option>
+						</select>
+							</label>
+							报销部门:
+							<label>
+									<input name="dpid" type="hidden" readonly="readonly" class="form-control" id="pid" />
+						             <input style="height:30px" name="pname" type="text" readonly="readonly" class="form-control" id="pname" placeholder="点击设置部门"/>
+					
+							</label>
+							<label>报销员工:
+								<input id="emp_name" type="search" name="emp_name" class="form-control input-sm input-small input-inline" placeholder="请输入姓名或手机号">
+							</label>
+						</div>
+						</div>
+					<div class="col-md-2 col-sm-2">
+						<button id="sample_editable_1_new" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+	<button id="export"  type="button" class="btn sbold green">
+							导出&nbsp;<i class="glyphicon glyphicon-download-alt"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-bar-chart"></i> <span
+							class="caption-subject bold uppercase">汇总统计</span>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="col-md-3 col-sm-3">
+					<span class="caption-subject bold uppercase">总发票数：</span>
+					<span class="caption-subject bold uppercase" id="fpcount">0</span>
+					</div>
+					<div class="col-md-3 col-sm-3">
+					<span class="caption-subject bold uppercase">总金额：</span>
+					<span  class="caption-subject bold uppercase"  id="fpzje">0</span>
+					</div>
+					<div class="col-md-3 col-sm-3">
+					<span class="caption-subject bold uppercase">总税额：</span>
+					<span  class="caption-subject bold uppercase"  id="fpzse">0</span>
+					</div>
+					<div class="col-md-3 col-sm-3">
+					<span class="caption-subject bold uppercase">价税合计：</span>
+					<span  class="caption-subject bold uppercase"  id="fpjshj">0</span>
+					</div>
+				</div>
+				<br>
+			</div>
+<!-- 			<div class="table-toolbar"> -->
+<!-- 				<div class="row"> -->
+<!-- 					<div class="col-md-12"> -->
+<!-- 						<div class="btn-group"> -->
+<!-- 							<button id="btn-add" class="btn sbold green"> -->
+<!-- 								增 加 -->
+<!-- 							</button> -->
+<!-- 						</div> -->
+<!-- 						<div class="btn-group"> -->
+<!-- 							<button id="btn-del" class="btn sbold green" data-toggle="modal"> -->
+<!-- 								删 除 -->
+<!-- 							</button> -->
+<!-- 						</div>     -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			<div class="dataTables_wrapper no-footer">
+				<div class="table-scrollable">
+					<table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1" 
+					role="grid" aria-describedby="sample_1_info" style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 5%;">
+									<div class="checker">
+										<span><input type="checkbox"  id="checkall" class="group-checkable"
+											data-set="#sample_1 .checkboxes"></span>
+									</div>
+								</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 6%;">录入人员</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 6%;">录入部门</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 6%;">手机号码</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 9%;">发票号码</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 9%;">发票代码</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12%;">购买方</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12%;">销售方</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 9%;">开票日期</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 9%;">查验日期</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 7%;">查验结果</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 7%;">总金额</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 7%;">税额</th>
+								
+							</tr>
+						</thead>
+						<tbody id="data-tbody"></tbody>
+					</table>
+				</div>
+				<div class="row" id="page-div"></div>
+			</div>
+		</div>
+	</div>
+<!-- 	<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1" -->
+<!-- 	role="dialog"> -->
+<!-- 	<div class="modal-dialog"> -->
+<!-- 		<div class="modal-content"> -->
+<!-- 			<div class="modal-header"> -->
+<!-- 				<button type="button" class="close" data-dismiss="modal" -->
+<!-- 					aria-hidden="true"></button> -->
+<!-- 				<h4 class="modal-title">Ajax Content</h4> -->
+<!-- 			</div> -->
+<!-- 			<div class="modal-body"> -->
+<!-- 				<div class="row"> -->
+<!-- 					<div class="col-md-12"> -->
+<!-- 						<div class="portlet light bordered"> -->
+<!--                                 <div class="portlet-title"> -->
+<!--                                     <div class="caption"> -->
+<!--                                         <i class="icon-bubble font-green-sharp"></i> -->
+<!--                                         <span class="caption-subject font-green-sharp bold uppercase">Checkable Tree</span> -->
+<!--                                     </div> -->
+<!--                                     <div class="actions"> -->
+<!--                                         <div class="btn-group"> -->
+<!--                                             <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="false"> Actions -->
+<!--                                                 <i class="fa fa-angle-down"></i> -->
+<!--                                             </a> -->
+<!--                                             <ul class="dropdown-menu pull-right"> -->
+<!--                                                 <li> -->
+<!--                                                     <a href="javascript:;"> Option 1</a> -->
+<!--                                                 </li> -->
+<!--                                                 <li class="divider"> </li> -->
+<!--                                                 <li> -->
+<!--                                                     <a href="javascript:;">Option 2</a> -->
+<!--                                                 </li> -->
+<!--                                                 <li> -->
+<!--                                                     <a href="javascript:;">Option 3</a> -->
+<!--                                                 </li> -->
+<!--                                                 <li> -->
+<!--                                                     <a href="javascript:;">Option 4</a> -->
+<!--                                                 </li> -->
+<!--                                             </ul> -->
+<!--                                         </div> -->
+<!--                                     </div> -->
+<!--                                 </div> -->
+<!-- 							</div> -->
+<!-- 							<div class="portlet-body"> -->
+<!--                                     <div id="tree_2" class="ztree"></div> -->
+<!--                                 </div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 			<div class="modal-footer"> -->
+<!-- 				<button type="button" class="btn default" data-dismiss="modal">Close</button> -->
+<!-- 				<button type="button" class="btn blue">Save changes</button> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+<!-- </div> -->
+<!-- </div> -->
+
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1"
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <i class="icon-pencil"></i>
+                    <span id="lblAddTitle" style="font-weight:bold">设置部门</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+                       	<ul id="treeDemo" class="ztree" style="overflow-y:scroll;height: 500px">
+            			</ul>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+				<button type="button" class="btn blue" id="savedep"> 保 存 </button>
+			</div>
+		</div>
+	</div>
+</div>

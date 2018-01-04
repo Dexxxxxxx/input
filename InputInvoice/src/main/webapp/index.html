@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>进项发票管理系统</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
+		<meta content="进项发票管理系统" name="description" />
+		<meta content="进项发票管理系统" name="author" />
+		<!-- BEGIN GLOBAL MANDATORY STYLES -->
+		<link href="view/lib/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+		<link href="view/lib/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+		<link href="view/lib/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+		<!-- END GLOBAL MANDATORY STYLES -->
+		<!-- BEGIN THEME GLOBAL STYLES -->
+		<link href="view/lib/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+		<link href="view/lib/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+		<!-- END THEME GLOBAL STYLES -->
+		<!-- BEGIN THEME LAYOUT STYLES -->
+		<link href="view/lib/assets/layouts/layout2/css/layout.min.css" rel="stylesheet" type="text/css" />
+		<link href="view/lib/assets/layouts/layout2/css/themes/blue.min.css" rel="stylesheet" type="text/css" id="style_color" />
+		<link href="view/lib/assets/global/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css" />
+		<!-- END THEME LAYOUT STYLES -->
+		<link rel="icon" type="image/png" href="view/lib/assets/global/img/logo.jpg">
+	</head>
+	<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+		<!-- BEGIN HEADER -->
+		<div class="page-header navbar navbar-fixed-top">
+			<!-- BEGIN HEADER INNER -->
+			<div class="page-header-inner">
+				<!-- BEGIN LOGO -->
+				<div class="page-logo hidden-xs">
+					<a href="index.html">
+<!-- 						<img src="view/lib/assets/layouts/layout2/img/logo3.png" alt="logo" class="logo-default" /> -->
+					</a>
+				</div>
+				<!-- END LOGO -->
+				<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+				<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
+				<!-- END RESPONSIVE MENU TOGGLER -->
+				<!-- BEGIN PAGE ACTIONS -->
+				<!-- DOC: Remove "hide" class to enable the page header actions -->
+				<div class="page-actions visible-xs-block" style="font-size: 20px;">进项发票管理系统</div>
+				<div class="page-actions visible-sm-block" style="font-size: 22px;">进项发票管理系统</div>
+				<div class="page-actions visible-md-block visible-lg-block" style="font-size: 24px;margin: 17px 0 15px 100px;">进项发票管理系统</div>
+				
+				<!-- END PAGE ACTIONS -->
+				<!-- BEGIN PAGE TOP -->
+				<div class="page-top">
+					<!-- BEGIN TOP NAVIGATION MENU -->
+					<div class="top-menu">
+						<ul class="nav navbar-nav pull-right">
+							<!-- <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+								<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+									<i class="icon-bell"></i>
+								</a>
+							</li>
+							<li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+								<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+									<i class="icon-envelope-open"></i>
+									<span class="badge badge-default"> 4 </span>
+								</a>
+							</li>
+							<li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
+								<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+									<i class="icon-calendar"></i>
+								</a>
+							</li> -->
+							<li class="dropdown dropdown-user">
+								<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+									<img alt="" class="img-circle" src="view/lib/assets/layouts/layout2/img/avatar3_small.jpg" />
+									<span class="username username-hide-on-mobile" id="login-user-name"> ---- </span>
+									<i class="fa fa-angle-down"></i>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-default">
+									<li>
+										<a href="javascript:void(0);" id="changePwd" >
+											<i class="icon-key"></i> 修改密码 </a>
+									</li>
+									<li class="divider"> </li>
+									<li>
+										<a href="javascript:void(0);" id="logout-a"> <i class="icon-user"></i> 退出系统 </a>
+									</li>
+								</ul>
+							</li>
+							<!-- END USER LOGIN DROPDOWN -->
+						</ul>
+					</div>
+					<!-- END TOP NAVIGATION MENU -->
+				</div>
+				<!-- END PAGE TOP -->
+			</div>
+			<!-- END HEADER INNER -->
+		</div>
+		<!-- END HEADER -->
+		<!-- BEGIN HEADER & CONTENT DIVIDER -->
+		<div class="clearfix"> </div>
+		<!-- END HEADER & CONTENT DIVIDER -->
+		<!-- BEGIN CONTAINER -->
+		<div class="page-container">
+			<!-- BEGIN SIDEBAR -->
+			<!-- <div class="page-sidebar-wrapper" style="position:fixed;left:0;top:68px;"> -->
+			<div class="page-sidebar-wrapper">
+				<!-- END SIDEBAR -->
+				<div class="page-sidebar navbar-collapse collapse">
+					<!-- BEGIN SIDEBAR MENU -->
+					<ul id="admin_sidebar" class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+					</ul>
+					<!-- END SIDEBAR MENU -->
+				</div>
+				<!-- END SIDEBAR -->
+			</div>
+			<!-- END SIDEBAR -->
+			<!-- BEGIN CONTENT -->
+			<div class="page-content-wrapper">
+				<!-- BEGIN CONTENT BODY -->
+				<div class="page-content" id="admin-content">
+					
+				</div>
+				<!-- END CONTENT BODY -->
+			</div>
+			<!-- END CONTENT -->
+			<!-- BEGIN QUICK SIDEBAR -->
+			<a href="javascript:;" class="page-quick-sidebar-toggler">
+				<i class="icon-login"></i>
+			</a>
+			<!-- END QUICK SIDEBAR -->
+		</div>
+		<!-- END CONTAINER -->
+		<!-- BEGIN FOOTER -->
+		<div class="page-footer">
+			<div class="page-footer-inner">Copyright ©.</div>
+			<div class="scroll-to-top">
+				<i class="icon-arrow-up"></i>
+			</div>
+		</div>
+		<div aria-hidden="true" id="ajax-modal-pwd" class="modal fade" tabIndex="-1" role="dialog">
+			<div class="modal-dialog">
+				<form method="post" id="pwd_form" class="form-horizontal">
+					<div class="modal-content">
+						<div class="modal-header">
+							<div class="caption">
+								<i class="icon-settings font-red"></i> 
+								<span class="caption-subject font-red sbold uppercase" id="fn_tittle">密码修改</span>
+							</div>
+						</div>
+						<div class="modal-body">
+							<div class="form-body">
+								<div class="form-group">
+									<label class="control-label col-md-3">原始密码 <span class="required"> * </span>
+									</label>
+									<div class="col-md-6">
+										<input type="password" name="oldPassword" class="form-control" id="oldPassword" />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="control-label col-md-3">新密码 <span class="required"> * </span>
+									</label>
+									<div class="col-md-6">
+										<input type="password" name="newPassword" class="form-control" id="newPassword" />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="control-label col-md-3">确认密码 <span class="required"> * </span></label>
+									<div class="col-md-6">
+										<input  type="password" name="newPassword2" class="form-control" id="newPassword2" />
+									</div>
+								</div>
+								<div class="form-group text-center">
+									<div class="text-left" style="margin: 0 auto;width: 475px;color:#ff0000;">
+										为保证您的账号安全,建议您将密码设置为包含数字、大写字母、小写字母以及特殊符号组成的6至18位密码;(如您的密码是系统初始密码,每次进入系统都会提示此信息)
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+							<button type="submit" class="btn blue" id="save"> 保 存 </button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!--[if lte IE 8]>
+		<script src="view/lib/respond.js"></script>
+		<![endif]-->
+		<OBJECT ID=sk  CLASSID="clsid:003BD8F2-A6C3-48EF-9B72-ECFD8FC4D49F" width='0px;' height="0px;" codebase="NISEC_SKSCX.ocx#version=1,0,0,1"></OBJECT>
+		<script data-main="view/lib/main.js?t=20161223" src="view/lib/require.js"></script>
+		<script src="view/lib/assets/global/scripts/base64.js"></script>
+	</body>
+
+</html>

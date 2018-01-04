@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.tobacco.BaccoPurchaseMapper">
+	<sql id="list_where">
+		<if test="search_key !=null and search_key !=''">
+			AND( 
+			INVOICE_NO　LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR　FARMER_NAME LIKE CONCAT(CONCAT('%', #{search_key}), '%') 
+			OR ID_CARD LIKE CONCAT(CONCAT('%', #{search_key}), '%') 
+			OR ADD_NAME LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR ORG_CD LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)
+		</if>
+		<!-- <if test="userid !=null and userid !=''">
+			AND  DEPARTID IN (
+			SELECT B.ID FROM BASE_DEPART B WHERE B.ID IN(
+			select deptid from base_user_depart where userid=#{userid})
+			CONNECT BY PRIOR B.ID = B.PID )
+		</if> -->
+		<if test="code !=null and code !=''">
+			and ORG_CD LIKE CONCAT(#{code}, '%')
+		</if>
+		
+		<if test="start_date !=null and start_date !=''">
+			and to_char(RECORD_TIME,'yyyy-MM-dd') &gt;= #{start_date}
+		</if>
+		
+		<if test="end_date !=null and end_date !=''">
+			and to_char(RECORD_TIME,'yyyy-MM-dd') &lt;= #{end_date}
+		</if>
+		<if test="status !=null and status !=''">
+			and status= #{status}
+		</if>
+		<choose>
+				<when test="status != null and status != ''">
+					and status= #{status}
+				</when>
+				<otherwise>
+					and (
+						status is null
+						or status=0
+					)
+				</otherwise>
+			</choose>
+	</sql>
+	<!-- 查询分页总条数 -->
+	<select id="listCount" resultType="int" parameterType="map">
+
+		select count(*) from (SELECT DISTINCT INVOICE_NO FROM SXYC_TAX_INVOICE_ORIG${suffix}
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+		)
+	</select>
+	<!-- 分页查询 -->
+	<select id="list" resultType="map" parameterType="map">
+		SELECT
+		
+		INVOICE_NO,TO_CHAR(BUSINESS_DATE,'YYYY-MM-DD HH24:MI:SS') BUSINESS_DATE , ORG_CD , TO_CHAR(RECORD_TIME,'YYYY-MM-DD HH24:MI:SS') RECORD_TIME ,SCALE_COUNT,
+		FARMER_CD,FARMER_NAME,ID_CARD,ADD_CD,ADD_NAME,SUM_WEIGHT,
+		SUM_AMOUNT,SUM_SUB_AMOUNT1,SUM_SUB_AMOUNT2,SUM_SUB_AMOUNT3,SUM_SUB_AMOUNT4,SUM_DEDUCT_AMOUNT
+		FROM (SELECT ROWNUM RN, T.* FROM (
+
+		SELECT DISTINCT INVOICE_NO,BUSINESS_DATE , ORG_CD , RECORD_TIME ,
+		SCALE_COUNT,FARMER_CD,FARMER_NAME,ID_CARD,ADD_CD,ADD_NAME,SUM_WEIGHT,
+		SUM_AMOUNT,SUM_SUB_AMOUNT1,SUM_SUB_AMOUNT2,SUM_SUB_AMOUNT3,SUM_SUB_AMOUNT4,
+		SUM_DEDUCT_AMOUNT FROM SXYC_TAX_INVOICE_ORIG${suffix} 
+		
+		WHERE 1 = 1
+		
+		<include refid="list_where"></include>
+		ORDER BY RECORD_TIME
+
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+		
+	</select>
+	<!-- 查询单条记录详情总条数 -->
+	<select id="listDetailCount" resultType="int" parameterType="map">
+
+		<!-- SELECT COUNT(*) FROM BASE_USER
+		WHERE 1 = 1
+		<include refid="list_where"></include> -->
+		select COUNT(*)
+		from sxyc_tax_invoice_orig${suffix}
+		where invoice_no=#{invoice_no}
+
+	</select>
+	<!-- 分页查询单条记录详情 -->
+	<select id="getById" resultType="map" parameterType="map">
+
+		SELECT
+		id,invoice_no,farmer_name, invoice_id, level_no, level_name, price, weight, amount, sub_price1, sub_amount1, sub_price2, 
+		sub_amount2, sub_price3, sub_amount3, sub_price4, sub_amount4, deduct_amount ,status
+		
+		FROM (SELECT ROWNUM RN, T.* FROM (
+
+		select id, farmer_name, invoice_no,
+		invoice_id, level_no, level_name, price, weight, amount, sub_price1, sub_amount1, sub_price2, 
+		sub_amount2, sub_price3, sub_amount3, sub_price4, sub_amount4, deduct_amount ,status
+		from sxyc_tax_invoice_orig${suffix}
+		where invoice_no=#{invoice_no}
+		ORDER BY invoice_id
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+		
+	</select>
+	<!--收购详情的公共信息  -->
+	<select id="getCommonInfo" resultType="map" parameterType="map">
+		select id, farmer_name, invoice_no,
+		invoice_id, level_no, level_name, price, weight, amount, sub_price1, sub_amount1, sub_price2, 
+		sub_amount2, sub_price3, sub_amount3, sub_price4, sub_amount4, deduct_amount 
+		from sxyc_tax_invoice_orig${suffix}
+		where invoice_no=#{invoice_no}
+	</select>
+	<!-- 刷新数据  新增收购信息入本地库 -->
+	<select id="refresh" parameterType="map">
+		<!-- 未涉及 -->
+	</select>
+	<!-- 获取需要开具发票收购信息 -->
+	<select id="getAllInfo" resultType="map" parameterType="map">
+		select id, BUSINESS_DATE, org_cd, record_time, invoice_no, scale_count, farmer_cd, farmer_name, 
+		id_card, add_cd, add_name, sum_weight, sum_amount, sum_sub_amount1, sum_sub_amount2, sum_sub_amount3, 
+		sum_sub_amount4, sum_deduct_amount, invoice_id, level_no, level_name, price, weight, amount, sub_price1, 
+		sub_amount1, sub_price2, sub_amount2, sub_price3, sub_amount3, sub_price4, sub_amount4, deduct_amount 
+		from sxyc_tax_invoice_orig${suffix} 
+		where invoice_no=#{invoice_no}
+		order by invoice_id
+	</select>
+	
+	
+	
+	
+<!-- 开具发票、存入数据库-->
+	<!-- 删除原有发票数据 -->
+	<delete id="delete" parameterType="map">
+		delete sxyc_tax_invoice${suffix}
+		where jylsh=#{jylsh} and type is null 
+	</delete>
+	<!-- 删除烟草详情信息-->
+	<delete id="delInvoiceDetail" parameterType="map">
+		DELETE SXYC_TAX_INVOICE_DETAIL${suffix} 
+		WHERE INVOICE_ID IN
+		(select id from SXYC_TAX_INVOICE${suffix} where jylsh=#{jylsh} and type is null)
+	</delete>
+	<!-- 保存发票信息 -->
+	<insert id="save" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into sxyc_tax_invoice${suffix}
+  		(id, fpqqlsh, jylsh, kplx, xsf_id, ghf_id,xsf_add, qdbz, zsfs, hjje, hjse, jshj, kce, bz, 
+  		skr, fhr, kpr, tzdbh, yfpdm, yfphm, deptid, createtime,type,status)
+		values
+  		(#{id}, #{fpqqlsh}, #{jylsh}, #{kplx}, #{xsf_id}, #{ghf_id},#{xsf_add}, #{qdbz}, #{zsfs}, #{hjje}, #{hjse}, #{jshj}, #{kce}, #{bz}, 
+  		#{skr}, #{fhr}, #{kpr}, #{tzdbh}, #{yfpdm}, #{yfphm}, #{deptid}, sysdate,1,0)
+	</insert>
+	<!-- 保存发票详情 -->
+	<insert id="saveDetail" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into sxyc_tax_invoice_detail${suffix}
+  		(id, invoice_id, scale_count, fphxz, spmc, spsm, ggxh, dw, spsl, 
+   		dj, je, sl, se, hsbz, spbm, zxbm, yhzcbs, lslbs, zzstsgl)
+		values
+  		(#{id}, #{invoice_id}, #{scale_count}, #{fphxz}, #{spmc}, #{spsm}, #{ggxh}, #{dw}, #{spsl}, 
+  		#{dj}, #{je}, #{sl}, #{se}, #{hsbz}, #{spbm}, #{zxbm}, #{yhzcbs}, #{lslbs}, #{zzstsgl})
+	</insert>
+	<!-- 修改发票信息 -->
+	<update id="update" parameterType="map">
+		update sxyc_tax_invoice${suffix}
+   		set 
+       	fpdm = #{fpdm},
+       	fphm = #{fphm},
+       	skm = #{skm},
+       	jym = #{jym},
+      	kprq = #{kprq},
+      	type = 1,
+      	status =1
+ 		where fpqqlsh = #{fpqqlsh}
+	</update>
+	<!-- 获取补贴信息 -->
+	<select id="getSubInfo" resultType="map" parameterType="map">
+		select id, code, item, value, type 
+		from SXYC_SUB_INFO
+		where code=#{code}
+		AND type=#{type}
+	</select>
+	
+	<select id="getFpInfo" resultType="map" parameterType="map">
+		select id, jylsh,fpdm,fphm,hjje,hjse,jshj,type,status from SXYC_TAX_INVOICE${suffix} t where 1=1
+		and jylsh=#{jylsh}
+	</select>
+	
+	<!-- 修改是否开票状态 -->
+	<update id="updateStatus" parameterType="map">
+		update SXYC_TAX_INVOICE_ORIG${suffix}
+		set
+		status = #{status}
+		where invoice_no in
+		(SELECT INVOICE_NO FROM  SXYC_ORIG_INVOICE${suffix}
+		WHERE ID =#{jylsh})
+	</update>
+	
+	
+	<!-- 根据id查询农户信息 -->
+	<select id="getFarmerInfo" parameterType="map" resultType="map">
+		SELECT ID, ID_CARD, NAME, BANK_CODE, BANK_NAME, BANK_ACNT 
+		FROM BASE_FARMER
+		where ID_CARD=#{id_card} or ID=#{id_card}
+	</select>
+	
+	
+	<!-- 获取所属部门的tree数据 -->
+	<select id="getTree1" resultType="map" parameterType="map">
+			select id,  name, pid from base_nsrinfo
+	</select>
+	
+</mapper>

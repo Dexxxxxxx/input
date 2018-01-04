@@ -1,0 +1,74 @@
+<div class="portlet light portlet-fit portlet-form bordered">
+<div class="portlet-title">
+    <div class="caption">
+        <i class="icon-settings font-red"></i>
+        <span class="caption-subject font-red sbold uppercase" id="fn_tittle">  </span>
+    </div>
+    <div class="actions">
+        <div class="btn-group btn-group-devided" data-toggle="buttons">
+        </div>
+    </div>
+</div>
+<div class="portlet-body">
+    <!-- BEGIN FORM-->
+   <form method="post" id="datahandle_form" class="form-horizontal">
+       <div class="form-body">
+           <div class="form-group">
+               <label class="control-label col-md-3">参数代码
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='PARAMCODE' type="text" name="paramcode" data-required="1" class="form-control" />
+               </div>
+               <div class="col-md-4">
+               		<span id="paramcode-error" class="span-text text-danger"></span> 
+               </div>
+           </div>
+           
+           <div class="form-group">
+               <label class="control-label col-md-3">参数名称
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='PARAMNAME' name="paramname" type="text" class="form-control" />
+               </div>
+               <div class="col-md-4">
+               	    <span id="paramname-error" class="span-text text-danger"></span>  
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">参数值
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='PARAMVALUE' name="paramvalue" type="text" class="form-control"/>
+               </div>
+               <div class="col-md-4">
+               	    <span id="paramvalue-error" class="span-text text-danger"></span>  
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">参数描述
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='PARAMDESC' name="paramdesc" type="text" class="form-control" />
+               </div>
+               <div class="col-md-4">
+               	    <span id="paramdesc-error" class="span-text text-danger"></span>  
+               </div>
+           </div>
+       <div class="form-actions">
+           <div class="row">
+               <div class="col-md-offset-3 col-md-9">
+                   <button id='save' type="submit" class="btn green"> 保 存 </button>
+                   <button id='cancel' type="button" class="btn grey-salsa btn-outline"> 返 回 </button>
+                   <span id="submit-error" class="span-text text-danger"></span>
+               </div>
+           </div>
+       </div>
+      </div>
+   </form>
+   <!-- END FORM-->
+    </div>
+</div>

@@ -1,0 +1,261 @@
+<div class="col-md-12">
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase"> 业务管理</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter col-md-12">
+							<label>搜 索 : <input type="search" name="search_key" id="search_key"
+								class="form-control input-sm input-sm input-inline"
+								placeholder="编号,TAM名称,纳税人,识别号,车架号">
+							</label><label>&nbsp;流程状态：</label> <select
+								class="form-control input-sm input-sm input-inline"
+								name="status" id="status">
+								<option value="1">全部</option>
+								<option value="0">正常</option>
+								<option value="999">完成</option>
+								<option value="-1">业务删除</option>
+							</select>
+							<label>&nbsp;执行结果：</label> <select
+								class="form-control input-sm input-sm input-inline"
+								name="process_status" id="process_status">
+								<option value="ALL">全部</option>
+								<option value="SUCCESS">成功</option>
+								<option value="ERROR">失败</option>
+							</select>
+							 <label>&nbsp;执行时间：</label>
+								<input class="datePicker date-picker-cst" name="start_date" type="text" 
+								id="start_date" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+								<label class="input-inline">TO</label> 
+								<input class="datePicker date-picker-cst" name="end_date" type="text" 
+								id="end_date" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})">
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2">
+						<button id="sample_editable_1_seach" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+						<button id="reSetTable" class="btn sbold green">
+							显示全部&nbsp;
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="dataTables_wrapper no-footer">
+					<div class="table-scrollable">
+						<table
+							class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							id="sample_1" role="grid" aria-describedby="sample_1_info"
+							style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+							<thead>
+								<tr role="row">
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 7%;">TAM编号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 7%;">TAM名称</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 7%;">征管账号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">纳税人名称</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">识别号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">证件类型</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 8.3%;">车架号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 8.3%;">厂牌型号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;">流程名称</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">流程状态</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">执行结果</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 8.3%;">执行时间</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">操作</th>
+								</tr>
+							</thead>
+							<tbody id="data-tbody"></tbody>
+						</table>
+					</div>
+					<div class="row" id="page-div"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 模态正文 审核 开始 -->
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1"
+	role="dialog">
+	<div class="modal-dialog">
+		<form action="#" id="examine_form" class="form-horizontal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="caption">
+						<i class="icon-settings font-red"></i> <span
+							class="caption-subject font-red sbold uppercase">审核</span>
+					</div>
+				</div>
+				<div class="modal-body" id="write-examine">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-3">车架号<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<input id="ID" type="hidden" name="id"> <span id='VIN'
+									class="form-control"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">合格证编号<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<span id='HGZBH' class="form-control"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">发动机号码<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<span id='FDJHM' class="form-control"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-md-3">厂牌型号<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<span id='MODEL' class="form-control"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">企业名称<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<span id='DEPARTNAME' class="form-control"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">处理状态<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<span id='STATUS' class="form-control"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">审核状态<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<span id='EXA_STATUS' class="form-control"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">发证日期<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<span id='FZRQ' class="form-control"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">匹配后的型号<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<span id='MARCH_XH' class="form-control"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">匹配后的最低计税价格<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<span id='MARCHMINJSJG' class="form-control"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">结论备注<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-9">
+								<textarea id='ERR_MSG' name="err_msg" class="form-control"
+									placeholder="可选,输入审核结论"></textarea>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn default" data-dismiss="modal">
+						返 回</button>
+					<button type="button" class="btn blue" id="saveExamineNo"
+						name="exa_status" value="2">不通过</button>
+					<button type="button" class="btn blue" id="saveExamineYes"
+						name="exa_status" value="1">通 过</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 模态正文  审核  结束 -->
+
+<div aria-hidden="true" id="ajax-modal-nopass" class="modal fade" tabIndex="-1"
+	role="dialog">
+	<div class="modal-dialog">
+		<form action="#" id="examine_form1" class="form-horizontal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="caption">
+						<i class="icon-settings font-red"></i> <span
+							class="caption-subject font-red sbold uppercase">结论信息</span>
+					</div>
+				</div>
+				<div class="modal-body" id="write-examine">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-2">结论备注
+							</label>
+							<div class="col-md-10">
+								<textarea id='error_msg' name="err_msg" class="form-control"
+									placeholder="可选,输入审核不通过缘由"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn default" data-dismiss="modal">返 回</button>
+					<button type="button" class="btn blue" id="saveError">保 存</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

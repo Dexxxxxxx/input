@@ -1,0 +1,282 @@
+<div class="col-md-5">
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span class="caption-subject bold uppercase">资源类型</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter">
+							<label>搜 索:
+								<input type="search" name="search_key" class="form-control input-sm input-small input-inline">
+							</label>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2">
+						<button id="sample_editable_1_new" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="btn-group">
+							<button id="btn-add" class="btn sbold green">
+								增 加
+							</button>
+						</div>
+						<div class="btn-group">
+							<button id="btn-del" class="btn sbold green" data-toggle="modal">
+								删 除
+							</button>
+						</div>    
+					</div>
+				</div>
+			</div>
+			<div class="dataTables_wrapper no-footer">
+				<div class="table-scrollable">
+					<table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 103px;">
+									<div class="checker">
+										<span><input type="checkbox"  id="check_group" class="group-checkable" 
+											data-set="#sample_1 .checkboxes"></span>
+									</div>
+								</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 254px;">名称</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 185px;">编码</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 100px;">操作</th>
+							</tr>
+						</thead>
+						<tbody id="data-tbody"></tbody>
+					</table>
+				</div>
+				<div class="row" id="page-div"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="col-md-7">
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span class="caption-subject bold uppercase">资源项目</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form_1" method="post">
+					<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter">
+							<label>搜 索:
+								<input type="search" name="search_key1" class="form-control input-sm input-small input-inline" id="search_key1">
+							</label>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2">
+						<button id="sample_editable_1_new_1" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="btn-group">
+							<button id="btn-add_items" class="btn sbold green">
+								增 加
+							</button>
+						</div>
+						<div class="btn-group">
+							<button id="btn-del_items" class="btn sbold green" data-toggle="modal">
+								删 除
+							</button>
+						</div>    
+					</div>
+				</div>
+			</div>
+			<div class="dataTables_wrapper no-footer">
+				<div class="table-scrollable">
+					<table class="table table-striped table-bordered table-hover order-column dataTable no-footer" id="sample_1_1" role="grid" aria-describedby="sample_1_info" 
+						style="word-break:break-all;">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" rowspan="1" colspan="1" aria-label="">
+									<div class="checker">
+										<span><input type="checkbox"  class="group-checkable" id="check_group_items"
+											data-set="#sample_1 .checkboxes"></span>
+									</div>
+								</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" style="width: 15%; ">名称</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" style="width: 20%;">编码</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" style="width: 15%;">值</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" style="width: 10%;">排序</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" style="width: 35%;">说明</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" style="width: 5%;">操作</th>
+							</tr>
+						</thead>
+						<tbody id="data-tbody_1"></tbody>
+					</table>
+				</div>
+				<div class="row" id="page-div_1"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 资源类型模态框》开始 -->
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1"
+	role="dialog">
+	<div class="modal-dialog">
+	<form method="post" id="resource_form" class="form-horizontal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="caption">
+					<i class="icon-settings font-red"></i> <span
+				class="caption-subject font-red sbold uppercase" id="fn_tittle"></span>
+			</div>
+			</div>
+			<div class="modal-body">
+				
+			<div class="form-body">
+				<div class="form-group" style="display: none">
+					<label class="control-label col-md-3">id <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-6">
+						<input type="text" name="id" data-required="1"
+							class="form-control" id="id" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">名称 <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-6">
+						<input type="text" name="name" data-required="1"
+							class="form-control" id="name" />
+					</div>
+					<div class='col-md-3'>
+						<span id="name-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">编码 <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-6">
+						<input name="code" type="text" class="form-control" id="code" />
+					</div>
+					<div class='col-md-3'>
+						<span id="code-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+			</div>
+			</div>
+			<div class="modal-footer">
+				<span id="submit-error" class='span-text text-danger'></span>
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+				<button type="submit" class="btn blue" id="save"> 保 存 </button>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+<!-- 资源类型模态框 》结束-->
+
+
+<!-- 资源详情模态框 》开始-->
+<div aria-hidden="true" id="ajax-modal_items" class="modal fade" tabIndex="-1"
+	role="dialog">
+	<div class="modal-dialog">
+		<form method="post" id="resource_form_1" class="form-horizontal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="caption">
+					<i class="icon-settings font-red"></i> <span
+				class="caption-subject font-red sbold uppercase" id="fn_tittle_items"></span>
+			</div>
+			</div>
+			<div class="modal-body">
+				
+			<div class="form-body">
+				<div class="form-group" style="display: none">
+					<label class="control-label col-md-3">id <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-6">
+						<input type="text" name="id" data-required="1"
+							class="form-control" id="id_items" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">名称 <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-6">
+						<input type="text" name="name" data-required="1"
+							class="form-control" id="name_items" />
+					</div>
+					<div class='col-md-3'>
+						<span id="name_items-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">编码 <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-6">
+						<input name="code" type="text" class="form-control" id="code_items" />
+					</div>
+					<div class='col-md-3'>
+						<span id="code_items-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">值<span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-6">
+						<input name="val" type="text" class="form-control" id="val_items" />
+					</div>
+					<div class='col-md-3'>
+						<span id="val_items-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">排序<span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-6">
+						<input name="byorder" type="text" class="form-control" id="byorder_items" />
+					</div>
+					<div class='col-md-3'>
+						<span id="byorder_items-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">说明<span
+						class="required"></span>
+					</label>
+					<div class="col-md-6">
+						<input name="mask" type="text" class="form-control" id="mask_items" />
+					</div>
+				</div>
+			</div>
+			</div>
+			<div class="modal-footer">
+				<span id="submit_items-error" class='span-text text-danger'></span>
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+				<button type="submit" class="btn blue" id="save_items"> 保 存 </button>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+<!-- 资源详情模态框 》结束-->

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.cigarette.CigarInvoiceDetailMapper">
+	<!-- 获取发票明细 -->
+	<select id="list" parameterType="map" resultType="map">
+		SELECT ID, INVOICE_ID, XH, FPHXZ, SPMC, SPSM, GGXH, DW, SPSL, 
+		DJ, JE, SL, SE,JSHJ, HSBZ, SPBM, ZXBM, YHZCBS, LSLBS, ZZSTSGL 
+		FROM CIGARETTE_INVOICE_DETAIL
+		WHERE INVOICE_ID=#{invoice_id}
+		ORDER BY TO_NUMBER(XH)
+	</select>
+	<!-- 删除发票详情 -->
+	<delete id="delete" parameterType="map">
+		delete CIGARETTE_INVOICE_DETAIL 
+		WHERE INVOICE_ID=#{invoice_id}
+	</delete>
+	<!-- 保存发票详情信息 -->
+	<insert id="insert" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into cigarette_invoice_detail
+  		(id, invoice_id, xh, fphxz, spmc, spsm, ggxh, dw, 
+  		spsl, dj, je, sl, se,jshj, hsbz, spbm, zxbm, yhzcbs, lslbs, zzstsgl)
+		values
+  		(#{id}, #{invoice_id}, #{xh}, #{fphxz}, #{spmc}, #{spsm}, #{ggxh}, #{dw}, 
+  		#{spsl}, #{dj}, #{je}, #{sl}, #{se},#{jshj}, #{hsbz}, #{spbm}, #{zxbm}, #{yhzcbs}, #{lslbs}, #{zzstsgl})
+	</insert>
+</mapper>

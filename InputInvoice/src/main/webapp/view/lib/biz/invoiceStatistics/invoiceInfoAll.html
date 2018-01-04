@@ -1,0 +1,310 @@
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase"> 进项发票查询 </span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+						<div>
+						<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter col-md-12">
+							<label>发票代码：</label>
+							<input type="search" name="fpdm" id="fpdm" style="width:100px;"
+								class="form-control form-control input-sm input-sm input-inline input-inline">
+<!-- 							<label>认证点：&nbsp;</label> -->
+<!-- 							<input type="search" name="authpoint" id="authpoint" readonly='readonly'  -->
+<!-- 								class="form-control form-control input-sm input-sm input-inline input-inline"> -->
+							<label>&nbsp;发票类型：</label> 
+							<select id="invoice_type" name="invoice_type"  style="width: 150px;height:30px">
+							<option value=''>-请选择发票类别-</option>
+							<option value='01'>增值税专票</option>
+							<option value='04'>增值税普票</option>
+							<option value='10'>增值税电子发票</option>
+							<option value='11'>增值税普通卷票</option>
+							<option value='03'>机动车发票</option>
+						</select>
+<!-- 							<select style="width:100px;" -->
+<!-- 								class="form-control input-sm input-sm input-inline" -->
+<!-- 								name="invoice_type" id="invoice_type"> -->
+<!-- 								<option value="">全部</option> -->
+<!-- 								<option value="004">增值税专票</option> -->
+<!-- 								<option value="007">增值税普票</option> -->
+<!-- 								<option value="009">货运专票</option> -->
+<!-- 								<option value="005">机动车专票</option> -->
+<!-- 							</select> -->
+							<label>&nbsp;开票时间：</label>
+								<input class="datePicker date-picker-cst" name="start_date" type="text" style="width:100px;"
+								id="start_date" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+								<label class="input-inline">至</label> 
+								<input class="datePicker date-picker-cst" name="end_date" type="text" style="width:100px;"
+								id="end_date" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})">
+						</div>
+					</div>
+					</div>
+					<div>
+						<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter col-md-12">
+							<label>发票号码：</label>
+							<input type="search" name="fphm" id="fphm" style="width:100px;"
+								class="form-control form-control input-sm input-sm input-inline input-inline">
+							<label>销方名称： </label>
+							<input name="drawerunit" id="drawerunit" >
+<!-- 							<label>&nbsp;发票状态：</label> <select -->
+<!-- 								class="form-control input-sm input-sm input-inline"  style="width:100px;" -->
+<!-- 								name="invoice_status" id="invoice_status"> -->
+<!-- 								<option value="">全部</option> -->
+<!-- 								<option value="1">正常</option> -->
+<!-- 								<option value="0">其它</option> -->
+<!-- 							</select> -->
+<!-- 							 <label>&nbsp;认证时间：</label> -->
+<!-- 								<input class="datePicker date-picker-cst" name="start_authdate" type="text" style="width:100px;" -->
+<!-- 								id="start_authdate" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_authdate\')||\'new Date()\'}'})"> -->
+<!-- 								<label class="input-inline">至</label>  -->
+<!-- 								<input class="datePicker date-picker-cst" name="end_authdate" type="text" style="width:100px;" -->
+<!-- 								id="end_authdate" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_authdate\')}',maxDate:new Date()})"> -->
+						</div>
+					</div>
+						<div class="col-md-2 col-sm-2">
+							<button id="sample_editable_1_seach" class="btn sbold green">
+								查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<br>
+			 <div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-bar-chart"></i> <span
+							class="caption-subject bold uppercase">汇总统计</span>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="col-md-3 col-sm-3">
+					<span class="caption-subject bold uppercase">总发票数：</span>
+					<span class="caption-subject bold uppercase" id="fpcount">0</span>
+					</div>
+					<div class="col-md-3 col-sm-3">
+					<span class="caption-subject bold uppercase">总金额：</span>
+					<span  class="caption-subject bold uppercase"  id="fpzje">0</span>
+					</div>
+					<div class="col-md-3 col-sm-3">
+					<span class="caption-subject bold uppercase">总税额：</span>
+					<span  class="caption-subject bold uppercase"  id="fpzse">0</span>
+					</div>
+					<div class="col-md-3 col-sm-3">
+					<span class="caption-subject bold uppercase">价税合计：</span>
+					<span  class="caption-subject bold uppercase"  id="fpjshj">0</span>
+					</div>
+				</div>
+				<br>
+			</div>
+			<div class="table-toolbar">
+				<div class="row">
+					<div class="col-md-12">
+						<!-- <div class="btn-group">
+							<button id="btn-new" class="btn sbold green">新 增</button>
+						</div>
+						<div class="btn-group">
+							<button id="btn-del" class="btn sbold green">删 除</button>
+						</div>
+						<div class="btn-group">
+							<button class="btn sbold green" id="ajax-demo"
+										data-url="ui_extended_modals_ajax_sample.html"
+										data-toggle="modal">配置功能</button>
+						</div> -->
+						<div class="btn-group">
+							<div style="display: block;" id="fileImport">
+								<button id="btn-import" class="btn sbold green">导入数据</button>
+							</div>
+						</div>
+						<form id="uploadForm" style="margin: 0px; display: inline"
+							name="upload" enctype="multipart/form-data" method="post">
+							<div class="btn-group selectFile" style="display: none">
+								<div>
+									<input id="file" type="file" name="thefile"
+										class="btn sbold green" />
+								</div>
+							</div>
+							<div class="btn-group selectFile" style="display: none">
+								<input type="submit" value="导入" class="btn sbold green" />
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="dataTables_wrapper no-footer">
+					<div class="table-scrollable">
+						<table
+							class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+							id="sample_1" role="grid" aria-describedby="sample_1_info"
+							style="table-layout: fixed; word-break: break-all; overflow: hidden; word-wrap: break-word;">
+							<thead>
+								<tr role="row">
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">发票代码</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">发票号码</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">开票日期</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 20%;">销售方名称</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">金额</th>
+									
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">税额</th>
+										<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">价税合计</th>
+<!-- 									<th class="sorting_disabled" tabindex="0" -->
+<!-- 										aria-controls="sample_1" rowspan="1" colspan="1" -->
+<!-- 										style="width: 10%;">认证方式</th> -->
+<!-- 									<th class="sorting_disabled" tabindex="0" -->
+<!-- 										aria-controls="sample_1" rowspan="1" colspan="1" -->
+<!-- 										style="width: 10%;">确认/认证日期</th> -->
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">发票类型</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">发票状态</th>
+								</tr>
+							</thead>
+							<tbody id="data-tbody"></tbody>
+						</table>
+					</div>
+					<div class="row" id="page-div"></div>
+				</div>
+			</div>
+		</div>
+  </div>
+<!-- 模态正文 角色》》销方名称  开始 -->
+<div aria-hidden="true" id="xhdwmc-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <i class="icon-pencil"></i>
+                    <span id="lblAddTitle" style="font-weight:bold">销方名称</span>
+                </h5>
+			</div>
+			
+			<div class="modal-body">
+			<form id="search-form-disk" method="post">
+				<div class="col-md-9 col-sm-9">
+						<div class="dataTables_filter">
+							<label>搜 索:
+								<input type="search" id="search_key" name="search_key" class="form-control input-sm input-inline">
+							</label>
+						</div>
+						</div>
+					<div class="col-md-3 col-sm-3">
+						<button id="sample_editable_1_new" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</div>
+				</form>
+				<br>
+				<div class="row">
+					<div class="col-md-12">
+					<div id="treeDemo" class="ztree" style="overflow-y:scroll;height: 400px">
+						<table
+						class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+						id="sample_1" role="grid" aria-describedby="sample_1_info"
+						style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" rowspan="1" colspan="1"
+									aria-label="" style="width: 20%;">
+									<div class="checker">
+										<span><input type="checkbox" class="group-checkable"
+											id="xhdwmccheck_group" data-set="#sample_1 .checkboxes"></span>
+									</div>
+								</th>
+								<th class="sorting_disabled " tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1" 
+									style="width: 80%;">名称</th>
+							</tr>
+						</thead>
+						<tbody id="xhdwmcdata-tbody">
+	            		</tbody>
+					</table>
+					 
+            			</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+				<button type="button" class="btn blue" id="surexhdwmc"> 确定 </button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 模态正文 角色》》功能  结束 -->
+<!-- 模态正文 角色》》认证点  开始 -->
+<div aria-hidden="true" id="authpoint-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <i class="icon-pencil"></i>
+                    <span id="lblAddTitle" style="font-weight:bold">认证点</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+					<div id="treeDemo" class="ztree" style="overflow-y:scroll;height: 400px">
+						<table
+						class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+						id="sample_1" role="grid" aria-describedby="sample_1_info"
+						style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" rowspan="1" colspan="1"
+									aria-label="" style="width: 20%;">
+									<div class="checker">
+										<span><input type="checkbox" class="group-checkable"
+											id="authpointcheck_group" data-set="#sample_1 .checkboxes"></span>
+									</div>
+								</th>
+								<th class="sorting_disabled " tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1" 
+									style="width: 40%;">税号</th>
+								<th class="sorting_disabled " tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1" 
+									style="width: 40%;">名称</th>
+							</tr>
+						</thead>
+						<tbody id="authpointdata-tbody">
+	            		</tbody>
+					</table>
+            			</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+				<button type="button" class="btn blue" id="sureauthpoint"> 确定 </button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 模态正文 角色》》功能  结束 -->

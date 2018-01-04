@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.tobacco.BaccoInvoiceMapper">
+
+	<sql id="list_where">
+		<if test="search_key !=null and search_key !=''">
+			AND(
+			S2.NAME LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR FPDM  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR FPHM  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)
+		</if>
+		<if test="type !=null and type !=''">
+			and	type=#{type}
+		</if>
+		<choose>
+			<when test="status != null and status != ''">
+					and	status=#{status}
+			</when>
+			<otherwise>
+					and	status is null
+			</otherwise>
+		</choose>
+		<if test="start_date !=null and start_date !=''">
+			and to_char(s.CREATETIME,'yyyy-MM-dd') &gt;= #{start_date}
+		</if>
+		<if test="end_date !=null and end_date !=''">
+			and to_char(s.CREATETIME,'yyyy-MM-dd') &lt;= #{end_date}
+		</if>
+		<if test="departid !=null and departid !=''">
+			and GHF_ID in (
+			SELECT BA.ID FROM BASE_DEPART BA
+			START WITH ID = #{departid}
+			CONNECT BY PRIOR ID = PID )
+		</if>
+	</sql>
+	<!-- 分页查询    收购发票 -->
+	<select id="list" parameterType="map" resultType="map">
+		SELECT
+		 ID, FPQQLSH, JYLSH,JYLSHID, KPLX, XSF_ID,XSF_NAME, GHF_ID, QDBZ, ZSFS, HJJE, HJSE, JSHJ,
+    	KCE, BZ, SKR, FHR, KPR, TZDBH, YFPDM, YFPHM, FPDM, FPHM, SKM, JYM, DEPTID, TO_CHAR(CREATETIME,'YYYY-MM-DD HH24:MI:SS') CREATETIME,TYPE,STATUS,KPF_NAME,ROWNUM
+    	FROM (SELECT ROWNUM RN, T.* FROM (
+    	SELECT DISTINCT S.*,S1.NAME KPF_NAME,S2.NAME XSF_NAME,S3.ID JYLSHID
+     	FROM SXYC_TAX_INVOICE${suffix} S LEFT JOIN　BASE_DEPART S1　ON S.GHF_ID=S1.ID LEFT JOIN BASE_FARMER S2 ON S.XSF_ID=S2.ID LEFT JOIN SXYC_ORIG_INVOICE${suffix} S3
+        ON S.JYLSH=S3.ID
+    	WHERE 1 = 1
+		<include refid="list_where"></include>
+		ORDER BY s.CREATETIME DESC
+		
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+	</select>
+	<!-- 查询总数 收购发票-->
+	<select id="listCount" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM SXYC_TAX_INVOICE${suffix} s LEFT JOIN BASE_FARMER S2 ON S.XSF_ID=S2.ID
+		WHERE 1 = 1 
+		<include refid="list_where"></include>
+	</select>
+	
+	<sql id="spelist_where">
+		<if test="search_key !=null and search_key !=''">
+			AND(
+			S2.NAME LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR FPDM  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR FPHM  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)
+		</if>
+		<if test="type !=null and type !=''">
+			and	type=#{type}
+		</if>
+		<choose>
+			<when test="status != null and status != ''">
+					and	status=#{status}
+			</when>
+			<otherwise>
+					and	status is null
+			</otherwise>
+		</choose>
+		<if test="start_date !=null and start_date !=''">
+			and to_char(s.CREATETIME,'yyyy-MM-dd') &gt;= #{start_date}
+		</if>
+		<if test="end_date !=null and end_date !=''">
+			and to_char(s.CREATETIME,'yyyy-MM-dd') &lt;= #{end_date}
+		</if>
+		<if test="departid !=null and departid !=''">
+			and XSF_ID in (
+			SELECT BA.ID FROM BASE_DEPART BA
+			START WITH ID = #{departid}
+			CONNECT BY PRIOR ID = PID )
+		</if>
+	</sql>
+	<select id="spe_list" parameterType="map" resultType="map">
+		SELECT
+		 ID, FPQQLSH, JYLSH, KPLX, XSF_ID,KPF_NAME, GHF_ID,GHF_NAME, QDBZ, ZSFS, HJJE, HJSE, JSHJ,
+    	KCE, BZ, SKR, FHR, KPR, TZDBH, YFPDM, YFPHM, FPDM, FPHM, SKM, JYM, DEPTID, TO_CHAR(CREATETIME,'YYYY-MM-DD HH24:MI:SS') CREATETIME,TYPE,STATUS,ROWNUM
+    	FROM (SELECT ROWNUM RN, T.* FROM (
+    	
+    	SELECT S.*,S1.NAME KPF_NAME,S2.NAME GHF_NAME FROM SXYC_TAX_INVOICE${suffix} S 
+    	LEFT JOIN BASE_DEPART S1 ON S.XSF_ID =S1.ID 
+    	LEFT JOIN BASE_CUSTOMER_INFO S2 ON S.GHF_ID=S2.ID
+    	WHERE 1 = 1
+		<include refid="spelist_where"></include>
+		ORDER BY s.CREATETIME DESC
+		
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+	</select>
+	<!-- 查询总数 收购发票-->
+	<select id="spe_listCount" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM SXYC_TAX_INVOICE${suffix} s LEFT JOIN BASE_CUSTOMER_INFO S2 ON S.GHF_ID=S2.ID
+		WHERE 1 = 1 
+		<include refid="spelist_where"></include>
+	</select>
+
+	<!-- 查询发票的公共信息 -->
+	<select id="getById" parameterType="map" resultType="map">
+		SELECT ID, FPQQLSH, JYLSH, KPLX, XSF_ID, XSF_ADD, GHF_ID, 
+		QDBZ, ZSFS, HJJE, HJSE, JSHJ, KCE, BZ, SKR, FHR, KPR, TZDBH,
+		YFPDM, YFPHM, FPDM, FPHM, SKM, JYM, DEPTID, TO_CHAR(CREATETIME,'YYYY-MM-DD HH24:MI:SS') CREATETIME, 
+		KPRQ, TYPE, STATUS 
+		FROM SXYC_TAX_INVOICE${suffix}
+		WHERE ID=#{id}
+	</select>
+	<select id="listDetail" parameterType="map" resultType="map">
+		SELECT ID, INVOICE_ID, SCALE_COUNT, FPHXZ, SPMC, SPSM, GGXH, 
+		DW, SPSL, DJ, JE, SL, SE, HSBZ, SPBM, ZXBM, YHZCBS, LSLBS, ZZSTSGL 
+		FROM SXYC_TAX_INVOICE_DETAIL${suffix}
+		WHERE INVOICE_ID=#{invoice_id}
+		order by SCALE_COUNT
+	</select>
+	<select id="listInvoice" parameterType="map" resultType="map">
+		SELECT ID, FPQQLSH, JYLSH, KPLX, XSF_ID, XSF_ADD, GHF_ID, 
+		QDBZ, ZSFS, HJJE, HJSE, JSHJ, KCE, BZ, SKR, FHR, KPR, TZDBH,
+		YFPDM, YFPHM, FPDM, FPHM, SKM, JYM, DEPTID, TO_CHAR(CREATETIME,'YYYY-MM-DD HH24:MI:SS') CREATETIME, KPRQ, TYPE, STATUS 
+		FROM SXYC_TAX_INVOICE${suffix}
+		WHERE JYLSH=#{jylsh}
+		ORDER BY FPHM
+	</select>
+	
+</mapper>

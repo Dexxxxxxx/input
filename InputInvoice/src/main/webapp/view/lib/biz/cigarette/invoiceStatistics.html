@@ -1,0 +1,348 @@
+<div>
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase">��ѯ������</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div class="col-md-9 col-sm-9">
+						<div class="dataTables_filter col-md-30" style="margin-left: 10px;width:1300px;">
+							<label style="margin-left: 0px">�ɼ���: </label>
+							<input id="jqbh" name="jqbh" class="form-control input-sm input-sm input-inline" placeholder="ȫ���ɼ���" type="text" text-align: center"></input>
+							<label style="margin-left: 30px" >��Ʊ����: </label>
+							<select id="fplx" name="fplx"  class="selectpicker form-control input-sm input-sm input-inline" style="width: 100px">
+								<option value=""></option>
+								<option value="007">��ֵ˰��ͨ��Ʊ</option>
+								<option value="004">��ֵ˰ר�÷�Ʊ</option>
+							</select>
+							<label>&nbsp;��Ʊʱ�䣺</label> <input
+								class="datePicker date-picker-cst" name="start_date" type="text"
+								id="start_date" style="width: 100px"
+								onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+							<label class="input-inline">��</label> <input
+								class="datePicker date-picker-cst" name="end_date" type="text" style="width: 100px"
+								id="end_date"
+								onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})">
+<!-- 							<label style="padding-left: 20px"><input type="checkbox"/>������Ʊ</label> -->
+<!-- 							<label>&nbsp;&nbsp;&nbsp;�����·ݣ�</label> <input -->
+<!-- 								class="datePicker date-picker-cst" name="start_date" type="text" -->
+<!-- 								id="start_date" -->
+<!-- 								onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})"> -->
+<!-- 							<label class="input-inline">��</label> <input -->
+<!-- 								class="datePicker date-picker-cst" name="end_date" type="text" -->
+<!-- 								id="end_date" -->
+<!-- 								onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})"> -->
+							<div style="margin-left: 0px;margin-top: 10px;">
+								<label style="padding-left: 0px"><input id="query" name="check" value="0.17" type="checkbox"/>17%</label>
+								<label style="padding-left: 40px"><input id="queryOne" name="checkOne" value="0.13" type="checkbox"/>13%</label>
+								<label style="padding-left: 40px"><input id="queryTwo" name="checkTwo" value="0.11" type="checkbox"/>11%</label>
+								<label style="padding-left: 40px"><input id="queryThree" name="checkThree" value="0.6" type="checkbox"/>6%</label>
+								<label style="padding-left: 40px"><input id="queryFour" name="checkFour" value="0.5" type="checkbox"/>5%</label>
+								<label style="padding-left: 40px"><input id="queryFive" name="checkFive" value="0.4" type="checkbox"/>4%</label>
+								<label style="padding-left: 40px"><input id="querySix" name="checkSix" value="0.3" type="checkbox"/>3%</label>
+								<label style="padding-left: 40px"><input id="querySeven" name="checkSeven" value="0.15" type="checkbox"/>1.5%</label>
+								<label style="padding-left: 40px"><input id="queryEight" name="checkEight" value="0" type="checkbox"/>��˰</label>
+							</div>
+							<div >
+								<button id="cx" style="margin-left:0px;margin-top: 10px" class="btn sbold gray">
+									<i class="glyphicon glyphicon-search"></i>&nbsp;��ѯ
+								</button>
+<!-- 								<button id="dc" style="margin-left:20px;margin-top: 10px" id="btn-export" class="btn sbold gray"> -->
+<!-- 									<i class="glyphicon glyphicon-export"></i>&nbsp;����EXCEL -->
+<!-- 								</button> -->
+							</div>
+							<!--��Ʊ���ô���� -->
+							<div class="portlet-title">
+								<div id="lyc" class="caption font-dark" style="margin-left: 0px">
+									<i class="icon-settings font-dark"></i> <span
+									class="caption-subject bold uppercase" style="font-size: 16px">��Ʊ���ô������</span>
+								</div>
+								<div id="data-tCount" class="fs" style="margin-top: 20px">
+									<span class="fs1" style="margin-left: 0px"></span>
+									<span class="fs2" style="padding-left: 230px"></span>
+									<span class="fs3" style="padding-left: 230px"></span>
+									<span class="fs4" style="padding-left: 230px"></span> 
+ 								</div> 
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="dataTables_wrapper no-footer">
+					<div class="table-scrollable">
+						<table
+							class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							id="sample_1" role="grid" aria-describedby="sample_1_info"
+							style="table-layout: fixed; word-break: break-all; overflow: hidden; word-wrap: break-word;">
+							<thead>
+								<tr id="xz" role="row">
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6.5%;text-align: center">���</th>
+									<th name="xmm" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">��Ŀ���</th>
+									<th name="hj" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">�ϼ�</th>
+									<th name="slOne" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">17%</th>
+									<th name="slTwo" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">13%</th>
+									<th name="slThree" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">11%</th>
+									<th name="slFour" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">6%</th>
+									<th name="slFive" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">5%</th>
+									<th name="slSix" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">4%</th>
+									<th name="slSeven" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">3%</th>
+									<th name="slEight" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">1.5%</th>
+									<th name="slNine" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">��˰</th>		
+<!-- 									<th class="sorting_disabled" tabindex="0" -->
+<!-- 										aria-controls="sample_1" rowspan="1" colspan="1" -->
+<!-- 										style="width: 5%;text-align: center">����</th> -->
+								</tr>
+							</thead>
+							<tbody id="data-tbody">
+								<tr id="trOne">
+									<td style="text-align: center">1</td>
+									<td style="text-align: center">����������</td>
+									<td style="text-align: center"></td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+								<tr id="trTwo">
+									<td style="text-align: center">2</td>
+									<td style="text-align: center">������Ͻ��</td>
+									<td style="text-align: center"></td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+								<tr id="trThree">
+									<td id="tdOne" style="text-align: center">3</td>
+									<td id="tdTwo" style="text-align: center">�������</td>
+									<td style="text-align: center"></td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+								<tr id="trFour">
+									<td id="tdOne" style="text-align: center">4</td>
+									<td id="tdTwo" style="text-align: center">����Ͻ��</td>
+									<td style="text-align: center"></td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+								<tr id="trFive">
+									<td id="tdOne" style="text-align: center">5</td>
+									<td id="tdTwo" style="text-align: center">����ʵ�ʽ��</td>
+									<td style="text-align: center"></td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+								<tr id="trSix">
+									<td id="tdOne" style="text-align: center">6</td>
+									<td id="tdTwo" style="text-align: center">��������˰��</td>
+									<td style="text-align: center"></td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+								<tr id="trSeven">
+									<td id="tdOne" style="text-align: center">7</td>
+									<td id="tdTwo" style="text-align: center">�������˰��</td>
+									<td style="text-align: center"> </td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+								<tr id="trEight">
+									<td id="tdOne" style="text-align: center">8</td>
+									<td id="tdTwo" style="text-align: center">�����˰��</td>
+									<td style="text-align: center"></td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+								<tr id="trNine">
+									<td id="tdOne" style="text-align: center">9</td>
+									<td id="tdTwo" style="text-align: center">�����˰��</td>
+									<td style="text-align: center"></td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+								<tr id="trTen">
+									<td id="tdOne" style="text-align: center">10</td>
+									<td id="tdTwo" style="text-align: center">����ʵ��˰��</td>
+									<td style="text-align: center"></td>
+									<td class="tdOne" style="text-align: center"></td>
+									<td class="tdTwo" style="text-align: center"></td>
+									<td class="tdThree" style="text-align: center"></td>
+									<td class="tdFour" style="text-align: center"></td>
+									<td class="tdFive" style="text-align: center"></td>
+									<td class="tdSix" style="text-align: center"></td>
+									<td class="tdSeven" style="text-align: center"></td>
+									<td class="tdEight" style="text-align: center"></td>
+									<td class="tdNine" style="text-align: center"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div aria-hidden="true" id="ajax-modal-choice" class="modal fade" tabIndex="-1" role="dialog">
+	<div class="modal-dialog" style="width: 40%;">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+					<span id="lblAddTitle" style="font-weight: bold">�̺��б�</span> <span
+						id="titles" style="color: red"></span>
+				</h5>
+			</div>
+			<div class="modal-body">
+				<form id="search-form-disk" method="post">
+				<div class="col-md-9 col-sm-9">
+						<div class="dataTables_filter">
+							<label>�� ��:
+								<input type="search" id="search_key" name="search_key" class="form-control input-sm input-inline">
+							</label>
+						</div>
+						</div>
+					<div class="col-md-3 col-sm-3">
+						<button id="sample_editable_1_new" class="btn sbold green">
+							��ѯ&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+						<!-- <button id="sample_editable_1_new" class="btn sbold green">
+							ѡ������&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button> -->
+					</div>
+				</form>
+				<br>
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<div class="table-scrollable">
+							<table
+								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+								id="sample_3" role="grid" aria-describedby="sample_1_info">
+								<thead>
+									<tr role="row">
+										<th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 5%;">
+											<div class="checker">
+											<span><input type="checkbox"  id="checkall" class="group-checkable"
+											data-set="#sample_1 .checkboxes"></span>
+											</div>
+										</th>
+										<th class="sorting_disabled" tabindex="0"
+											aria-controls="sample_1" rowspan="1" colspan="1"
+											style="width: 25%;">��˾���</th>
+										<th class="sorting_disabled" tabindex="0"
+											aria-controls="sample_1" rowspan="1" colspan="1"
+											style="width: 25%;">˰��</th>
+										<th class="sorting_disabled" tabindex="0"
+											aria-controls="sample_1" rowspan="1" colspan="1"
+											style="width: 25%;">�ɼ������</th>
+										<th class="sorting_disabled" tabindex="0"
+											aria-controls="sample_1" rowspan="1" colspan="1"
+											style="width: 25%;">��Ʊ��ţ��̺ţ�</th>
+										</tr>
+								</thead>
+								<tbody id="data-tbody-disk"></tbody>
+							</table>
+						</div>
+						<div class="row" id="page-div-disk"></div>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="confirm" class="btn default" data-dismiss="modal">
+				ȷ ��</button>
+				<button type="button" class="btn default" data-dismiss="modal">
+				�� ��</button>
+			</div>
+		</div>
+	</div>
+</div>

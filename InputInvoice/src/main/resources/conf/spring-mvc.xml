@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+http://www.springframework.org/schema/mvc 
+http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<!-- 自动扫描controller包下的所有类，使其认为spring mvc的控制器 -->
+	<context:component-scan base-package="com.cdhy.controller" />
+
+	<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/html;charset=UTF-8</value>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+<!-- 	<bean id="beanDefineConfigue" class="com.cdhy.job.InitAccess_Token"></bean> -->
+	<!-- 配置json时，如果是字符串的话，去掉引号 -->
+	<bean id="messageAdapter"
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<!-- Support JSON -->
+				<bean
+					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="mappingJacksonHttpMessageConverter" /><!-- json转换器 -->
+			</list>
+		</property>
+	</bean>
+
+	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/" p:suffix=".html" />
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding">
+			<value>UTF-8</value>
+		</property>
+		<property name="maxUploadSize">
+			<value>32505856</value><!-- 上传文件大小限制为31M，31*1024*1024 -->
+		</property>
+		<property name="maxInMemorySize">
+			<value>4096</value>
+		</property>
+	</bean>
+	
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.framework.interceprots.EncodingInterceptor"
+				p:encoding="UTF-8" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.framework.interceprots.AuthInterceptor">
+				<property name="excludeNamespace">
+					<list>
+						<value>/pub/sys/</value>
+						<value>/invoiceCall</value>
+						<value>/cigarette/common/</value>
+					</list>
+				</property>
+				<property name="excludeUrls">
+					<list>
+					<value>/security/user/wxQueryDep.do</value>
+						<value>/security/login/login.do</value>
+						<value>/security/login/getLoginUserInfo.do</value>
+						<value>/security/login/logout.do</value>
+						<value>/security/login/updatePassword.do</value>
+						<!-- 角色相关 -->
+<!-- 						<value>/security/role/getTree.do</value> -->
+						<!-- 功能权限相关 -->
+<!-- 						<value>/security/privilege/getTree.do</value> -->
+						<!-- 部门相关 -->
+<!-- 						<value>/security/depart/getTree.do</value> -->
+						<!-- 用户相关 -->
+						<value>/security/user/getAllRoleIdById.do</value>
+						<!-- 部门相关 -->
+<!-- 						<value>/security/nation/getTree.do</value> -->
+						<!-- 首页内容 -->
+						<value>/security/index/list.do</value>
+						<!-- 纳税人信息 -->
+						<value>/tobacco/purchase/getNsrTree.do</value>
+		<!-- 转售开票 -->
+						<!-- 获取某条购买方信息 -->
+						<value>/tobacco/buyer/getById.do</value>
+						<!-- 获取购买方信息 -->
+						<value>/tobacco/buyer/list.do</value>
+						<!-- 获取某条商品信息 -->
+						<value>/tobacco/message/getById.do</value>
+						<!-- 获取商品信息 -->
+						<value>/tobacco/message/list.do</value>
+		<!-- 收购开票 -->
+						<!-- 烟草收购单次开票 -->
+						<value>/tobacco/purchase/doInvoiceByOne.do</value>
+						
+						<value>/tobacco/invoice/listInvoice.do</value>
+						
+						<value>/tobacco/purchase/saveInvoice.do</value>
+						<value>/tobacco/sale/saveInvoice.do</value>
+						
+		<!-- 初始化参数设置 -->
+						<value>/cigarette/common/setting.do</value>
+						<value>/cigarette/common/checkPrint.do</value>
+		<!-- 查看电子发票列表 -->
+						<value>/cigarette/ecigarette/elist.do</value>
+		<!-- 卷烟开具普票 -->
+						<value>/cigarette/gencigarette/saveInvoice.do</value>
+						<value>/cigarette/gencigarette/getInvoiceList.do</value>
+		<!-- 卷烟开具专票 -->
+						<value>/cigarette/specigarette/saveInvoice.do</value>
+						<value>/cigarette/specigarette/getInvoiceList.do</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+</beans>

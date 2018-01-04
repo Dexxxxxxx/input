@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.cigarette.CigarInvoiceMapper">
+	<sql id="list_where">
+		<if test="search_key !=null and search_key !=''">
+			AND(
+			FPDM  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR FPHM  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR GHDWSBH  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR GHDWMC LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)
+		</if>
+		<if test="start_date !=null and start_date !=''">
+			AND SUBSTR(KPRQ,1,8) &gt;= #{start_date}
+		</if>
+		<if test="end_date !=null and end_date !=''">
+			AND SUBSTR(KPRQ,1,8) &lt;= #{end_date}
+		</if>
+		<if test="qdbz !=null and qdbz !=''">
+			and qdbz= #{qdbz}
+		</if>
+		<if test="type !=null and type !=''">
+			AND  TYPE=#{type}
+		</if>
+		<if test="status !=null and status !=''">
+			AND　STATUS=#{status}
+		</if>
+		<if test="yh !=null and yh !=''">
+			AND　GHDWDM=#{yh}
+		</if>
+		<if test="dystatus !=null and dystatus !=''">
+			AND　DYSTATUS=#{dystatus}
+		</if>
+		<if test="kplx !=null and kplx !=''">
+			AND　kplx=#{kplx}
+		</if>
+	</sql>
+	<!-- 分页list -->
+	<select id="list" parameterType="map" resultType="map">
+		select id, order_no, invoice_no, fpdm, fphm, fpzt, scbz, kprq, 
+		jqbh, skm, jym, tspz, xhdwsbh, xhdwmc, xhdwdzdh, xhdwyhzh, GHDWDM, 
+		ghdwsbh, ghdwmc, ghdwdzdh, ghdwyhzh, zsfs, hjje, hjse, jshj, kce, bz, skr, 
+		fhr, kpr, deptid, qdbz, ssyf, yfpdm, yfphm, zfrq, zfr, type, url, status,dystatus
+		FROM (SELECT ROWNUM RN, T.* FROM (
+
+		SELECT  T.* 
+		FROM CIGARETTE_INVOICE T 
+		
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+		ORDER BY T.FPDM ASC,T.FPHM	ASC
+
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+	</select>
+	<!-- 分页总数 -->
+	<select id="listCount" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM CIGARETTE_INVOICE t
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+	</select>
+	<!-- 获取某张发票的公共信息 -->
+	<select id="getInvoice" parameterType="map" resultType="map">
+		SELECT 
+		ID, FPQQLSH, ORIG_ID, KPLX, XSF_ID, GHF_NSRSBH, GHF_NAME, GHF_ADD_PHONE, GHF_BANK_ACCOUNT, 
+		QDBZ, ZSFS, HJJE, HJSE, JSHJ, KCE, BZ, SKR, FHR, KPRID, TZDBH, YFPDM, YFPHM, FPDM, FPHM, 
+		SKM, JYM, DEPTID, TO_CHAR(CREATETIME,'YYYY-MM-DD HH24:MI:SS') CREATETIME, KPRQ, TYPE, STATUS, ZFR, ZFRQ, ZFZT 
+		FROM CIGARETTE_INVOICE
+		WHERE ID=#{id}
+	</select>
+	<!-- 获取发票详情 -->
+	<select id="getById" parameterType="map" resultType="map">
+		SELECT ID, ORDER_NO, INVOICE_NO, FPDM, FPHM, FPZT, SCBZ, KPRQ, JQBH, SKM, JYM, 
+		TSPZ, XHDWSBH, XHDWMC, XHDWDZDH, XHDWYHZH, GHDWDM, GHDWSBH, GHDWMC, GHDWDZDH, 
+		GHDWYHZH, ZSFS, HJJE, HJSE, JSHJ, KCE, BZ, SKR, FHR, KPR, DEPTID, QDBZ, SSYF, 
+		YFPDM, YFPHM, ZFRQ, ZFR, TYPE, URL, STATUS 
+		FROM CIGARETTE_INVOICE 
+		WHERE ID=#{id}
+	</select>
+	<!-- 删除发票 -->
+	<delete id="delete" parameterType="map">
+		DELETE CIGARETTE_INVOICE 
+		WHERE INVOICE_NO=#{invoice_no}
+	</delete>
+	<!-- 删除发票 -->
+	<delete id="deleteById" parameterType="map">
+		DELETE CIGARETTE_INVOICE 
+		WHERE ID=#{id}
+	</delete>
+	<!-- 获取发票开具情况 -->
+	<select id="listInvoice" parameterType="map" resultType="map">
+		SELECT ID, FPQQLSH, KPLX, QDBZ, HJJE, HJSE, JSHJ, KCE, BZ, SKR, FHR, 
+		KPRID,TZDBH, YFPDM, YFPHM, FPDM, FPHM,KPRQ, TYPE, STATUS
+		FROM (SELECT ROWNUM RN, T.* FROM (
+		select id, fpqqlsh, kplx, qdbz, hjje, hjse, jshj, kce, bz, skr, fhr, kprid,
+    	tzdbh, yfpdm, yfphm, fpdm, fphm,kprq, type, status
+    	from cigarette_invoice
+		<where>
+			<if test="fpqqlsh !=null and fpqqlsh !=''">
+				and orig_id=#{fpqqlsh}
+			</if>
+			<if test="batch_id !=null and batch_id !=''">
+				and batch_id=#{batch_id}
+			</if>
+		</where>
+		ORDER BY FPDM,FPHM
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+	</select>
+	<select id="listInvoiceCount" parameterType="map" resultType="int">
+		select count(*) from cigarette_invoice
+		<where>
+			<if test="fpqqlsh !=null and fpqqlsh !=''">
+				and orig_id=#{fpqqlsh}
+			</if>
+			<if test="batch_id !=null and batch_id !=''">
+				and batch_id=#{batch_id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 保存发票信息 -->
+	<insert id="save" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into cigarette_invoice
+  		(id, order_no, invoice_no,tspz, xhdwsbh, xhdwmc, xhdwdzdh, xhdwyhzh,
+  		GHDWDM, ghdwsbh, ghdwmc, ghdwdzdh, ghdwyhzh, zsfs,kplx, hjje, hjse, jshj, kce, bz, skr, fhr, kpr, deptid, 
+  		qdbz, ssyf, yfpdm, yfphm, zfrq, zfr, type, status)
+		values
+  		(#{id}, #{order_no}, #{invoice_no},
+  		#{tspz}, #{xhdwsbh}, #{xhdwmc}, #{xhdwdzdh}, #{xhdwyhzh}, 
+  		#{ghdwdm}, #{ghdwsbh}, #{ghdwmc}, #{ghdwdzdh}, #{ghdwyhzh}, #{zsfs},#{kplx}, #{hjje}, #{hjse}, #{jshj}, #{kce}, #{bz}, #{skr}, #{fhr}, #{kpr}, #{deptid}, 
+  		#{qdbz}, #{ssyf}, #{yfpdm}, #{yfphm}, #{zfrq}, #{zfr}, #{type}, #{status})
+	</insert>
+	<!-- 保存红票信息 -->
+	<insert id="saveRed" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into cigarette_invoice
+  		(id, order_no, invoice_no, fpdm, fphm, fpzt, scbz, kprq, jqbh, skm, jym, 
+  		tspz, xhdwsbh, xhdwmc, xhdwdzdh, xhdwyhzh, ghdwdm, ghdwsbh, ghdwmc, ghdwdzdh, 
+  		ghdwyhzh, zsfs,kplx, hjje, hjse, jshj, kce, bz, skr, fhr, kpr, deptid, qdbz, ssyf, 
+  		yfpdm, yfphm, zfrq, zfr, type, url, status, hpurl, dystatus)
+		values
+  		(#{id}, #{order_no}, #{invoice_no}, #{fpdm}, #{fphm}, #{fpzt}, #{scbz}, #{kprq}, #{jqbh}, #{skm}, #{jym}, 
+  		#{tspz}, #{xhdwsbh}, #{xhdwmc}, #{xhdwdzdh}, #{xhdwyhzh}, #{ghdwdm}, #{ghdwsbh}, #{ghdwmc}, #{ghdwdzdh}, 
+  		#{ghdwyhzh}, #{zsfs},#{kplx}, #{hjje}, #{hjse}, #{jshj}, #{kce}, #{bz}, #{skr}, #{fhr}, #{kpr}, #{deptid}, #{qdbz}, #{ssyf}, 
+  		#{yfpdm}, #{yfphm}, #{zfrq}, #{zfr}, #{type}, #{url}, #{status}, #{hpurl}, #{dystatus})
+	</insert>
+	<!-- 修改开票状态 -->
+	<update id="update" parameterType="map">
+		update cigarette_invoice
+   		set 
+   		<if test="fpdm !=null and fpdm !=''">
+			fpdm = #{fpdm},
+		</if>
+		<if test="fphm !=null and fphm !=''">
+			fphm = #{fphm},
+		</if>
+		<if test="skm !=null and skm !=''">
+			skm = #{skm},
+		</if>
+		<if test="jym !=null and jym !=''">
+			jym = #{jym},
+		</if>
+       	<if test="kprq !=null and kprq !=''">
+			kprq = #{kprq},
+		</if>
+		<if test="url !=null and url !=''">
+			url = #{url},
+		</if>
+      	status = #{status}
+ 		where id = #{id}
+	</update>
+	<!-- 修改作废状态 -->
+	<update id="updateCancel" parameterType="map">
+		update cigarette_invoice
+   		set
+   		<if test="zfr !=null and zfr !=''">
+			zfr = #{zfr},
+		</if>
+		<if test="zfrq !=null and zfrq !=''">
+			zfrq = #{zfrq},
+		</if>
+		<if test="zfzt !=null and zfzt !=''">
+			zfzt = #{zfzt},
+		</if>
+		status = #{status}
+		where 
+		fpdm=#{fpdm} and fphm=#{fphm}
+	</update>
+	<!-- 修改发票打印状态-->
+	<update id="updateDyStatus">
+		update cigarette_invoice
+		set dystatus=#{dystatus}
+		where fpdm=#{fpdm} and fphm=#{fphm}
+	</update>
+	<select id="getByInvoice_no" parameterType="map" resultType="map"> 
+		SELECT ID, ORDER_NO, INVOICE_NO, FPDM, FPHM, FPZT, SCBZ, KPRQ, JQBH, SKM, JYM, 
+		TSPZ, XHDWSBH, XHDWMC, XHDWDZDH, XHDWYHZH, GHDWDM, GHDWSBH, GHDWMC, GHDWDZDH, 
+		GHDWYHZH, ZSFS, HJJE, HJSE, JSHJ, KCE, BZ, SKR, FHR, KPR, DEPTID, QDBZ, SSYF, 
+		YFPDM, YFPHM, ZFRQ, ZFR, TYPE, URL, STATUS 
+		FROM CIGARETTE_INVOICE 
+		WHERE 1=1 
+		<if test="invoice_no !=null and invoice_no !=''">
+			and  INVOICE_NO = #{invoice_no} 
+		</if>
+		<if test="order_no !=null and order_no !=''">
+			and  ORDER_NO = #{order_no}
+		</if>
+		<if test="status !=null and status !=''">
+			and  status = #{status} 
+		</if>
+		ORDER BY FPDM,FPHM
+		
+	</select>
+	<select id="getByDmHm" parameterType="map" resultType="map">
+		SELECT ID, ORDER_NO, INVOICE_NO, FPDM, FPHM, FPZT, SCBZ, KPRQ, JQBH, SKM, JYM, 
+		TSPZ, XHDWSBH, XHDWMC, XHDWDZDH, XHDWYHZH, GHDWDM, GHDWSBH, GHDWMC, GHDWDZDH, 
+		GHDWYHZH, ZSFS, HJJE, HJSE, JSHJ, KCE, BZ, SKR, FHR, KPR, DEPTID, QDBZ, SSYF, 
+		YFPDM, YFPHM, ZFRQ, ZFR, TYPE, URL, STATUS 
+		FROM CIGARETTE_INVOICE 
+		WHERE FPDM=#{fpdm} AND FPHM=#{fphm}
+	</select>
+</mapper>

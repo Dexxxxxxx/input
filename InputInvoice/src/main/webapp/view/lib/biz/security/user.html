@@ -1,0 +1,154 @@
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span class="caption-subject bold uppercase"> 用户管理 </span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter col-md-12">
+							<label>搜 索 :
+								<input type="search" name=seach_key class="form-control input-sm input-small input-inline" placeholder="姓名，账户，电话">
+							</label>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2">
+						<button id="sample_editable_1_seach" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="btn-group">
+							<button id="btn-new" class="btn sbold green">
+								 新 增 
+							</button>
+						</div>
+						<div class="btn-group">
+							<button id="btn-start" class="btn sbold green">
+								 启  用 
+							</button>
+						</div>
+						<div class="btn-group">
+							<button id="btn-del" class="btn sbold green">
+								 禁 用 
+							</button>
+						</div>
+						<div class="btn-group">
+							<button id="btn-deluser" class="btn sbold green">
+								 删 除 
+							</button>
+						</div>
+						<div class="btn-group">
+							<button id="reset-pwd" class="btn sbold green">
+								 重置密码 
+							</button>
+						</div>
+						<div class="btn-group">
+							<button id="showrole" class="btn sbold green">
+								 设置角色 
+							</button>
+						</div>
+						<!-- 暂未启用 -->
+						<!-- <div class="btn-group">
+							<button id="showdepart" class="btn sbold green">
+								 权限控制 
+							</button>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="dataTables_wrapper no-footer">
+				<div class="table-scrollable">
+					<table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1" role="grid" 
+						aria-describedby="sample_1_info"
+						style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 5%;">
+									<div class="checker">
+										<span><input type="checkbox" class="group-checkable" id="check_group" 
+											data-set="#sample_1 .checkboxes"></span>
+									</div>
+								</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">真实姓名</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">性别</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">登录账户</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">电子邮件</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">联系电话</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">所属机构</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">是否禁用</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">创建时间</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">操作</th>
+							</tr>
+						</thead>
+						<tbody id="data-tbody"></tbody>
+					</table>
+				</div>
+				<div class="row" id="page-div"></div>
+			</div>
+		</div>
+	</div>
+
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1"
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <i class="icon-pencil"></i>
+                    <span id="lblAddTitle" style="font-weight:bold">设置角色</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="portlet-body">
+							<div id="tree_2" class="ztree"></div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn default" data-dismiss="modal">返回</button>
+					<button type="button" class="btn blue" id="save-role">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div aria-hidden="true" id="ajax-modal1" class="modal fade" tabIndex="-1"
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				 <h5 class="modal-title">
+                    <i class="icon-pencil"></i>
+                    <span id="lblAddTitle" style="font-weight:bold">设置管理部门</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="portlet-body">
+							<div id="tree_3" class="ztree" style="overflow-y:scroll;height: 700px"></div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn default" data-dismiss="modal">返回</button>
+					<button type="button" class="btn blue" id="save-depart">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

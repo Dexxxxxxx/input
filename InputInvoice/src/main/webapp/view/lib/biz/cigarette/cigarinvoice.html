@@ -1,0 +1,327 @@
+<div>
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase"> 卷烟发票管理</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+						<div>
+						<div class="dataTables_filter col-md-12 col-sm-12">
+							<label>搜 索 : 
+							<input type="search" name="search_key" id="search_key" style="width: 120px;"
+								class="form-control input-sm input-sm input-inline"
+								placeholder="单号、购方名称">
+							</label>
+							<label>&nbsp;发票种类：<select
+								class="form-control input-sm input-sm input-inline" style="width:90px;"
+								name="type" id="type">
+								<!-- <option value="ALL">全部</option> -->
+								<option value="004">专票</option>
+								<option value="007">普票</option>
+								<option value="026">电子发票</option>
+							</select>
+							</label>
+							<label>&nbsp;开票类型：<select
+										class="form-control input-sm input-sm input-inline" style="width:120px;"
+										name="kplx" id="kplx">
+										<option value="0">正数票(蓝票)</option>
+										<option value="1">负数票(红票)</option>
+								</select>
+							</label>
+							<label>&nbsp;发票状态： <select
+								class="form-control input-sm input-sm input-inline" style="width:75px;"
+								name="status" id="status">
+								<option value="1">正常</option>
+								<option value="-1">已作废</option>
+							</select>
+							</label>
+							
+						</div>
+					</div>
+					<div>
+					<div class="col-md-9 col-sm-9">
+						<label>清单标志：  <select
+								class="form-control input-sm input-sm input-inline" style="width:90px;"
+								name="qdbz" id="qdbz">
+								<option value="">全部</option>
+								<option value="0">否</option>
+								<option value="1">是</option>
+							</select>
+						</label>
+						<label>&nbsp;打印状态：<select
+										class="form-control input-sm input-sm input-inline" style="width:90px;"
+										name="dystatus" id="dystatus">
+										<option value="">全部</option>
+										<option value="1">已打印</option>
+										<option value="0">未打印</option>
+								</select>
+						</label>
+						<label>&nbsp;开票日期：<input class="datePicker date-picker-cst" name="start_date" type="text"  style="width: 120px;"
+								id="start_date" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+								&nbsp;&nbsp;至 &nbsp;
+								<input class="datePicker date-picker-cst" name="end_date" type="text" style="width: 120px;"
+								id="end_date" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})">
+						</label>
+					</div>
+					<div class="col-md-3 col-sm-3">
+						<button id="sample_editable_1_seach" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</div>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+			<div class="row">
+				<div class="col-md-10">
+					<button type="button" id="setDefaultPrint" class="btn sbold green btn-sm">
+						设置打印边距
+					</button>
+					<button type="button" id="print" class="btn sbold green btn-sm">
+						打印&nbsp;<i class="icon-printer"></i>
+					</button>
+					<button type="button" id="printlist" class="btn sbold green btn-sm">
+						打印清单&nbsp;<i class="icon-printer"></i>
+					</button>
+					<button type="button" id="cancel" class="btn sbold green btn-sm">
+						作 废
+					</button>
+					<button type="button" id="redInvoice" class="btn sbold green btn-sm">
+						冲 红
+					</button>
+					<button type="button" id="checkInvoice" class="btn sbold green btn-sm">
+						查 看
+					</button>
+					<button type="button" id="rollback" class="btn sbold green btn-sm">
+						回 滚
+					</button>
+				</div>
+				<div class="col-md-2 pull-right">
+							<label>每页：</label>
+							<select name="sample_2_length" aria-controls="sample_2" class="form-control input-sm input-sm input-inline" id="page_status">
+							<option value="10">10</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+							<option value="400">400</option>
+							<option value="400">2000</option>
+							</select>
+							<label>条</label>
+				</div>
+			</div>
+				<div class="dataTables_wrapper no-footer">
+					<div class="table-scrollable">
+						<table class="table table-size table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1" 
+					role="grid" aria-describedby="sample_1_info" style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+							<thead>
+								<tr role="row">
+									<th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 2%;">
+										<div class="checker">
+											<span><input type="checkbox"  id="checkall" class="group-checkable"
+												data-set="#sample_1 .checkboxes"></span>
+										</div>
+									</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">销售单号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 4%;">类型</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;">发票代码</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">发票号码</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 15%;">购方名称</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 15%;">销方名称</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">价税合计</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">开票人</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">开票时间</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 3%;">清单</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">打印状态</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">发票状态</th>
+								</tr>
+							</thead>
+							<tbody id="data-tbody"></tbody>
+						</table>
+					</div>
+					<div class="row" id="page-div"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div aria-hidden="true" id="ajax-modalbar" class="modal fade" tabIndex="-1" 
+	role="dialog" aria-hidden="true" data-backdrop="static">
+	<div class="modal-dialog" style="position: absolute;top: 50%;left: 50%;margin-left: -300px; margin-top: -20px;">
+		<div class="progress">
+    		<div id="bar_progress" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+        	<span id="bar_number">0%</span>
+    		</div>
+		</div>
+		<div>
+			<span style="text-align: center; color: #fff ;width: 100%;font-size: 16px;display: block;">打印文件传输中……</span>
+		</div>
+	</div>
+</div>
+<!-- 模态正文 详情 开始 -->
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog" style="width: 50%;">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <span id="lblAddTitle" style="font-weight:bold">发票明细</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<div class="table-scrollable">
+						
+						
+						<!-- 购方信息详情列表 -->
+							<table
+								class="table table-size table-striped table-bordered table-hover order-column dataTable no-footer"
+								id="sample_3" role="grid" aria-describedby="sample_1_info">
+								<thead>
+									<tr role="row">
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 3%;">序号</th>
+										<!-- <th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 4%;">发票行性质</th> -->
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">商品名称</th>
+										<!-- <th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 5%;">商品编码</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 5%;">自行编码</th> -->
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 5%;">单位</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 8%;">单价</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 7%;">商品数量</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 8%;">金额</th>
+										<!-- <th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 5%;">商品税目</th> -->
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 5%;">税率</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 6%;">税额</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 5%;">含税标志</th>
+									</tr>
+								</thead>
+								<tbody id="data-tbody-detail"></tbody>
+							</table>
+							<tr>
+						</div>
+						<div class="row" id="page-div-detail"></div>
+					</div>
+				</div>
+		
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 设置默认打印边距模态 -->
+<!-- 模态正文 详情 开始 -->
+<div aria-hidden="true" id="defaultPrint" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog" style="width: 30%;">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <span id="lblAddTitle" style="font-weight:bold">设置默认打印边距</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<div class="table-scrollable">
+							<div class="form-inline form-group">
+							<label  for="exampleInputName1">&nbsp;发票种类：</label> <select
+								class="form-control input-sm input-sm input-inline"
+								id="exampleInputName1">
+								<option value="004">专票</option>
+								<option value="007">普票</option>
+							</select>
+    							<label for="exampleInputName2">打印上边距:</label>
+    							<input type="text" class="form-control input-xsmall" id="exampleInputName2" placeholder="打印上边距,输入数字">
+     							<label for="exampleInputName3">打印左边距:</label>
+     							<input type="text" class="form-control input-xsmall" id="exampleInputName3" placeholder="打印左边距,输入数字">
+  							</div>
+						</div>
+						<div class="row" id="page-div-detail"></div>
+					</div>
+				</div>
+		
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn green" id="sureDefaultPrint"> 确 定 </button>
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 同步冲红发票 -->
+<div aria-hidden="true" id="ajax-modal-red" class="modal fade" tabIndex="-1" role="dialog">
+			<div class="modal-dialog">
+				<form method="post" id="pwd_form" class="form-horizontal">
+					<div class="modal-content">
+						<div class="modal-header">
+							<div class="caption">
+								<i class="icon-settings font-red"></i> 
+								<span class="caption-subject font-red sbold uppercase" id="fn_tittle">同步冲红发票</span>
+							</div>
+						</div>
+						<div class="modal-body">
+							<div class="form-body">
+								<input type="text"  class="form-control" id="invoice_id" style="display: none"/>							
+								<div class="form-group">
+									<label class="control-label col-md-3">发票代码 <span class="required"> * </span>
+									</label>
+									<div class="col-md-6">
+										<input type="text" name="fpdm" class="form-control" id="fpdm" />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="control-label col-md-3">发票号码<span class="required"> * </span>
+									</label>
+									<div class="col-md-6">
+										<input type="text" name="fphm" class="form-control" id="fphm" />
+									</div>
+								</div>
+								
+								<div class="form-group text-center">
+									<div class="text-left" style="margin: 0 auto;width: 475px;color:#ff0000;">
+										专普票冲红在税控服务器上执行，将返回的发票代码、发票号码在本系统中同步
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+							<button type="button" class="btn blue" id="savered"> 提 交 </button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>

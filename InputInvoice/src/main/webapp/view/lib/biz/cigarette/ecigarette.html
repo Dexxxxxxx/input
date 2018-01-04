@@ -1,0 +1,302 @@
+<div>
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase"> 卷烟电票</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div class="col-md-9 col-sm-9">
+						<div class="dataTables_filter col-md-12">
+							<label>搜 索 : </label> <input type="search" name="search_key"
+								id="search_key"
+								class="form-control input-sm input-sm input-inline"
+								placeholder="单据号、购方单位名称"> <label>&nbsp;开票状态：</label> <select
+								class="form-control input-sm input-sm input-inline"
+								name="invoice_status" id="invoice_status">
+								<!-- <option value="ALL">全部</option> -->
+								<option value="0">未开票</option>
+								<option value="1">已开票</option>
+								<option value="2">失败</option>
+							</select> 
+							<!-- <label>&nbsp;售出时间：</label> 
+							<input
+								class="datePicker date-picker-cst" name="start_date" type="text"
+								id="start_date"
+								onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+							<label class="input-inline">至</label> 
+							<input
+								class="datePicker date-picker-cst" name="end_date" type="text"
+								id="end_date"
+								onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})"> -->
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-3">
+						<button id="sample_editable_1_seach" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+						<button type="button" id="reSetTable" class="btn sbold green">
+							显示全部&nbsp;</button>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="row">
+					<div class="col-md-10">
+						<div class="btn-group">
+							<button id="btn-FpInfo" class="btn sbold green">开 票</button>
+						</div>
+						<!-- <div class="btn-group">
+							<button id="btn-del" class="btn sbold green">删 除</button>
+						</div> -->
+					</div>
+					<div class="col-md-2 pull-right">
+							<label>每页：</label>
+							<select name="sample_2_length" aria-controls="sample_2" class="form-control input-sm input-sm input-inline" id="page_status">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+							<option value="400">400</option>
+							</select>
+							<label>条</label>
+					</div>
+				</div>
+				<div class="dataTables_wrapper no-footer">
+					<div class="table-scrollable">
+						<table
+							class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+							id="sample_1" role="grid" aria-describedby="sample_1_info"
+							style="table-layout: fixed; word-break: break-all; overflow: hidden; word-wrap: break-word;">
+							<thead>
+								<tr role="row">
+									<th class="sorting_disabled" rowspan="1" colspan="1"
+										aria-label="" style="width: 2%;">
+										<div class="checker">
+											<span><input type="checkbox" id="checkall"
+												class="group-checkable" data-set="#sample_1 .checkboxes"></span>
+										</div>
+									</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 8%;">销售单据号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 15%;">购方单位名称</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 8%;">购方税号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 20%;">经营地址</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 12%;">开户行及账号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">导入日期</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">操作</th>	
+								</tr>
+							</thead>
+							<tbody id="data-tbody"></tbody>
+						</table>
+					</div>
+					<div class="row" id="page-div"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="fiex dn" style="display:none"><img src="loading2.gif" /></div>
+<!-- 模态正文 详情 开始 -->
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog" style="width: 50%;">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <span id="lblAddTitle" style="font-weight:bold">销售单据详情</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<table
+								class="table table-hover order-column dataTable no-footer"
+								id="sample_4" role="grid" aria-describedby="sample_1_info" style="margin-bottom:0;">
+								<thead>
+									<tr role="row">
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;border-bottom: 0;">单据编号</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;border-bottom: 0;">名称</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;border-bottom: 0;">规格</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;border-bottom: 0;">数量</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;border-bottom: 0;">单价</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;border-bottom: 0;">税率</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 17%;border-bottom: 0;">含税金额</th>
+									</tr>
+								</thead>
+							</table>
+						<div class="table-scrollable"  style="overflow-y:scroll;height: 350px;margin-top:0">
+						<!-- 卷烟详情列表 -->
+							<table
+								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+								id="sample_4" role="grid" aria-describedby="sample_1_info" style="margin-top:0">
+								<tbody id="data-tbody-detail"></tbody>
+							</table>
+							<tr>
+						</div>
+						<div class="row" id="page-div-detail"></div>
+					</div>
+				</div>
+		
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 模态正文  详情  结束 -->
+
+
+<!-- 模态正文 详情 开始 -->
+<div aria-hidden="true" id="ajax-FpInfo" class="modal fade"
+	tabIndex="-1" role="dialog">
+	<div class="modal-dialog" style="width: 60%;">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+					<span id="lblAddTitle" style="font-weight: bold">开票详情</span>
+				</h5>
+			</div>
+			<div class="modal-body">
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<div class="table-scrollable" style="overflow-y:scroll;height: 400px">
+							<!-- 购方信息详情列表 -->
+							<table
+								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+								id="sample_5" role="grid" aria-describedby="sample_1_info">
+								<thead>
+									<tr role="row">
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1"style="width: 15%;">销售单据号</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1"style="width: 10%;">发票种类</th>
+										<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"style="width: 13%;">发票代码</th>
+										<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"style="width: 12%;">发票号码</th>
+										<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"style="width: 10%;">合计金额</th>
+										<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"style="width: 10%;">合计税额</th>
+										<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"style="width: 10%;">价税合计</th>
+ 										<!-- <th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"style="width: 10%;">开票状态</th> -->
+										<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"style="width: 20%;">操作（状态）</th>
+									</tr>
+								</thead>
+								<tbody id="data-tbody-FpInfo"></tbody>
+							</table>
+							<tr>
+						</div>
+						<div class="row" id="page-div-detail"></div>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal">返 回</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 模态正文  详情  结束 -->
+
+
+
+<!-- 模态修改客户信息 -->
+<div aria-hidden="true" id="modal-customerinfo" class="modal fade" tabIndex="-1" role="dialog">
+	<div class="modal-dialog">
+		<form method="post" id="customerinfo_form" class="form-horizontal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="caption">
+						<i class="fa fa-edit font-red"></i> 
+						<span class="caption-subject font-red sbold uppercase">客户信息修改</span>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-3">销售单据号</label>
+							<div class="col-md-8">
+								<input readonly="readonly" type="text" name="invoice_no" class="form-control" id="invoice_no" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">购方单位代码 </label>
+							<div class="col-md-8">
+								<input readonly="readonly" type="text" name="ghdwdm" class="form-control" id="ghdwdm" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3"><span class="required"> * </span>购方单位名称 </label>
+							<div class="col-md-8">
+								<input readonly="readonly" type="text" name="ghdwmc" class="form-control" id="ghdwmc" />
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="control-label col-md-3">购方纳税识别号 </label>
+							<div class="col-md-8">
+								<input  type="text" name="ghdwnsrsbh" class="form-control" id="ghdwnsrsbh" />
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="control-label col-md-3"><span class="required"> * </span>经营地址、电话 </label>
+							<div class="col-md-8">
+								<input type="text" name="ghdwdzdh" class="form-control" id="ghdwdzdh" />
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="control-label col-md-3">开户银行、账号 </label>
+							<div class="col-md-8">
+								<input type="text" name="ghdwyhzh" class="form-control" id="ghdwyhzh" />
+							</div>
+						</div>
+						
+						<div class="form-group text-center">
+							<div class="text-left" style="margin: 0 auto;width: 475px;color:#ff0000;">
+								带有*号的选项为必填项。
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+					<button type="submit" class="btn blue" id="midfy"> 保 存 </button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

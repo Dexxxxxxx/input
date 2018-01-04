@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpl>
+    <sms>
+        <id>sms.tpl.bindcode</id>
+        <text>本次操作的验证码为:{0}，您正在进行票聚短信验证操作.如非本人操作请忽略。{1}</text>
+    </sms>
+</tpl>

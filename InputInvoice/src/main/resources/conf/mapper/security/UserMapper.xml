@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.security.UserMapper">
+	<sql id="list_where">
+		<if test="seach_key !=null and seach_key !=''">
+			AND( 
+			NAME LIKE CONCAT(CONCAT('%', #{seach_key}), '%') 
+			OR USERNAME LIKE CONCAT(CONCAT('%', #{seach_key}), '%') 
+			OR PHONE LIKE CONCAT(CONCAT('%', #{seach_key}), '%')
+			OR DEPARTNAME LIKE CONCAT(CONCAT('%', #{seach_key}), '%')
+			)
+		</if>
+	</sql>
+
+	<!-- 查询分页总条数 -->
+	<select id="listCount" resultType="int" parameterType="map">
+
+		SELECT COUNT(*) FROM BASE_USER
+		WHERE 1 = 1
+		 <if test="dpid != null and dpid !=''">
+             AND 	DEPARTID IN (
+				
+                SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY C.PID = PRIOR C.id
+                
+				)
+			</if>
+		<include refid="list_where"></include>
+
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="list" resultType="map" parameterType="map">
+
+	SELECT
+	ID,DEPARTID,DEPARTNAME,USERNAME,PASSWORD,NAME,PHONE,EMAIL,REMARKS,ENABLED,
+	NVL(GENDER,'') GENDER,TO_CHAR(CREATETIME,'yyyy-MM-dd
+	HH24:mi:ss') CREATETIME
+	FROM (SELECT ROWNUM RN, T.* FROM (
+
+	SELECT * FROM BASE_USER
+	WHERE 1 = 1
+	<if test="dpid != null and dpid !=''">
+		AND DEPARTID IN (
+
+		SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY C.PID =
+		PRIOR C.id
+
+		)
+	</if>
+		<include refid="list_where"></include>
+
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+		ORDER BY CREATETIME DESC 
+	</select>
+
+	<!-- 删除用户角色 -->
+	<delete id="deleteUserRole" parameterType="map">
+		<if test="userId !=null and userId !=''">
+			DELETE FROM BASE_ROLE_USER T WHERE T.USERID=#{userId}
+		</if>
+	</delete>
+
+	<!-- 删除用户角色 批量 -->
+	<delete id="deleteUsersRole" parameterType="map">
+		DELETE FROM BASE_ROLE_USER T WHERE T.USERID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 设置角色 -->
+	<select id="setRole" parameterType="map">
+		<if test="userId !=null and userId !='' and roleIds!=null and roleIds!=''">
+			INSERT INTO BASE_ROLE_USER(USERID,ROLE)
+			SELECT #{userId} USERID,T.ID ROLE
+			FROM BASE_ROLE T
+			WHERE T.ID IN
+			<foreach collection="roleIds" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+
+	<!-- 获取用户所有角色ID -->
+	<select id="getAllRoleIdById" resultType="map" parameterType="map">
+	
+		SELECT * FROM BASE_ROLE_USER T WHERE 1=1
+		<if test="userId !=null and userId !=''">
+			AND T.USERID=#{userId}
+		</if>
+	</select>
+	
+	<!-- 删除用户管理部门-->
+	<delete id="deleteUserDepart" parameterType="map">
+		<if test="userId !=null and userId !=''">
+			DELETE FROM BASE_USER_DEPART T WHERE T.USERID=#{userId}
+		</if>
+	</delete>
+	<!-- 设置用户管理部门 -->
+	<select id="setDepart" parameterType="map">
+		<if test="userId !=null and userId !='' and departIds !=null ">
+			INSERT INTO BASE_USER_DEPART(USERID,DEPTID)
+			
+			SELECT #{userId} USERID,T.ID DEPTID
+			FROM BASE_DEPART T
+			WHERE T.ID IN 
+			<foreach collection="array" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 根据ID获取信息 -->
+	<select id="getById" resultType="map" parameterType="map">
+		SELECT ID,DEPARTID,DEPARTNAME,USERNAME,PASSWORD,NAME,PHONE,EMAIL,REMARKS,
+		TO_CHAR(CREATETIME,'yyyy-MM-dd HH24:mi:ss') CREATETIME,ENABLED
+		FROM BASE_USER WHERE ID=#{id}
+	</select>
+
+	<!-- 增加 -->
+	<insert id="add" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		INSERT INTO BASE_USER
+		(ID,DEPARTID,DEPARTNAME,USERNAME,PASSWORD,NAME,PHONE,EMAIL,REMARKS,CREATETIME,GENDER,ENABLED)
+		VALUES
+		(#{id},#{departid},#{departname},#{username},#{password},#{name},#{phone},#{email},#{remarks},SYSDATE,#{gender},#{enabled})
+	</insert>
+
+	<!-- 禁用  -->
+	<delete id="deleteByIds" parameterType="map">
+		UPDATE BASE_USER SET ENABLED=#{enabled} WHERE ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!--启用 -->
+	<update id="startByIds" parameterType="map">
+			UPDATE BASE_USER SET ENABLED=#{enabled} WHERE ID IN
+			<foreach collection="array" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+		</foreach>
+	</update>
+	<!-- 删除用户 -->
+	<delete id="deleteUsers" parameterType="map">
+		DELETE BASE_USER WHERE ID IN
+		<foreach collection="array" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+		</foreach>
+	</delete>
+	<!-- 修改 -->
+	<update id="update" parameterType="map">
+		UPDATE BASE_USER
+		SET
+		DEPARTID=#{departid},
+		DEPARTNAME=#{departname},
+		USERNAME=#{username},
+		NAME=#{name},
+		PHONE=#{phone},
+		EMAIL=#{email},
+		REMARKS=#{remarks},
+		ENABLED=#{enabled},
+		GENDER=#{gender}
+		WHERE ID = #{id}
+	</update>
+	<!-- 获取tree数据 -->
+	<select id="getTree" resultType="map" parameterType="map">
+
+		SELECT T.ID,T.NAME, T2.CHECKED
+		FROM BASE_ROLE T
+		LEFT JOIN (SELECT DISTINCT ROLE ,
+		<choose>
+			<when test="userId !=null and userId !=''">
+				'true'
+			</when>
+			<otherwise>
+				''
+			</otherwise>
+		</choose>
+		CHECKED
+		FROM BASE_ROLE_USER RU
+		WHERE 1 = 1
+		<if test="userId !=null and userId !=''">
+			AND RU.USERID=#{userId}
+		</if>
+		) T2
+		ON T.ID = T2.ROLE
+	</select>
+	
+	<!-- 设置用户所属机构数状图 -->
+	<select id="setUserDepartTree" resultType="map" parameterType="map">
+		SELECT 
+		T.ID AS D_ID,T.PID,T.NAME AS D_NAME,T2.ID AS U_ID,T2.NAME AS U_NAME,T2.USERNAME,T2.CHECKED FROM BASE_DEPART T
+
+		LEFT JOIN (SELECT ID,NAME,USERNAME,DEPARTID,
+		<choose>
+			<when test="userId !=null and userId !=''">
+				'true'
+			</when>
+			<otherwise>
+				''
+			</otherwise>
+		</choose> 
+		CHECKED FROM BASE_USER BU 
+		WHERE 1 = 1 
+		<if test="userId !=null and userId !=''">
+			AND BU.ID = #{userId}
+		</if>
+		) T2 ON T.ID = T2.DEPARTID
+	</select>
+	
+	<select id="getUserByUsername" resultType="map" parameterType="map">
+		SELECT T.USERNAME,T.DEPARTID DEP_ID,TT.NAME DEP_NAME FROM BASE_USER T LEFT JOIN BASE_DEPART TT ON T.DEPARTID=TT.ID
+
+        WHERE  T.USERNAME=#{username} AND T.ENABLED=0
+	</select>
+	
+	<select id="getOrgByDep" resultType="map" parameterType="map">
+	SELECT ORG_NAME FROM (
+	SELECT C.NAME ORG_NAME,C.PID FROM BASE_DEPART C START WITH C.ID = #{DEP_ID}
+	CONNECT BY PRIOR C.PID = C.ID
+	)S WHERE S.PID='-1'
+
+	</select>
+
+</mapper>

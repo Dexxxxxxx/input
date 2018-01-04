@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.tobacco.BaccoSaleMapper">
+	<!-- 开具发票、存入数据库-->
+	<!-- 保存发票信息 -->
+	<insert id="save" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into sxyc_tax_invoice${suffix}
+  		(id, fpqqlsh, jylsh, kplx, xsf_id, ghf_id, qdbz, zsfs, hjje, hjse, jshj, kce, bz, 
+  		skr, fhr, kpr, tzdbh, yfpdm, yfphm, fpdm, fphm, skm, jym, deptid, createtime)
+		values
+  		(#{id}, #{fpqqlsh}, #{jylsh}, #{kplx}, #{xsf_id}, #{ghf_id}, #{qdbz}, #{zsfs}, #{hjje}, #{hjse}, #{jshj}, #{kce}, #{bz}, 
+  		#{skr}, #{fhr}, #{kpr}, #{tzdbh}, #{yfpdm}, #{yfphm}, #{fpdm}, #{fphm}, #{skm}, #{jym}, #{deptid}, sysdate)
+	</insert>
+	<!-- 保存发票详情 -->
+	<insert id="saveDetail" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into sxyc_tax_invoice_detail${suffix}
+  		(id, invoice_id, scale_count, fphxz, spmc, spsm, ggxh, dw, spsl, 
+   		dj, je, sl, se, hsbz, spbm, zxbm, yhzcbs, lslbs, zzstsgl)
+		values
+  		(#{id}, #{invoice_id}, #{scale_count}, #{fphxz}, #{spmc}, #{spsm}, #{ggxh}, #{dw}, #{spsl}, 
+  		#{dj}, #{je}, #{sl}, #{se}, #{hsbz}, #{spbm}, #{zxbm}, #{yhzcbs}, #{lslbs}, #{zzstsgl})
+	</insert>
+	<!-- 修改发票信息 -->
+	<update id="update" parameterType="map">
+		update sxyc_tax_invoice${suffix}
+   		set 
+       	fpdm = #{fpdm},
+       	fphm = #{fphm},
+       	skm = #{skm},
+       	jym = #{jym},
+      	kprq = #{kprq},
+      	type = 2,
+      	status=1
+ 		where fpqqlsh = #{fpqqlsh}
+	</update>
+</mapper>

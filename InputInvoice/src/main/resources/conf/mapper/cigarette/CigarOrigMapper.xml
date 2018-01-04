@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.cigarette.CigarOrigMapper">
+	<sql id="list_where">
+		<if test="search_key!=null and search_key!=''">
+			AND 
+			(
+				COM_NAME LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+				OR
+				COM_TAX_ACCOUNT LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+				OR
+				s.ORIG_ID LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)	
+		</if>
+		<if test="start_date !=null and start_date !=''">
+			and to_date(sale_date,'yyyy-MM-dd')&gt;=to_date(#{start_date},'yyyy-MM-dd')
+		</if>
+		
+		<if test="end_date !=null and end_date !=''">
+			and to_date(sale_date,'yyyy-MM-dd')&lt;=to_date(#{end_date},'yyyy-MM-dd')
+		</if>
+		AND s.TYPE=#{type}
+		<choose>
+				<when test="status != null and status != ''">
+					and s.status= #{status}
+				</when>
+				<otherwise>
+					and (
+						s.status is null
+						or s.status=0
+					)
+				</otherwise>
+		</choose>
+		<if test="fplxdm !=null and fplxdm !=''">
+			and fplxdm=#{fplxdm}
+		</if>
+	</sql>
+<!-- 分页查询 -->
+	<select id="list" parameterType="map" resultType="map">
+		SELECT INVOICE_NO,GHDWDM, ghdwmc, ghdwnsrsbh, ghdwdzdh,ghdwyhzh,SALE_DATE, STATUS
+		FROM (SELECT ROWNUM RN, T.* FROM (
+    	SELECT DISTINCT S.INVOICE_NO, S.GHDWDM, C.GHDWMC, C.GHDWNSRSBH, C.GHDWDZDH, C.GHDWYHZH,S.SALE_DATE , S.TYPE, S.STATUS
+    	FROM CIGARETTE_INVOICE_ORIG S
+        LEFT JOIN CUSTOMER_INFO C ON S.GHDWDM=C.GHDWDM
+    	WHERE 1 = 1
+		<include refid="list_where"></include>
+		ORDER BY SALE_DATE DESC
+
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+	</select>
+	<select id="listCount" parameterType="map" resultType="int">
+		select count(*) 
+		from 
+		(SELECT DISTINCT INVOICE_NO FROM CIGARETTE_INVOICE_ORIG s
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+		)
+	</select>
+	<!-- 查看订单明细 -->
+	<select id="getById" parameterType="map" resultType="map">
+		SELECT  SPXH, SPMC, GGXH, DW, SPSL, DJ, SL, JE, SE, JSHJ 
+		FROM CIGARETTE_INVOICE_ORIG
+		WHERE INVOICE_NO=#{invoice_no}
+		ORDER BY SPXH
+	</select>
+	<!-- 获取订单的公共信息 -->
+	<select id="getInvoiceCommonInfo" parameterType="map" resultType="map">
+		SELECT DISTINCT S.INVOICE_NO, S.GHDWDM, C.GHDWMC, C.GHDWNSRSBH, C.GHDWDZDH, C.GHDWYHZH,s.SALE_DATE , s.TYPE, s.STATUS
+    	FROM cigarette_invoice_orig S
+        LEFT JOIN CUSTOMER_INFO C ON S.GHDWDM=C.GHDWDM
+		WHERE  S.INVOICE_NO=#{invoice_no}
+		AND ROWNUM=1
+		
+	</select>
+	<!-- 修改卷烟是否开票状态 -->
+	<update id="update" parameterType="map">
+		UPDATE CIGARETTE_INVOICE_ORIG
+		SET
+		STATUS = #{status},
+		FPLXDM = #{fplxdm}
+		WHERE INVOICE_NO = #{invoice_no}
+	</update>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.cigarette.CommonsMapper">
+<!-- 客户信息 -->
+<sql id="customerInfo">
+	ID,GF_DWDM,SSDWDM,GF_DWMC,GF_NSRSBH,GF_ADDR_TEL,GF_BANK_ACCOUNT
+</sql>
+<!-- 查询客户信息 -->
+<select id="queryCustomerInfo" parameterType="map" resultType="map">
+	SELECT
+	<include refid="customerInfo"></include>
+	FROM CUSTOMER_INFO T
+	<where>
+		<if test="gf_dwdm !=null and gf_dwdm !='' ">
+			T.GF_DWDM = #{gf_dwdm} AND
+		</if>
+		<if test="ssdwdm !=null and ssdwdm !='' ">
+			T.SSDWDM = #{ssdwdm} AND
+		</if>
+		<if test="gf_nsrsbh !=null and gf_nsrsbh !='' ">
+			T.GF_NSRSBH = #{gf_nsrsbh} AND
+		</if>
+		<if test="gf_dwmc !=null and gf_dwmc !='' ">
+			T.GF_DWMC = #{gf_dwmc}
+			<!-- T.GF_DWMC LIKE CONCAT(CONCAT('%',#{gf_dwmc}),'%') -->
+		</if>
+	</where>
+</select>
+
+<!-- 修改客户信息 -->
+<insert id="modifyCustomerInfo" parameterType="map">
+	<selectKey keyProperty="count" resultType="int" order="BEFORE">
+		SELECT count(*) count FROM CUSTOMER_INFO where GF_DWMC = #{gf_dwmc}
+	</selectKey>
+	<if test="count > 0">
+		UPDATE CUSTOMER_INFO T
+		<set>
+			<if test="gf_dwdm !=null and gf_dwdm !='' ">
+				T.GF_DWDM=#{gf_dwdm},
+			</if>
+			<if test="ssdwdm !=null and ssdwdm !='' ">
+				T.SSDWDM=#{ssdwdm},
+			</if>
+				T.GF_NSRSBH=#{gf_nsrsbh},
+				T.GF_ADDR_TEL=#{gf_addr_tel},
+				T.GF_BANK_ACCOUNT=#{gf_bank_account}
+		</set>
+		where T.GF_DWMC = #{gf_dwmc}
+	</if>
+	<if test="count == 0 ">
+		INSERT INTO CUSTOMER_INFO (ID,SSDWDM,GF_DWMC,GF_NSRSBH,GF_ADDR_TEL,GF_BANK_ACCOUNT)
+		VALUES (sys_guid(),#{ssdwdm},#{gf_dwmc},#{gf_nsrsbh},#{gf_addr_tel},#{gf_bank_account})
+	</if>
+</insert>
+
+</mapper>

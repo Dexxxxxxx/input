@@ -1,0 +1,98 @@
+<div class="portlet light portlet-fit portlet-form">
+<div class="portlet-title">
+    <div class="caption">
+        <i class="icon-settings font-red"></i>
+        <span class="caption-subject font-red sbold uppercase" id="fn_tittle"></span>
+    </div>
+    <div class="actions">
+        <div class="btn-group btn-group-devided" data-toggle="buttons">
+        </div>
+    </div>
+</div>
+<div class="portlet-body">
+    <!-- BEGIN FORM-->
+   <form method="post" id="nsrinfo_form" class="form-horizontal">
+       <div class="form-body">
+           <div class="alert alert-danger display-hide">
+               <button class="close" data-close="alert"></button> You have some form errors. Please check below. </div>
+           <div class="alert alert-success display-hide">
+               <button class="close" data-close="alert"></button> Your form validation is successful! </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">纳税人识别号
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='nsrsbh' type="text" name="nsrsbh" readonly="readonly" data-required="1" class="form-control" />
+               </div>
+               <div class="col-md-4">
+               		<span id="nsrsbh-error" class="span-text text-danger"></span>
+               </div>
+           </div>
+           
+           <div class="form-group">
+               <label class="control-label col-md-3">名称
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='name' type="text" name="name" readonly="readonly" data-required="1" class="form-control" /> 
+               </div>
+               <div class="col-md-4">
+               		<span id="name-error" class="span-text text-danger"></span>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">地址电话
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='dzdh' name="dzdh" type="text" class="form-control" />
+               </div>
+               <div class="col-md-4">
+               		<span id="dzdh-error" class="span-text text-danger"></span>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">银行账号
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='yhzh' name="yhzh" type="text" class="form-control" />
+               </div>
+               <div class="col-md-4">
+               		<span id="yhzh-error" class="span-text text-danger"></span> 
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">openid
+               </label>
+               <div class="col-md-4">
+               		<textarea id="openid" rows="3"  name="openid" data-required="1" class="form-control" /> 
+               </div>
+               <div class="col-md-5">
+               		<span id="openid-error" class="span-text text-danger">openid在开放平台-接口信息中获取</span> 
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">app_secret
+               </label>
+               <div class="col-md-4">
+		           	<textarea id="app_secret" rows="3" name="app_secret" data-required="1" class="form-control"/>
+	           	</div>
+	           	<div class='col-md-5'>
+						<span id="app_secret_error" class='span-text text-danger'>app_secret在开放平台-接口信息中获取</span>
+				</div>
+           </div>
+       <div class="form-actions">
+           <div class="row">
+               <div class="col-md-offset-3 col-md-4">
+                   <button id='submit_1' type="submit" class="btn green"> 保 存 </button>
+                   <button id='cancel' type="button" class="btn grey-salsa btn-outline"> 返 回 </button>
+                   <span id="submit-error" class="span-text text-danger"></span> 
+               </div>
+           </div>
+       </div>
+      </div>
+   </form>
+   <!-- END FORM-->
+    </div>
+</div>

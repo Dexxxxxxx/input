@@ -1,0 +1,68 @@
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span class="caption-subject bold uppercase">购方信息管理</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter">
+							<label>搜 索 :
+								<input type="search" name="search_key" class="form-control input-sm input-small input-inline">
+							</label>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2">
+						<button id="sample_editable_1_new" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="btn-group">
+							<button id="btn-add" class="btn sbold green">
+								增 加 
+							</button>
+							</div>
+						<div class="btn-group">
+							<button id="btn-del" class="btn sbold green" data-toggle="modal">
+								删 除
+							</button>
+						</div>    
+					</div>
+				</div>
+			</div>
+			<div class="dataTables_wrapper no-footer">
+				<div class="table-scrollable">
+					<table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 103px;">
+									<div class="checker">
+										<span><input type="checkbox"  id="checkall" class="group-checkable"
+											data-set="#sample_1 .checkboxes"></span>
+									</div>
+								</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 254px;">购方单位名称</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 254px;">纳税人识别号</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 185px;">地址</th>
+								<!-- <th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 198px;">PID</th>
+								 -->
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 208px;">电话</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 208px;">开户行</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 208px;">银行账号</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 198px;">操作</th>
+							</tr>
+						</thead>
+						<tbody id="data-tbody"></tbody>
+					</table>
+				</div>
+				<div class="row" id="page-div"></div>
+			</div>
+		</div>
+	</div>

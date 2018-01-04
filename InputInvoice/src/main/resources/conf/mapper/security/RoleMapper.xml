@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.security.RoleMapper">
+	<sql id="list_where">
+		<if test="name !=null and name !=''">
+			AND NAME LIKE CONCAT(CONCAT('%', #{name}), '%')
+		</if>
+		<if test="sn !=null and sn !=''">
+			AND SN LIKE CONCAT(CONCAT('%', #{sn}), '%')
+		</if>
+	</sql>
+
+	<!-- 查询分页总条数 -->
+	<select id="listCount" resultType="int" parameterType="map">
+
+		SELECT COUNT(*) FROM BASE_ROLE
+		WHERE 1 = 1
+		<if test="id !=null and id !=''">
+		AND ID IN
+		(
+		SELECT U.ROLE FROM BASE_ROLE_USER U WHERE U.USERID=#{id}
+		)
+		</if>
+		<include refid="list_where"></include>
+
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="list" resultType="map" parameterType="map">
+
+		SELECT
+		ID,NAME,SN,DESCRIPTION,TO_CHAR(CREATETIME,'yyyy-MM-dd HH24:mi:ss') CREATETIME
+		FROM (SELECT ROWNUM RN, T.* FROM (
+
+		SELECT * FROM BASE_ROLE
+		WHERE 1 = 1
+		<if test="id !=null and id !=''">
+		AND ID IN
+		(
+		SELECT U.ROLE FROM BASE_ROLE_USER U WHERE U.USERID=#{id}
+		)
+		</if>
+		<include refid="list_where"></include>
+
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+		ORDER BY CREATETIME DESC
+	</select>
+
+	<!-- 获取tree数据 -->
+	<select id="getTree" resultType="map" parameterType="map">
+
+<!-- 		SELECT T.ID,T.NAME, T2.CHECKED -->
+<!-- 		FROM BASE_ROLE T -->
+<!-- 		LEFT JOIN (SELECT DISTINCT ROLE , -->
+<!-- 		<choose> -->
+<!-- 			<when test="userId !=null and userId !=''"> -->
+<!-- 				'true' -->
+<!-- 			</when> -->
+<!-- 			<otherwise> -->
+<!-- 				'' -->
+<!-- 			</otherwise> -->
+<!-- 		</choose> -->
+<!-- 		CHECKED -->
+<!-- 		FROM BASE_ROLE_USER RU -->
+<!-- 		WHERE 1 = 1 -->
+<!-- 		<if test="userId !=null and userId !=''"> -->
+<!-- 			AND RU.USERID=#{userId} -->
+<!-- 		</if> -->
+<!-- 		) T2 -->
+<!-- 		ON T.ID = T2.ROLE -->
+		
+	SELECT * FROM (
+	SELECT DISTINCT TT.ID,TT.NAME FROM BASE_ROLE_USER T LEFT JOIN BASE_ROLE TT ON
+	T.ROLE=TT.ID
+	WHERE 1=1
+	<if test="id !=null and id !=''">
+	AND T.USERID=#{id}
+	</if>
+	)S1
+	LEFT JOIN (
+	SELECT TB.ROLE,'true' CHECKED FROM BASE_ROLE_USER TB WHERE
+	TB.USERID=#{userId}
+	)S2 ON S1.ID=S2.ROLE
+
+		
+		
+	</select>
+
+
+	<!-- 根据ID获取信息 -->
+	<select id="getById" resultType="map" parameterType="map">
+		SELECT ID,NAME,SN,DESCRIPTION,TO_CHAR(CREATETIME,'yyyy-MM-dd HH24:mi:ss') CREATETIME
+		FROM BASE_ROLE WHERE ID=#{id}
+	</select>
+
+	<!-- 删除角色-用户中间表 -->
+	<delete id="deleteRoleUser" parameterType="map">
+		DELETE FROM BASE_ROLE_USER T WHERE T.ROLE IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 删除权限 -批量 -->
+	<delete id="deleteRolePrivileges" parameterType="map">
+		DELETE FROM BASE_ROLE_PRIVILEGE T WHERE T.ROLE IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 删除权限 -->
+	<delete id="deleteRolePrivilege" parameterType="map">
+		<if test="roleId !=null and roleId !=''">
+			DELETE FROM BASE_ROLE_PRIVILEGE T WHERE T.ROLE=#{roleId}
+		</if>
+	</delete>
+
+	<!-- 设置角色权限 -->
+	<select id="setPrivilege" parameterType="map">
+		<if test="roleId !=null and roleId !='' and pids !=null">
+			INSERT INTO BASE_ROLE_PRIVILEGE(ROLE,PRIVILEGE)
+			SELECT #{roleId} ROLE,T.ID PRIVILEGE
+			FROM BASE_PRIVILEGE T
+			WHERE T.ID IN
+			<foreach collection="pids" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 增加 -->
+	<insert id="add" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		INSERT INTO BASE_ROLE (ID,NAME,SN,DESCRIPTION,CREATETIME)
+		VALUES (
+		#{id},
+		#{name},
+		#{sn},
+		#{description},
+		SYSDATE
+		)
+	</insert>
+	
+	<!-- 增加角色的同时，关联到当前角色 -->
+	<insert id="addRoleUser" parameterType="map">
+		
+		INSERT INTO BASE_ROLE_USER (ROLE,USERID)
+		VALUES (
+		#{id},
+		#{userid}
+
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteByIds" parameterType="map">
+		DELETE BASE_ROLE T WHERE T.ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="map">
+		UPDATE BASE_ROLE
+		SET
+		NAME=#{name},
+		SN=#{sn},
+		DESCRIPTION=#{description}
+		WHERE ID = #{id}
+	</update>
+</mapper>

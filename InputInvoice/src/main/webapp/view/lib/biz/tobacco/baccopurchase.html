@@ -1,0 +1,242 @@
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase"> 烟草收购</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div class="col-md-9 col-sm-9">
+						<div class="dataTables_filter col-md-12">
+							<label>搜 索 : </label>
+							<input type="search" name="search_key" id="search_key"
+								class="form-control input-sm input-sm input-inline"
+								placeholder="种植主体名称、地址、开票单位">
+							<label>&nbsp;开票状态：</label> <select
+								class="form-control input-sm input-sm input-inline"
+								name="invoice_status" id="invoice_status">
+								<!-- <option value="ALL">全部</option> -->
+								<option value="no">未开票</option>
+								<option value="yes">已开票</option>
+							</select>
+							 <label>&nbsp;收购时间：</label>
+								<input class="datePicker date-picker-cst" name="start_date" type="text" 
+								id="start_date" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+								<label class="input-inline">至</label> 
+								<input class="datePicker date-picker-cst" name="end_date" type="text" 
+								id="end_date" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})">
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-3">
+						<button id="sample_editable_1_seach" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+						<button type="button" id="reSetTable" class="btn sbold green">
+							显示全部&nbsp;
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="btn-group">
+							<button id="btn-doinvoices" class="btn sbold green">合并开票</button>
+						</div>
+					</div>
+				</div>
+				<div class="dataTables_wrapper no-footer">
+					<div class="table-scrollable">
+						<table
+							class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							id="sample_1" role="grid" aria-describedby="sample_1_info"
+							style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+							<thead>
+								<tr role="row">
+									<th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 2%;">
+									<div class="checker">
+										<span><input type="checkbox" class="group-checkable" id="check_group" 
+											data-set="#sample_1 .checkboxes"></span>
+									</div>
+									</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 9%;">交易流水号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5.5%;">开票单位</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 3%;">称数</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 7%;">种植主体编码</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">种植主体名称</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 8%;">身份证号码</th>
+									<!-- <th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 8.3%;">种植主体地址代码</th> -->
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 9%;">种植户地址</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">交易总重量</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">交易总金额</th>
+									<!-- <th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 5%;">开票状态</th> -->
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 8%;">收购时间</th>
+									<!-- <th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 8%;">开票时间</th> -->
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 7%;">操作</th>
+								</tr>
+							</thead>
+							<tbody id="data-tbody"></tbody>
+						</table>
+					</div>
+					<div class="row" id="page-div"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+<div class="fiex dn" style="display:none"><img src="loading2.gif" /></div>
+<!-- 模态正文 详情 开始 -->
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog" style="width: 70%;">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <span id="lblAddTitle" style="font-weight:bold">收购详情</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<div class="table-scrollable">
+						<!-- 购方信息详情列表 -->
+							<table
+								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+								id="sample_3" role="grid" aria-describedby="sample_1_info">
+								<thead>
+									<tr role="row">
+										<!-- <th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">过磅序列号</th> -->
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">种植主体名称</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">烟叶等级代码</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">烟叶等级名称</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">单价</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">重量</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">金额</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">补贴1单价</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">补贴1金额</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">补贴2单价</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">补贴2金额</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">补贴3单价</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">补贴3金额</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">补贴4单价</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">补贴4金额</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">扣款金额</th>
+										
+									</tr>
+								</thead>
+								<tbody id="data-tbody-detail"></tbody>
+							</table>
+							<tr>
+							<!-- 购方信息公共信息-->
+						<!-- <table class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							id="sample_2" role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+							<tbody id="data-comment-detail">
+							<tr role="row">
+									<td class="col-md-1 bold" >补贴1总金额:</td><td id='sum_amount1' class="col-md-1"></td>
+									<td class="col-md-1 bold">补贴2总金额:</td><td id='sum_amount2' class="col-md-1"></td>
+									<td class="col-md-1 bold">补贴3总金额:</td><td id='sum_amount3' class="col-md-1"></td>
+									<td class="col-md-1 bold">补贴4总金额:</td><td id='sum_amount4' class="col-md-1"></td>
+									<td class="col-md-1 bold">扣款总金额:</td><td id='sum_deduct_amount' class="col-md-1"></td>
+									<td class="col-md-1 bold">价税合计:</td><td id='all_count' class="col-md-1"></td>
+								</tr>
+							</tbody>
+						</table> -->
+						</div>
+						<div class="row" id="page-div-detail"></div>
+					</div>
+				</div>
+		
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 模态正文  详情  结束 -->
+
+
+<!-- 模态正文 详情 开始 -->
+<div aria-hidden="true" id="ajax-FpInfo" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog" style="width: 50%;">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <span id="lblAddTitle" style="font-weight:bold">开票详情</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<div class="table-scrollable">
+						<!-- 购方信息详情列表 -->
+							<table
+								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+								id="sample_3" role="grid" aria-describedby="sample_1_info">
+								<thead>
+									<tr role="row">
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">交易流水号</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">发票代码</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">发票号码</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">合计金额</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">合计税额</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">价税合计</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">开票状态</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">操作</th>
+									</tr>
+								</thead>
+								<tbody id="data-tbody-FpInfo"></tbody>
+							</table>
+							<tr>
+						</div>
+						<div class="row" id="page-div-detail"></div>
+					</div>
+				</div>
+		
+			</div>
+			<div class="modal-footer">
+				<!-- <button type="button" class="btn default" id="print">打印</button> -->
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.cigarette.CigarCustomerMapper">
+	<sql id="list_where">
+		<if test="search_key !=null and search_key !=''">
+			AND(
+			GHDWDM  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR GHDWMC  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR GHDWNSRSBH  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)
+		</if>
+	</sql>
+	<!-- 分页list -->
+	<select id="list" parameterType="map" resultType="map">
+		SELECT ID, ORIG_CD, GHDWDM, GHDWMC, GHDWNSRSBH, GHDWDZDH, GHDWYHZH
+		FROM (SELECT ROWNUM RN, T.* FROM (
+		SELECT  T.* 
+		FROM CUSTOMER_INFO T 
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+		<!-- ORDER BY T.FPHM	DESC -->
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+	</select>
+	<!-- 分页总数 -->
+	<select id="listCount" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM CUSTOMER_INFO T
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+	</select>
+	<!-- 获取客户详情 -->
+	<select id="getById" parameterType="map" resultType="map">
+		SELECT ID, GHDWDM, GHDWMC, GHDWNSRSBH, GHDWDZDH, GHDWYHZH 
+		FROM CUSTOMER_INFO
+		where 1=1
+		<if test="id !=null and id !=''">
+			AND ID=#{id}
+		</if>
+		<if test="ghdwdm !=null and ghdwdm !=''">
+			AND GHDWDM=#{ghdwdm}
+		</if>
+		<if test="ghdwmc !=null and ghdwmc !=''">
+			AND ghdwmc=#{ghdwmc}
+		</if>
+	</select>
+	<!-- 修改客户信息 -->
+	<update id="update" parameterType="map">
+		update customer_info
+   		set
+       	GHDWMC = #{ghdwmc},
+       	GHDWNSRSBH = #{ghdwnsrsbh},
+       	GHDWDZDH = #{ghdwdzdh},
+       	GHDWYHZH = #{ghdwyhzh}
+ 		where GHDWDM = #{ghdwdm}
+	</update>
+	<!-- 增加客户信息 -->
+	<insert id="add" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		insert into customer_info
+  		(id, 
+  		<if test="orig_cd !=null and orig_cd !=''">
+	  		orig_cd, 
+		</if>
+  		ghdwdm, ghdwmc, ghdwnsrsbh, ghdwdzdh, ghdwyhzh)
+		values
+  		(#{id}, 
+  		<if test="orig_cd !=null and orig_cd !=''">
+	  		#{orig_cd}, 
+		</if>
+  		#{ghdwdm}, #{ghdwmc}, #{ghdwnsrsbh}, #{ghdwdzdh}, #{ghdwyhzh})
+	</insert>
+	<delete id="deleteByIds" parameterType="map">
+		DELETE CUSTOMER_INFO T WHERE
+		T.ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+</mapper>

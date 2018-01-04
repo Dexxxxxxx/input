@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.cigarette.GenCigaretteMapper">
+	<select id="getSpInfo" parameterType="map" resultType="map">
+		SELECT ID, ORIG_ID, COM_NAME, COM_TAX_ACCOUNT, COM_ADDR, COM_BANK, COM_ACCOUNT, 
+		SALE_DATE, ITEM_NAME, ITEM_SPEC, LINE_ORD, LINE_PRICE, LINE_AMT, SL, STATUS 
+		FROM CIGARETTE_INVOICE_ORIG
+		WHERE ORIG_ID=#{orig_id}
+	</select>
+	<delete id="deleteByIds" parameterType="map">
+		DELETE CIGARETTE_INVOICE_ORIG T WHERE
+		T.ORIG_ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+</mapper>

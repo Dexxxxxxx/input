@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.cigarette.SpeCigaretteMapper">
+
+	<sql id="list_where">
+		<if test="search_key!=null and search_key!=''">
+			AND 
+			(
+				COM_NAME LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+				OR
+				COM_TAX_ACCOUNT LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)	
+		</if>
+		<if test="start_date !=null and start_date !=''">
+			and to_date(sale_date,'yyyy-MM-dd')&gt;=to_date(#{start_date},'yyyy-MM-dd')
+		</if>
+		
+		<if test="end_date !=null and end_date !=''">
+			and to_date(sale_date,'yyyy-MM-dd')&lt;=to_date(#{end_date},'yyyy-MM-dd')
+		</if>
+		<choose>
+				<when test="status != null and status != ''">
+					and status= #{status}
+				</when>
+				<otherwise>
+					and (
+						status is null
+						or status=0
+					)
+				</otherwise>
+		</choose>
+	</sql>
+
+
+	<!-- 分页查询 -->
+	<select id="list" parameterType="map" resultType="map">
+		SELECT ORIG_ID, COM_NAME, COM_TAX_ACCOUNT, COM_ADDR, 
+		COM_BANK, COM_ACCOUNT, SALE_DATE, STATUS
+		FROM (SELECT ROWNUM RN, T.* FROM (
+		SELECT DISTINCT ORIG_ID, COM_NAME, COM_TAX_ACCOUNT, COM_ADDR, 
+    	COM_BANK, COM_ACCOUNT, SALE_DATE, STATUS
+		FROM CIGARETTE_INVOICE_ORIG
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+		ORDER BY SALE_DATE DESC
+
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+	</select>
+	<select id="listCount" parameterType="map" resultType="int">
+		select count(*) 
+		from 
+		(SELECT DISTINCT ORIG_ID FROM CIGARETTE_INVOICE_ORIG
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+		)
+	</select>
+	<!-- 查看 -->
+	<select id="getById" parameterType="map" resultType="map">
+		SELECT ORIG_ID,ITEM_NAME, ITEM_SPEC, LINE_ORD, 
+		LINE_PRICE, LINE_AMT, SL, STATUS 
+		FROM CIGARETTE_INVOICE_ORIG
+		WHERE ORIG_ID=#{orig_id}
+	</select>
+	<!-- 查看多个 -->
+	<select id="getByIds" parameterType="map" resultType="map">
+		SELECT ORIG_ID, COM_NAME, COM_TAX_ACCOUNT, COM_ADDR, COM_BANK, COM_ACCOUNT,
+		SALE_DATE, ITEM_NAME, ITEM_SPEC, LINE_ORD, LINE_PRICE, LINE_AMT, SL, STATUS 
+		FROM CIGARETTE_INVOICE_ORIG
+		WHERE ORIG_ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<delete id="deleteByIds" parameterType="map">
+		DELETE CIGARETTE_INVOICE_ORIG T WHERE
+		T.ORIG_ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 根据税号获取抬头信息 -->
+	<select id="getComInfo" parameterType="map" resultType="map">
+		SELECT T.COM_NAME,T.COM_TAX_ACCOUNT,T.COM_ADDR,T.COM_BANK,T.COM_ACCOUNT 
+		FROM CIGARETTE_INVOICE_ORIG T WHERE 
+		ROWNUM=1 AND T.COM_TAX_ACCOUNT=#{com_tax_account}
+	</select>
+	
+	<!-- 获取商品信息 -->
+	<select id="getSpInfo" parameterType="map" resultType="map">
+		select t1.item_name, t1.item_spec,sum(t1.line_ord) line_ord,avg(t1.line_price) line_price,avg(t1.sl) sl,sum(t1.line_amt) line_amt  
+		from CIGARETTE_INVOICE_ORIG t1  
+        where t1.orig_id in 
+        <foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+       group by t1.item_name,t1.item_spec
+	</select>
+	
+	<!-- 获取单张单据的商品信息 -->
+	<select id="getSpInfoByOne" parameterType="map" resultType="map">
+		select t1.item_name, t1.item_spec,sum(t1.line_ord) line_ord,avg(t1.line_price) line_price,avg(t1.sl) sl,sum(t1.line_amt) line_amt  
+		from CIGARETTE_INVOICE_ORIG t1  
+        where t1.orig_id =#{array} 
+       group by t1.item_name,t1.item_spec
+	</select>
+
+</mapper>

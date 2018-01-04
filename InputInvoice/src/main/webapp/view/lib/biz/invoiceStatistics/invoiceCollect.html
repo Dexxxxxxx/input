@@ -1,0 +1,196 @@
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase"> 进项发票汇总 </span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div>
+					<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter col-md-12">
+							<!-- <label>发票代码: </label><input type="search" name="fpdm" style="width:100px;"
+								class="form-control input-sm input-sm input-inline"> -->
+							
+							<label>开票日期:</label> <input
+								class="datePicker date-picker-cst" name="start_date" type="text"
+								id="start_date" style="width:100px;"
+								onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+							<label>到: </label><input
+								class="datePicker date-picker-cst" name="end_date" type="text"
+								id="end_date" style="width:100px;"
+								onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})">
+						</div>
+					</div>
+					</div>
+					<br><br><br>
+					
+					<div class="col-md-12 col-sm-12">
+						<div class="col-md-9 col-sm-9">
+						<div class="col-md-1 col-sm-1"><input type="checkbox" class="sl_checkboxes" value="17"><span>17%</span></div>
+						<div class="col-md-1 col-sm-1"><input type="checkbox" class="sl_checkboxes" value="13"><span>13%</span></div>
+						<div class="col-md-1 col-sm-1"><input type="checkbox" class="sl_checkboxes" value="11"><span>11%</span></div>
+						<div class="col-md-1 col-sm-1"><input type="checkbox" class="sl_checkboxes" value="6"><span>6%</span></div>
+						<div class="col-md-1 col-sm-1"><input type="checkbox" class="sl_checkboxes" value="5"><span>5%</span></div>
+						<div class="col-md-1 col-sm-1"><input type="checkbox" class="sl_checkboxes" value="4"><span>4%</span></div>
+						<div class="col-md-1 col-sm-1"><input type="checkbox" class="sl_checkboxes" value="3"><span>3%</span></div>
+						<div class="col-md-1 col-sm-1"><input type="checkbox" class="sl_checkboxes" value="1.5"><span>1.5%</span></div>
+						<div class="col-md-1 col-sm-1"><input type="checkbox" class="sl_checkboxes" value="0"><span>免税</span></div>
+						</div>
+						<div class="col-md-2 col-sm-2 col-md-offset-1">
+						<button id="getCount" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="row">
+					<div class="col-md-12">
+				</div>
+			</div>
+			<div class="dataTables_wrapper no-footer">
+				<div class="table-scrollable">
+					<table
+						class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+						id="sample_1" role="grid" aria-describedby="sample_1_info"
+						style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">序号</th>
+									<th name="xmm" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">项目名称</th>
+									<th name="hj" class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">合计</th>
+									<th name="slOne" class="sorting_disabled sl_17 sl_hide" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">17%</th>
+									<th name="slTwo" class="sorting_disabled sl_13 sl_hide" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">13%</th>
+									<th name="slThree" class="sorting_disabled sl_11 sl_hide" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">11%</th>
+									<th name="slFour" class="sorting_disabled sl_6 sl_hide" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">6%</th>
+									<th name="slFive" class="sorting_disabled sl_5 sl_hide" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">5%</th>
+									<th name="slSix" class="sorting_disabled sl_4 sl_hide" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">4%</th>
+									<th name="slSeven" class="sorting_disabled sl_3 sl_hide" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">3%</th>
+									<th name="slEight" class="sorting_disabled sl_15 sl_hide" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">1.5%</th>
+									<th name="slNine" class="sorting_disabled sl_0 sl_hide" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">免税</th>
+									<th name="slNine" class="sorting_disabled sl_qt" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 6%;text-align: center">其它</th>
+							</tr>
+						</thead>
+						<tbody id="data-tbody">
+							<tr>
+								<td>1</td>
+								<td>进项金额</td>
+									<td id="je_all"  style="text-align: center"></td>
+									<td id="je_17" class="sl_17 sl_hide" style="text-align: center"></td>
+									<td id="je_13" class="sl_13 sl_hide" style="text-align: center"></td>
+									<td id="je_11" class="sl_11 sl_hide" style="text-align: center"></td>
+									<td id="je_6" class="sl_6 sl_hide" style="text-align: center"></td>
+									<td id="je_5" class="sl_5 sl_hide" style="text-align: center"></td>
+									<td id="je_4" class="sl_4 sl_hide" style="text-align: center"></td>
+									<td id="je_3" class="sl_3 sl_hide" style="text-align: center"></td>
+									<!-- 金额1.5% -->
+									<td id="je_15" class="sl_15 sl_hide" style="text-align: center"></td>
+									<td id="je_0" class="sl_0 sl_hide" style="text-align: center"></td>
+									<td id="je_qt" class="sl_qt" style="text-align: center"></td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>进项税额</td>
+									<td id="se_all" style="text-align: center"></td>
+									<td id="se_17" class="sl_17 sl_hide" style="text-align: center"></td>
+									<td id="se_13" class="sl_13 sl_hide" style="text-align: center"></td>
+									<td id="se_11" class="sl_11 sl_hide" style="text-align: center"></td>
+									<td id="se_6" class="sl_6 sl_hide" style="text-align: center"></td>
+									<td id="se_5" class="sl_5 sl_hide" style="text-align: center"></td>
+									<td id="se_4" class="sl_4 sl_hide" style="text-align: center"></td>
+									<td id="se_3" class="sl_3 sl_hide" style="text-align: center"></td>
+									<!-- 税额1.5% -->
+									<td id="se_15" class="sl_15 sl_hide" style="text-align: center"></td>
+									<td id="se_0" class="sl_0 sl_hide" style="text-align: center"></td>
+									<td id="se_qt" class="sl_qt" style="text-align: center"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row" id=""></div>
+			</div>
+		</div>
+	</div>
+  </div>
+<!-- 模态正文 角色》》认证点  开始 -->
+<div aria-hidden="true" id="authpoint-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <i class="icon-pencil"></i>
+                    <span id="lblAddTitle" style="font-weight:bold">认证点</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+					<div id="treeDemo" class="ztree" style="overflow-y:scroll;height: 400px">
+						<table
+						class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+						id="sample_1" role="grid" aria-describedby="sample_1_info"
+						style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" rowspan="1" colspan="1"
+									aria-label="" style="width: 20%;">
+									<div class="checker">
+										<span><input type="checkbox" class="group-checkable"
+											id="authpointcheck_group" data-set="#sample_1 .checkboxes"></span>
+									</div>
+								</th>
+								<th class="sorting_disabled " tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1" 
+									style="width: 40%;">税号</th>
+								<th class="sorting_disabled " tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1" 
+									style="width: 40%;">名称</th>
+							</tr>
+						</thead>
+						<tbody id="authpointdata-tbody">
+	            		</tbody>
+					</table>
+            			</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+				<button type="button" class="btn blue" id="sureauthpoint"> 确定 </button>
+			</div>
+		</div>
+	</div>
+</div>

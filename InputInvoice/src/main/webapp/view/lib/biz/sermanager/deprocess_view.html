@@ -1,0 +1,806 @@
+<div class="col-md-12">
+	<div class="portlet">
+		<div class="portlet-title">
+			<div class="caption font-red">
+				<i class="icon-settings font-red"></i> 
+				<span class="caption-subject bold uppercase"> 详情列表</span>
+			</div>
+		</div>
+		<div class="portlet-title">
+			<button id="btn-cancel" class="btn sbold green">返 回</button>
+			<button id="btn-ref" class="btn sbold green">刷新数据</button>
+			<button id="btn-revoke" class="btn sbold green">作废申报</button>
+			<button id="btn-del" class="btn sbold green">删 除</button>
+		</div>
+		<div class="dataTables_wrapper no-footer">
+			<div class="table-scrollable">
+				<table
+					class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+					id="sample_1" role="grid" aria-describedby="sample_1_info"
+					style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+					<thead>
+						<tr role="row" class="odd">
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">TAM编号</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.8%;">TAM名称</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">征管账号</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">纳税人类别</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">纳税人名称</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">识别号</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">证件号码</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">车架号</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">厂牌型号</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">流程名称</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7.6%;">流程状态</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7%;">执行结果</th>
+							<th class="sorting_disabled" tabindex="0"
+								aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 8.2%;">执行时间</th>
+						</tr>
+					</thead>
+					<tbody id="data-tbody-info"></tbody>
+				</table>
+			</div>
+		</div>
+		<ul class="nav nav-pills">
+				<li class="active"><a aria-expanded="true" href="#portlet_tab_1"
+					data-toggle="tab"> 纳税人信息 </a></li>
+				<li class=""><a aria-expanded="false" href="#portlet_tab_2"
+					data-toggle="tab"> 车辆合格证 </a></li>
+				<li class=""><a aria-expanded="false" href="#portlet_tab_3"
+					data-toggle="tab"> 纳税申报表 </a></li>
+				<li class=""><a aria-expanded="false" href="#portlet_tab_4"
+					data-toggle="tab"> 车辆信息 </a></li>
+				<li class=""><a aria-expanded="false" href="#portlet_tab_5"
+					data-toggle="tab"> POS缴款信息 </a></li>
+				<li class=""><a aria-expanded="false" href="#portlet_tab_6"
+					data-toggle="tab"> 税票信息 </a></li>
+				<li class=""><a aria-expanded="false" href="#portlet_tab_7"
+					data-toggle="tab"> 发票信息 </a></li>
+				<li class=""><a aria-expanded="false" href="#portlet_tab_8"
+					data-toggle="tab"> 完税证明 </a></li>
+				<li class=""><a aria-expanded="false" href="#portlet_tab_9"
+				 	data-toggle="tab"> 应征欠税信息 </a></li>
+				 <li class=""><a aria-expanded="false" href="#portlet_tab_10"
+				 	data-toggle="tab"> 摩托车类型 </a></li>
+				<li class=""><a aria-expanded="false" href="#portlet_tab_11"
+				 	data-toggle="tab"> 流程执行脚本 </a></li>
+			</ul>
+		</div>
+		
+		<div class="portlet-body">
+			<input type="hidden" id="getOrderId" ><!-- 缓存整个页面的ORDERID -->
+			<div class="tab-content" id="tab-content">
+			<!-- 纳税人信息 -->
+				<div data-initialized="1" id="portlet_tab_1" class="scroller tab-pane active" style="height: auto; overflow: auto; width: auto;">
+					<table class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+							<tbody id="cst_taxpayer">
+								<tr role="row">
+									<td class="col-md-2 bold" >姓名(中英文):</td><td id='NAME' class="col-md-2"></td>
+									<td class="col-md-2 bold">纳税人识别号:</td><td id='NSRSBH' class="col-md-2"></td>
+									<td class="col-md-2 bold">纳税人类别:</td><td id='NSRLB' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >登记序号:</td><td id='DJXH' class="col-md-2"></td>
+									<td class="col-md-2 bold">登记注册类型代码:</td><td id='DJZCLX_DM' class="col-md-2"></td>
+									<td class="col-md-2 bold">行业代码:</td><td id='HY_DM' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >国籍代码:</td><td id='GJDM' class="col-md-2"></td>
+									<td class="col-md-2 bold">证件种类代码:</td><td id='SFZJLXDM' class="col-md-2"></td>
+									<td class="col-md-2 bold">证件号码:</td><td id='ZJHM' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >职业:</td><td id='ZYDM' class="col-md-2"></td>
+									<td class="col-md-2 bold">联系电话:</td><td id='LXDH' class="col-md-2"></td>
+									<td class="col-md-2 bold">通讯地址:</td><td id='TXDZ' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >居住地址:</td><td id='JZDZ' class="col-md-2"></td>
+									<td class="col-md-2 bold">户籍地址:</td><td id='HJDZ' class="col-md-2"></td>
+									<td class="col-md-2 bold">创建时间:</td><td id='CREATETIME' class="col-md-2"></td>
+								</tr>
+							</tbody>
+						</table>
+				</div>
+				<!-- 车辆合格证 -->
+				<div id="portlet_tab_2" class="scroller tab-pane" style="height: auto; overflow: auto; width: auto;">
+					
+					<table class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+							<tbody id="cst_certificate">
+								<tr role="row">
+									<td class="col-md-2 bold" >进口标志:</td><td id='IMPORTED' class="col-md-2"></td>
+									<td class="col-md-2 bold">合格证编号:</td><td id='HGZBH' class="col-md-2"></td>
+									<td class="col-md-2 bold">发证日期:</td><td id='FZRQ' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >车辆制造企业名称:</td><td id='CLZZQYMC' class="col-md-2"></td>
+									<td class="col-md-2 bold">车辆类型大:</td><td id='CLLX_D' class="col-md-2"></td>
+									<td class="col-md-2 bold">车辆类型:</td><td id='CLLX' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >车辆品牌:</td><td id='CLPP' class="col-md-2"></td>
+									<td class="col-md-2 bold">车辆型号:</td><td id='CLXH' class="col-md-2"></td>
+									<td class="col-md-2 bold">车身颜色:</td><td id='CSYS' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >车架号:</td><td id='VIN' class="col-md-2"></td>
+									<td class="col-md-2 bold">发动机号:</td><td id='FDJH' class="col-md-2"></td>
+									<td class="col-md-2 bold">发动机型号:</td><td id='FDJXH' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >燃料种类:</td><td id='YLZL' class="col-md-2"></td>
+									<td class="col-md-2 bold">排放标准:</td><td id='PFBZ' class="col-md-2"></td>
+									<td class="col-md-2 bold">排量:</td><td id='PL' class="col-md-2"></td>
+								</tr>
+								
+								<tr role="row">
+									<td class="col-md-2 bold" >功率:</td><td id='GL' class="col-md-2"></td>
+									<td class="col-md-2 bold">转向形式:</td><td id='ZXXS' class="col-md-2"></td>
+									<td class="col-md-2 bold">轮距前:</td><td id='LJ_Q' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >轮距后:</td><td id='LJ_H' class="col-md-2"></td>
+									<td class="col-md-2 bold">轮胎数:</td><td id='LTS' class="col-md-2"></td>
+									<td class="col-md-2 bold">轮胎规格:</td><td id='LTGG' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >轴距(mm):</td><td id='ZJ' class="col-md-2"></td>
+									<td class="col-md-2 bold">轴荷(kg):</td><td id='ZH' class="col-md-2"></td>
+									<td class="col-md-2 bold">轴数:</td><td id='ZS' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >外廓尺寸长(mm):</td><td id='WKCC_C' class="col-md-2"></td>
+									<td class="col-md-2 bold">外廓尺寸宽(mm):</td><td id='WKCC_K' class="col-md-2"></td>
+									<td class="col-md-2 bold">外廓尺寸高(mm):</td><td id='WKCC_G' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >总质量(kg):</td><td id='ZZL' class="col-md-2"></td>
+									<td class="col-md-2 bold">整备质量(mm):</td><td id='ZBZL' class="col-md-2"></td>
+									<td class="col-md-2 bold">额定载客(人):</td><td id='EDZK' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold" >配置序列号(进口):</td><td id='PZXLH' class="col-md-2"></td>
+									<td class="col-md-2 bold">证书取得日期(进口):</td><td id='ZSQDRQ' class="col-md-2"></td>
+									<td class="col-md-2 bold">数据上传日期(进口):</td><td id='SJSCRQ' class="col-md-2"></td>
+								</tr><tr role="row">
+									<td class="col-md-2 bold" >创建时间:</td><td id='CREATEDATE' class="col-md-2"></td>
+									<td class="col-md-2 bold">原始数据:</td><td colspan="3">
+										<div style='height: 100px; overflow-y: auto; overflow-x: hidden'><span id='XML' ></span></div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+				</div>
+				<!-- 纳税申报表 -->
+				<div class="scroller tab-pane" style="height: auto; overflow: auto; width: auto;" id="portlet_tab_3">
+					<table class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+						<tbody id="cst_declaration">
+								<tr role="row">
+									<td class="col-md-2 bold" >申报表版本:</td><td id='BBH' class="col-md-2"></td>
+									<td class="col-md-2 bold" >纳税人类别:</td><td id='NSRLB' class="col-md-2"></td>
+									<td class="col-md-2 bold">车架号:</td><td id='VIN' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold">发动机号码:</td><td id='FDJHM' class="col-md-2"></td>
+<!-- 									<td class="col-md-2 bold " >CPSM:</td><td id='CPSM' class="col-md-2"></td> -->
+									<td class="col-md-2 bold">吨位:</td><td id='DW' class="col-md-2"></td>
+									<td class="col-md-2 bold">限乘人数:</td><td id='XCRS' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >厂牌型号:</td><td id='CPXH' class="col-md-2"></td>
+									<td class="col-md-2 bold">进口标志:</td><td id='JKBZ' class="col-md-2"></td>
+									<td class="col-md-2 bold">出厂日期:</td><td id='CCRQ' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >排气量:</td><td id='PQL' class="col-md-2"></td>
+									<td class="col-md-2 bold">经办人名称:</td><td id='MC' class="col-md-2"></td>
+									<td class="col-md-2 bold">经办人电话:</td><td id='DH' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >经办人:</td><td id='JBR' class="col-md-2"></td>
+									<td class="col-md-2 bold">经办人地址:</td><td id='DZ' class="col-md-2"></td>
+									<td class="col-md-2 bold">主管税务机关代码:</td><td id='ZGSWJG_DM' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >出厂日期:</td><td id='CCRQ' class="col-md-2"></td>
+									<td class="col-md-2 bold">开票日期:</td><td id='KPRQ' class="col-md-2"></td>
+									<td class="col-md-2 bold">创建时间:</td><td id='CREATEDATE' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >纳税人识别号(经销商的):</td><td id='NSR_SBH' class="col-md-2"></td>
+									<td class="col-md-2 bold">发票代码:</td><td id='FPDM' class="col-md-2"></td>
+									<td class="col-md-2 bold">发票号码:</td><td id='FPHM' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >价税合计:</td><td id='JSHJ' class="col-md-2"></td>
+									<td class="col-md-2 bold">价外费用:</td><td id='JWFY' class="col-md-2"></td>
+									<td class="col-md-2 bold">关税完税价格:</td><td id='GSWS_JG' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >关税:</td><td id='GS' class="col-md-2"></td>
+									<td class="col-md-2 bold">消费税:</td><td id='XFS' class="col-md-2"></td>
+									<td class="col-md-2 bold">增值税税率:</td><td id='ZZSSL' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >发票含税标志:</td><td id='FPHSBZ' class="col-md-2"></td>
+									<td class="col-md-2 bold">购货单位(纳税人名称):</td><td id='GHDW' class="col-md-2"></td>
+									<td class="col-md-2 bold">纳税人证件种类代码:</td><td id='NSR_ZJZL_DM' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >纳税人证件号码:</td><td id='SFZHM' class="col-md-2"></td>
+									<td class="col-md-2 bold">纳税人识别号:</td><td id='NSRSBH' class="col-md-2"></td>
+									<td class="col-md-2 bold">纳税人邮编:</td><td id='NSR_YB' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >纳税人地址:</td><td id='NSR_DZ' class="col-md-2"></td>
+									<td class="col-md-2 bold">纳税人电话:</td><td id='NSR_DH' class="col-md-2"></td>
+									<td class="col-md-2 bold">纳税人登记注册类型代码:</td><td id='NSR_DJZCLX_DM' class="col-md-2"></td>
+								</tr>
+								<tr role="row">
+									<td class="col-md-2 bold " >纳税人行业代码:</td><td id='NSR_HY_DM' class="col-md-2"></td>
+									<td class="col-md-2 bold">原始数据:</td><td colspan="3">
+										<div style='height: 100px; overflow-y: auto; overflow-x: hidden'><span id='XML' ></span></div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+				</div>
+				<!-- 车辆信息 -->
+				<div class="scroller tab-pane" style="height: auto; overflow: auto; width: auto;" id="portlet_tab_4">
+					<table class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+						<tbody id="cst_pay_car">
+							<tr role="row">
+								<td class="col-md-2 bold" >车辆类别名称:</td><td id='CLLBMC' class="col-md-2"></td>
+								<td class="col-md-2 bold">生产企业名称:</td><td id='SCQY' class="col-md-2"></td>
+								<td class="col-md-2 bold">厂牌型号:</td><td id='MMODEL' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >车辆识别代码:</td><td id='VIN' class="col-md-2"></td>
+								<td class="col-md-2 bold">发动机号码:</td><td id='FDJH' class="col-md-2"></td>
+								<td class="col-md-2 bold">吨位:</td><td id='DW' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >限乘人数:</td><td id='EDZK' class="col-md-2"></td>
+								<td class="col-md-2 bold">车辆序列号:</td><td id='CLXLH' class="col-md-2"></td>
+								<td class="col-md-2 bold">车辆生产企业代码:</td><td id='CLSCQYDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >车辆生产企业名称:</td><td id='CLSCQYMC' class="col-md-2"></td>
+								<td class="col-md-2 bold">车辆类别代码:</td><td id='CLLBDM1' class="col-md-2"></td>
+								<td class="col-md-2 bold">车辆厂牌型号:</td><td id='CLCPXH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >车辆厂牌:</td><td id='CLCP' class="col-md-2"></td>
+								<td class="col-md-2 bold">车辆型号:</td><td id='CLXH' class="col-md-2"></td>
+								<td class="col-md-2 bold">车辆吨位:</td><td id='CLDW' class="col-md-2"></td>
+							</tr>
+							
+							<tr role="row">
+								<td class="col-md-2 bold" >座位数:</td><td id='ZWS' class="col-md-2"></td>
+								<td class="col-md-2 bold">排气量:</td><td id='PQL' class="col-md-2"></td>
+								<!-- <td class="col-md-2 bold">主要配置:</td><td id='ZYPZ' class="col-md-2"></td> -->
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >车辆类型代码:</td><td id='CLLXDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">产地:</td><td id='CD' class="col-md-2"></td>
+								<td class="col-md-2 bold">产地属性:</td><td id='CDSX' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold">主要配置:</td><td colspan="5">
+									<div style='height: 100px; overflow-y: auto; overflow-x: hidden'><span id='MAINCFG' ></span></div>
+								</td>
+								<td class="col-md-2 bold"></td><td class="col-md-2"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- POS缴款信息 -->
+				<div class="scroller tab-pane" style="height: auto; overflow: auto; width: auto;" id="portlet_tab_5">
+					<table class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+						<tbody id="cst_pay_pos">
+							<tr role="row">
+								<td class="col-md-2 bold" >纳税人识别号:</td><td id='NSRSBH' class="col-md-2"></td>
+								<td class="col-md-2 bold">税务人员代码:</td><td id='SWRYDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">扣款税务机关代码:</td><td id='SWJGDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >电子税票号:</td><td id='DZSPH' class="col-md-2"></td>
+								<td class="col-md-2 bold">应缴税额:</td><td id='YJSE' class="col-md-2"></td>
+								<td class="col-md-2 bold" >pos刷新时间:</td><td id='POS_DATE' class="col-md-2"></td>
+								
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold">支付状态</td><td id='STATUS' class="col-md-2"></td>
+								<td class="col-md-2 bold">税库银支付说明</td><td id='KKFHMC' class="col-md-2"></td>
+								<td class="col-md-2 bold" >pos支付状态:</td><td id='POS_STATUS' class="col-md-2"></td>
+								
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold">pos支付说明:</td><td id='POS_MSG' class="col-md-2"></td>
+								<td class="col-md-2 bold">pos支付响应:</td><td colspan="3" id='POS_DATA' class="col-md-2"></td>
+							</tr>
+						</tbody>
+					</table>
+					<button id="btn-pay-pos" class="btn sbold green">刷新交易状态</button>
+					<button id="btn-pass-pos" class="btn sbold green">通过缴费</button>
+				</div>
+				<!-- 税票信息  -->
+				<div class="scroller tab-pane" style="height: auto; overflow-y: hidden; width: auto;" id="portlet_tab_6">
+					<table class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+						<tbody id="cst_pay_receipt" >
+							<tr role="row">
+								<td class="col-md-2 bold" >登记注册类型:</td><td id='DJZCLX' class="col-md-2"></td>
+								<td class="col-md-2 bold">填发日期:</td><td id='TFRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">纳税人识别号:</td><td id='NSRSBH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >纳税人名称:</td><td id='NSRMC' class="col-md-2"></td>
+								<td class="col-md-2 bold">原凭证号:</td><td id='YSZH' class="col-md-2"></td>
+								<td class="col-md-2 bold">税种:</td><td id='SZ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >品目名称:</td><td id='PMMC' class="col-md-2"></td>
+								<td class="col-md-2 bold">合计金额(数字):</td><td id='HJJE' class="col-md-2"></td>
+								<td class="col-md-2 bold">合计金额(大写):</td><td id='HJJE_ZH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >税务机关(填票人):</td><td id='SWJG' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款所属时期:</td><td id='SKSSSQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">税务机关代码:</td><td id='SWJGDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >电子税票号:</td><td id='DZSPHM' class="col-md-2"></td>
+								<td class="col-md-2 bold">应交税额:</td><td id='YJSE' class="col-md-2"></td>
+								<td class="col-md-2 bold">缴款期限:</td><td id='JKQX' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >税票UUID:</td><td id='SPUUID' class="col-md-2"></td>
+								<td class="col-md-2 bold">征收UUID:</td><td id='ZSUUID' class="col-md-2"></td>
+								<td class="col-md-2 bold">电子税票明细号:</td><td id='DZSPMXXH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >关联电子税票明细序号:</td><td id='GLDZSPMXXH' class="col-md-2"></td>
+								<td class="col-md-2 bold">票证种类代码:</td><td id='PZZLDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">票证字轨代码:</td><td id='PZZGDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >票证号码:</td><td id='PZHM' class="col-md-2"></td>
+								<td class="col-md-2 bold">汇总缴款书标志:</td><td id='HZJKSBZ' class="col-md-2"></td>
+								<td class="col-md-2 bold">登记序号:</td><td id='DJXH' class="col-md-2"></td>
+							</tr>
+							
+							<tr role="row">
+								<td class="col-md-2 bold" >税款所属期起:</td><td id='SKSSQQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款所属期止:</td><td id='SKSSQZ' class="col-md-2"></td>
+								<td class="col-md-2 bold">征收项目代码:</td><td id='ZSXMDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >征收品目代码:</td><td id='ZSPMDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">征收子目代码:</td><td id='ZSZMDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">登记注册类型代码:</td><td id='DJZCLXDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >行业代码:</td><td id='HYDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">申报方式代码:</td><td id='SBFSDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">征收方式代码:</td><td id='ZSFSDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >操作类型代码:</td><td id='CZLXDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款种类代码:</td><td id='SKZLDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款属性代码:</td><td id='SKSXDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >征收代理方式代码:</td><td id='ZSDLFSDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">课税数量:</td><td id='KSSL' class="col-md-2"></td>
+								<td class="col-md-2 bold">计税依据:</td><td id='JSYJ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >已缴税额:</td><td id='SZXXGRIDLB_YJSE' class="col-md-2"></td>
+								<td class="col-md-2 bold">税率:</td><td id='SL1' class="col-md-2"></td>
+								<td class="col-md-2 bold">实缴(退)金额:</td><td id='SJJE' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >开具日期:</td><td id='KJRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款缴纳方式代码:</td><td id='SKJNFSDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">预算科目代码:</td><td id='YSKMDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >预算分配比例代码:</td><td id='YSFPBLDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">收款国库代码:</td><td id='SKGKDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">存款账户账号UUID:</td><td id='CKZHZHUUID' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >银行行别代码:</td><td id='YHHBDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">银行营业网点代码:</td><td id='YHYYWDDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">银行账号:</td><td id='YHZH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >街道乡镇代码:</td><td id='JDXZDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">调账类型代码:</td><td id='TZLXDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">原缴款期限:</td><td id='YJKQX' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >上解日期:</td><td id='SJRQ1' class="col-md-2"></td>
+								<td class="col-md-2 bold">上解销号日期:</td><td id='SJXHRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">上解销人代码:</td><td id='SJXHRDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >上解记账日期||上解记账日期:</td><td id='SJJZRQ1' class="col-md-2"></td>
+								<td class="col-md-2 bold">入(退)库日期:</td><td id='RKRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">入库销号日期:</td><td id='RKXHRQ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >入库销号人代码:</td><td id='RKXHRDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">入库记账日期||入库记账日期:</td><td id='RKJZRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">税收管理员代码:</td><td id='SSGLYDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >主管税务所（科、分局）代码:</td><td id='ZGSWSKFJDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款所属税务机构代码:</td><td id='SKSSSWJGDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">征收税务机关代码:</td><td id='ZSSWJGDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >扣缴登记序号:</td><td id='KJDJXH' class="col-md-2"></td>
+								<td class="col-md-2 bold">税源编号:</td><td id='SYBH1' class="col-md-2"></td>
+								<td class="col-md-2 bold">结存获取标志:</td><td id="BILLBALANCE" class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold">保存并打印标志(税局):</td><td id='PRINTPAYPAID' class="col-md-2"></td>
+								<td class="col-md-2 bold">打印状态:</td><td id="PRINTSTATUS" class="col-md-2"></td>
+								<td class="col-md-2 bold" >备注:</td><td colspan="2">
+									<div style='height: 80px; overflow-y: auto; overflow-x: hidden'><span id='BZ' ></span></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div style="position:absolute; margin-top: -50px;">
+						<button id="btn-sp" class="btn sbold green">税票作废</button>
+<!-- 						<button id="btn-33" class="btn sbold green">税票更新</button> -->
+					</div>
+				</div>
+				<!-- 发票信息 -->
+				<div class="scroller tab-pane" style="height: auto; overflow-y: auto; width: auto;" id="portlet_tab_7">
+					<table class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+						<tbody id="cst_pay_invoice">
+							<tr role="row">
+								<td class="col-md-2 bold" >发票代码:</td><td id='CODE' class="col-md-2"></td>
+								<td class="col-md-2 bold">发票号码:</td><td id='NUM' class="col-md-2"></td>
+								<td class="col-md-2 bold">车架号:</td><td id='VIN' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >购置日期:</td><td id='GZRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">增值税税率:</td><td id='ZZSSL' class="col-md-2"></td>
+								<td class="col-md-2 bold">发票价格:</td><td id='FPJG' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >申报计税价格:</td><td id='SBJSJG' class="col-md-2"></td>
+								<td class="col-md-2 bold">主管税务机关代码:</td><td id='ZGSWJGDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">最低计税价格:</td><td id='ZDJSJG' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >限缴日期:</td><td id='XJRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">计税价格:</td><td id='JSJG' class="col-md-2"></td>
+								<td class="col-md-2 bold">税率:</td><td id='SL1' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >应纳税额:</td><td id='YNSE' class="col-md-2"></td>
+								<td class="col-md-2 bold">应补退税额:</td><td id='YBTSE' class="col-md-2"></td>
+								<td class="col-md-2 bold"></td><td class="col-md-2"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 完税证明 -->
+				<div class="scroller tab-pane" style="height: auto; overflow: auto; width: auto;" id="portlet_tab_8">
+					<table class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+						<tbody id="cst_pay_paid">
+							<tr role="row">
+								<td class="col-md-2 bold" >业务报文返回码:</td><td id='RECODE' class="col-md-2"></td>
+								<td class="col-md-2 bold">车购税申报UUID:</td><td id='CGSSBUUID' class="col-md-2"></td>
+								<td class="col-md-2 bold">凭证序号:</td><td id='PZXH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >征收机关名称:</td><td id='ZSJGMC' class="col-md-2"></td>
+								<td class="col-md-2 bold">征收机关代码:</td><td id='ZSJGDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">车辆档案UUID:</td><td id='ZSJ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >车购税UUID:</td><td id='CGSUUID' class="col-md-2"></td>
+								<td class="col-md-2 bold">车辆档案编号:</td><td id='CLDABH' class="col-md-2"></td>
+								<td class="col-md-2 bold">车辆识别代号:</td><td id='CLSBDH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >发放日期:</td><td id='FFRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">完税凭证号码:</td><td id='WSPZHM' class="col-md-2"></td>
+								<td class="col-md-2 bold">免税填发日期:</td><td id='MSTFRQ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >征收填发日期:</td><td id='ZSTFRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">征免税标志:</td><td id='ZMSBZ' class="col-md-2"></td>
+								<td class="col-md-2 bold">票证号码:</td><td id='PZHM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >税务机关经办人代码:</td><td id='SWJGJBRDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">税务机关经办人名称:</td><td id='SWJGJBRMC' class="col-md-2"></td>
+								<td class="col-md-2 bold">登记序号:</td><td id='DJXH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >纳税人识别号:</td><td id='NSRSBH' class="col-md-2"></td>
+								<td class="col-md-2 bold">纳税人名称:</td><td id='NSRMC' class="col-md-2"></td>
+								<td class="col-md-2 bold">票证字轨名称:</td><td id='PZZG' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >票证种类代码:</td><td id='PZZLDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">票证字轨代码:</td><td id='PZZGDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">票证起始号码:</td><td id='PZQSHM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >票证终止号码:</td><td id='PZZZHM' class="col-md-2"></td>
+								<td class="col-md-2 bold">结存获取标志(税局):</td><td id='BILLBALANCE' class="col-md-2"></td>
+								<td class="col-md-2 bold">保存并打印标志(税局):</td><td id='PRINTPAYPAID' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >打印状态:</td><td id='PRINTSTATUS' class="col-md-2"></td>
+								<td class="col-md-2 bold">二维条码串:</td><td id='EWTMC' class="col-md-2"></td>
+								<td class="col-md-2 bold">二维条码图:</td><td id='EWTMT' class="col-md-2"></td>
+							</tr>
+						</tbody>
+					</table>
+					<button id="btn-wsz" class="btn sbold green">完税证作废</button>
+<!-- 					<button id="btn-6" class="btn sbold green">完税证更新</button> -->
+				</div>
+				<!-- 应征欠税信息 -->
+				<div class="scroller tab-pane" style="height: auto; overflow-y: auto; width: auto;" id="portlet_tab_9">
+					<table class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="word-break:break-all;word-wrap:break-word;">
+						<tbody id="cst_taxes_info">
+							<tr role="row">
+								<td class="col-md-2 bold" >征收UUID:</td><td id='ZSUUID' class="col-md-2"></td>
+								<td class="col-md-2 bold">应征凭证序号:</td><td id='YZPZXH' class="col-md-2"></td>
+								<td class="col-md-2 bold">应征凭证明细序号:</td><td id='YZPZMXXH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >应征凭证种类代码:</td><td id='GLYZPZMXXH' class="col-md-2"></td>
+								<td class="col-md-2 bold">应征凭证种类代码:</td><td id='YZPZZLDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">登记序号:</td><td id='DJXH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >征收代理方式代码:</td><td id='ZSDLFSDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">纳税申报日期:</td><td id='NSSBRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">应征发生日期:</td><td id='YZFSRQ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >应征归属日期:</td><td id='YZGSRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">会计记账日期:</td><td id='KJJZRQ' class="col-md-2"></td>
+								<td class="col-md-2 bold">应征车辆日期:</td><td id='YZCLRQ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >操作类型代码:</td><td id='CZLXDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">调账类型代码:</td><td id='TZLXDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款处理类型代码:</td><td id='SKCLLXDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >申报属性代码:</td><td id='SBSXDM1' class="col-md-2"></td>
+								<td class="col-md-2 bold">课税数量:</td><td id='KSSL' class="col-md-2"></td>
+								<td class="col-md-2 bold">计税依据:</td><td id='JSYJ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >税率:</td><td id='SL1' class="col-md-2"></td>
+								<td class="col-md-2 bold">应纳税额:</td><td id='YNSE' class="col-md-2"></td>
+								<td class="col-md-2 bold">减免税额:</td><td id='JMSE' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >已缴税额:</td><td id='YJSE' class="col-md-2"></td>
+								<td class="col-md-2 bold">应补(退)税额:</td><td id='YBTSE' class="col-md-2"></td>
+								<td class="col-md-2 bold">滞纳金金额:</td><td id='ZNJJE' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >罚款金额:</td><td id='FKJE' class="col-md-2"></td>
+								<td class="col-md-2 bold">利息金额:</td><td id='LXJE' class="col-md-2"></td>
+								<td class="col-md-2 bold">行业代码:</td><td id='HYDM' class="col-md-2"></td>
+							</tr>
+							
+							<tr role="row">
+								<td class="col-md-2 bold" >征收项目代码:</td><td id='ZSXMDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">征收品目代码:</td><td id='ZSPMDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款所属期起:</td><td id='SKSSQQ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >税款所属期止:</td><td id='SKSSQZ' class="col-md-2"></td>
+								<td class="col-md-2 bold">缴款期限:</td><td id='JKQX' class="col-md-2"></td>
+								<td class="col-md-2 bold">原缴款期限:</td><td id='YJKQX' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >查补属性代码:</td><td id='CBSXDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">登记注册类型代码:</td><td id='DJZCLXDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">单位隶属关系代码:</td><td id='DWLSGXDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >街道乡镇代码:</td><td id='JDXZDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">税收管理员代码:</td><td id='SSGLYDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">扣缴登记序号:</td><td id='KJDJXH' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >征收方式代码:</td><td id='ZSFSDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款种类代码:</td><td id='SKZLDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款属性代码:</td><td id='KSXDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >应缴税款状态代码:</td><td id='YJSKZTDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">申报方式代码:</td><td id='SBFSDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">征收子目代码:</td><td id='ZSZMDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >税源编号:</td><td id='SYBH1' class="col-md-2"></td>
+								<td class="col-md-2 bold">税款所属税务机构代码:</td><td id='SKSSSWJGDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">主管税务所（科、分局）代码:</td><td id='ZGSWSKFJDM' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >征收税务机关代码:</td><td id='ZSSWJGDM' class="col-md-2"></td>
+								<td class="col-md-2 bold">确认明细UUID:</td><td id='QRMXUUID' class="col-md-2"></td>
+								<td class="col-md-2 bold">入库日期:</td><td id='RKRQ' class="col-md-2"></td>
+							</tr>
+							<tr role="row">
+								<td class="col-md-2 bold" >备注:</td><td colspan="3">
+									<div style='height: 100px; overflow-y: auto; overflow-x: hidden'><span id='BZ' ></span></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 摩托车类型 -->
+				<div class="scroller tab-pane" style="height: auto; overflow-y: auto; width: auto;" id="portlet_tab_10">
+					<table class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+							role="grid" aria-describedby="sample_1_info"
+							style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+									style="width: 7%;">车辆类别代码</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7%;">车辆类型代码</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 5%;">价格类型</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7%;">最低计税价格</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7%;">车辆序列号</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7%;">车辆型号</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7%;">车辆厂牌</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 7%;">车辆厂牌型号</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 5%;">车辆吨位</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 4%;">座位数</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 4%;">排气量</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 9%;">车辆生产企业名称</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 5%;">产地属性</th>
+								<th class="sorting_disabled" tabindex="0"aria-controls="sample_1" rowspan="1" colspan="1"
+								style="width: 19%;">主要配置</th>
+								<!-- CLGZSRLNYZLDM --><!-- 未知其属性 页面未显示 -->
+							</tr>
+						</thead>
+						<tbody id="data-tbody-motor"></tbody>
+					</table>
+				</div>
+				<!-- 流程执行脚本 --><!--   -->
+				<div class="scroller tab-pane" id="portlet_tab_11" style="height: auto; overflow: auto; width: auto;">
+					<table class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+							id="sample_1" role="grid" aria-describedby="sample_1_info"
+							style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1"
+									style="width: 8%;">所属任务</th>
+								<th class="sorting_disabled" tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1"
+									style="width: 8%;">对应流程名称</th>
+								<th class="sorting_disabled" tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1"
+									style="width: 8%;">流程名称代码</th>
+								<th class="sorting_disabled" tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1"
+									style="width: 5%;">耗时(毫秒)</th>
+								<th class="sorting_disabled" tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1"
+									style="width: 8%;">执行时间</th>
+								<th class="sorting_disabled" tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1"
+									style="width: 8%;">执行结果</th>
+								<th class="sorting_disabled" tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1"
+									style="width: 10%;">执行结果说明</th>
+								<th class="sorting_disabled" tabindex="0"
+									aria-controls="sample_1" rowspan="1" colspan="1"
+									style="width: 35%;">执行结果明细</th>
+							</tr>
+						</thead>
+						<tbody id="data-tbody-script"></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 登录密码验证 -->
+	<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1"
+	role="dialog">
+	<div class="modal-dialog">
+		<form id="veri_form" class="form-horizontal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="caption">
+						<i class="icon-settings font-red"></i> <span
+							class="caption-subject font-red sbold uppercase">密码确认</span>
+					</div>
+				</div>
+				<div class="modal-body" id="veri">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-3">输入密码：
+							</label>
+							<div class="col-md-7">
+								<input id='veri_pwd' type="password" name="password" class="form-control"
+									placeholder="必填..."></input>
+							</div>
+						</div>
+						<div style="color: red;margin-left: 25%;font-size: 12px;">
+							<span id="warning"></span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn default" data-dismiss="modal">取 消</button>
+					<button type="submit" class="btn blue" id="save">确 定</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

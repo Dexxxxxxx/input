@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.cigarette.CigarCommonInfoMapper">
+<!-- 查询所有接口信息 -->
+	<select id="list" parameterType="map" resultType="map">
+		SELECT NSRSBH, OPENID, APP_SECRET, ACCESS_TOKEN 
+		FROM CIGARETTE_COMM_INFO
+	</select>
+<!-- 查询接口的公共信息 -->
+	<select id="getInfo" parameterType="map" resultType="map">
+		SELECT NSRSBH, OPENID, APP_SECRET, ACCESS_TOKEN 
+		FROM CIGARETTE_COMM_INFO
+		WHERE 1=1
+		<if test="nsrsbh !=null and nsrsbh !=''">
+       		AND  NSRSBH=#{nsrsbh}
+		</if>
+		<if test="openid !=null and openid !=''">
+			AND OPENID=#{openid}
+		</if>
+		<if test="nsrsbh !=null and nsrsbh !=''">
+			AND NSRSBH=#{nsrsbh}
+		</if>
+	</select>
+<!-- 修改接口信息 -->
+	<update id="update" parameterType="map">
+		update cigarette_comm_info
+   		set 
+        access_token = #{access_token}
+ 		where  1=1 
+ 		<if test="nsrsbh !=null and nsrsbh !=''">
+       		AND  OPENID=#{openid}
+		</if>
+		<if test="nsrsbh !=null and nsrsbh !=''">
+       		AND  APP_SECRET=#{app_secret}
+		</if>
+	</update>
+	
+<!-- 获取纳税人信息 -->
+	<select id="getNsrInfo" parameterType="map" resultType="map">
+		select id, nsrsbh, name, dzdh, yhzh, pid 
+		from base_nsrinfo
+		where nsrsbh=#{nsrsbh}
+	</select>
+</mapper>

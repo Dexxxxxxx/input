@@ -1,0 +1,149 @@
+<div class="col-md-12">
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase">车辆购置税业务收入报表</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div class="col-md-offset-2 col-md-10">
+						<div class=" col-md-5">
+							<input type="text"  class="form-control" readonly="readonly" id="tamname" name="tamname" value="所有TAM机">
+							<input type="hidden" name="tam" id="tamid" value="999">
+						</div>
+						<div class=" col-md-4">
+						<label>&nbsp;时间：</label>
+						<input class="datePicker date-picker-cst" name="start_date" type="text" 
+								id="start_date" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+						<label class="input-inline">TO</label> 	
+						<input class="datePicker date-picker-cst" name="end_date" type="text" 
+								id="end_date" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})">	
+						</div>
+						<div class=" col-md-3">
+						<button id="sample_editable_1_seach" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+						<button id="excel" class="btn sbold green">
+							导出 Excel
+						</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+			<span class="caption-subject bold uppercase" id="title"></span>
+			<div class="dataTables_wrapper no-footer">
+				<div class="table-scrollable">
+					<table
+						class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+						id="sample_1" role="grid" aria-describedby="sample_1_info">
+						<thead>
+							<tr role="row">
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">数量 </th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">征收合计</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">减：退税</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">滞纳金</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">其他收入</th>
+								<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">合计</th>
+							</tr>
+						</thead>
+						<tbody id="data-tbody"></tbody>
+							<tr>
+								<td>数量</td>
+								<td id="daycount" class="text-right"></td>
+								<td class="text-right">0</td>
+								<td class="text-right">0</td>
+								<td class="text-right">0</td>
+								<td id="daycountall" class="text-right"></td>
+							</tr>
+							<tr>
+								<td>POS机缴款</td>
+								<td id="daypospayment" class="text-right"></td>
+								<td class="text-right">0</td>
+								<td class="text-right">0</td>
+								<td class="text-right">0</td>
+								<td id="daypospaymentall" class="text-right"></td>
+							</tr>
+							<tr>
+								<td>总计</td>
+								<td id="dayzj" class="text-right"></td>
+								<td class="text-right">0</td>
+								<td class="text-right">0</td>
+								<td class="text-right">0</td>
+								<td id="daypayment" class="text-right"></td>
+							</tr>
+					</table>
+				</div>
+				<div class="row" id="page-div"></div>
+			</div>
+		</div>
+		<div id="body"></div>
+	</div>
+  </div>
+</div>
+<!-- 模态正文 角色》》功能  开始 -->
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <span id="lblAddTitle" style="font-weight:bold">TAM机详情列表</span>
+                </h5>
+			</div>
+			<!-- 因为 JS new app.Page的原因,必须需要一个新定义的form -->
+			<div class="modal-body">
+				<form id="tam-search" method="post">
+					<div class="col-md-7 col-sm-7">
+							<div class="dataTables_filter">
+								<label>搜 索:
+									<input type="search" name="search_key" id="search_key" class="form-control input-sm input-small input-inline">
+								</label>
+							</div>
+							</div>
+						<div class="col-md-5 col-sm-5">
+							<button id="sample_editable_1_seach" class="btn sbold green">
+								查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+							</button>
+							<button id="showall" class="btn sbold green">
+								选择所有&nbsp;
+							</button>
+						</div>
+				</form>
+				<br>
+				<div class="table-toolbar">
+					<div class="dataTables_wrapper no-footer">
+						<div class="table-scrollable">
+							<table
+								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+								id="sample_2" role="grid" aria-describedby="sample_1_info">
+								<thead>
+									<tr role="row">
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 15%;">平台机构</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">TAM机编号</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">名称</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 10%;">POSTTYPE</th>
+										<th class="sorting_disabled" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" style="width: 12.5%;">POST_ID</th>
+									</tr>
+								</thead>
+								<tbody id="data-tbody-tail"></tbody>
+							</table>
+						</div>
+						<div class="row" id="page-div-tail"></div>
+					</div>
+				</div>
+		
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+<!-- 				<button type="button" class="btn blue" id="savePri"> 保 存 </button> -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 模态正文 角色》》功能  结束 -->

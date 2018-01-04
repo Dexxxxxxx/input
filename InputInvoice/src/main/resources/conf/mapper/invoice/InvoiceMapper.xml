@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.invoice.IInvoiceMapper">
+<!-- 烟草发票管理 -->
+	<!-- 查询烟草发票开具信息列表  -->
+	<sql id="listTobaccoInvoice_where">
+		<if test="search_key !=null and search_key !=''">
+			AND(
+			FPDM  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			OR FPHM  LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)
+		</if>
+		<choose>
+			<when test="type != null and type != ''">
+					and	type=1
+			</when>
+			<otherwise>
+					and	type=2
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="status != null and status != ''">
+					and	status=#{status}
+			</when>
+			<otherwise>
+					and	status is null
+			</otherwise>
+		</choose>
+		<if test="start_date !=null and start_date !=''">
+			and to_char(s.CREATETIME,'yyyy-MM-dd') &gt;= #{start_date}
+		</if>
+		<if test="end_date !=null and end_date !=''">
+			and to_char(s.CREATETIME,'yyyy-MM-dd') &lt;= #{end_date}
+		</if>
+		<if test="departid !=null and departid !=''">
+			and GHF_ID in (
+			SELECT BA.ID FROM BASE_DEPART BA
+			START WITH ID = #{departid}
+			CONNECT BY PRIOR ID = PID )
+		</if>
+		
+	</sql>
+	<select id="listTobaccoInvoice" parameterType="map" resultType="map">
+		SELECT
+		ID, FPQQLSH, JYLSH, KPLX, XSF_ID, GHF_ID, QDBZ, ZSFS, HJJE, HJSE, JSHJ,
+		KCE, BZ, SKR, FHR, KPR, TZDBH, YFPDM, YFPHM, FPDM, FPHM, SKM, JYM, DEPTID, TO_CHAR(CREATETIME,'YYYY-MM-DD HH24:MI:SS') CREATETIME,TYPE,KPF_NAME
+		FROM (SELECT ROWNUM RN, T.* FROM (
+		SELECT S.*,S1.NAME KPF_NAME
+    	FROM SXYC_TAX_INVOICE${suffix} S LEFT JOIN　BASE_DEPART S1　ON S.XSF_ID=S1.ID
+		WHERE 1 = 1 
+		<include refid="listTobaccoInvoice_where"></include>
+		ORDER BY s.CREATETIME DESC
+		
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+	</select>
+	<!-- 查询烟草发票开具信息总条数  -->
+	<select id="tobaccoInvoiceCount" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM SXYC_TAX_INVOICE${suffix}
+		WHERE 1 = 1
+		<include refid="listTobaccoInvoice_where"></include>
+	</select>
+	<!-- 获取烟草某一张发票的公共信息-->
+	<select id="getTobaccoInvoice" parameterType="map" resultType="map">
+		SELECT ID, FPQQLSH, JYLSH, KPLX, XSF_ID, GHF_ID, XSF_ADD, QDBZ, ZSFS, HJJE, 
+		HJSE, JSHJ, KCE, BZ, SKR, FHR, KPR, TZDBH, YFPDM, YFPHM, FPDM, FPHM, 
+		SKM, JYM, DEPTID, TO_CHAR(CREATETIME,'YYYY-MM-DD HH24:MI:SS') CREATETIME, KPRQ, TYPE 
+		from sxyc_tax_invoice${suffix}
+		where id=#{id}
+	</select>
+	<!-- 获取烟草某一张发票商品开具信息 -->
+	<select id="getTobaccoInvoiceDetail" parameterType="map" resultType="map">
+		select id, invoice_id, scale_count, fphxz, spmc, spsm, ggxh, dw, 
+		spsl, dj, je, sl, se, hsbz, spbm, zxbm, yhzcbs, lslbs, zzstsgl
+		from sxyc_tax_invoice_detail${suffix}
+		where invoice_id=#{invoice_id}
+		order by scale_count
+	</select>
+	
+	
+	<!-- 保存发票信息 -->
+	<insert id="saveInvoiceInfo" parameterType="map">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select uuid()
+		</selectKey>
+		insert into fp_msg
+  		(id, fpqqlsh, yylxdm, fphm, fpdm, fpzt, xhdwsbh, xhdwmc, xhdwdzdh, xhdwyhzh, 
+  		ghdwsbh, ghdwmc, ghdwdzdh, ghdwyhzh, fphxz, ggxh, zhsl, spbm, sl, hjse, ykfsje, 
+  		kpjh, qdbz, scbz, kprq, kpsj, spmc, spsm, hsbz, se, skr, jshj, fhr, dw, spsl, 
+  		dj, je, zzstsgl, yfpdm, yfphm, qmcs, hjje, tspz, skpbh, skm, jym, ssyf, zyspmc, 
+  		zfrq, zfr, zxbm, yhzcbs, jmbbh, bmbbbh, hsslbs, qmz, status, bz)
+		values
+  		(#{id}, #{fpqqlsh}, #{yylxdm}, #{fphm}, #{fpdm}, #{fpzt}, #{xhdwsbh}, #{xhdwmc}, #{xhdwdzdh}, #{xhdwyhzh}, 
+  		#{ghdwsbh}, #{ghdwmc}, #{ghdwdzdh}, #{ghdwyhzh}, #{fphxz}, #{ggxh}, #{zhsl}, #{spbm}, #{sl}, #{hjse}, #{ykfsje}, 
+  		#{kpjh}, #{qdbz}, #{scbz}, #{kprq}, #{kpsj}, #{spmc}, #{spsm}, #{hsbz}, #{se}, #{skr}, #{jshj}, #{fhr}, #{dw}, #{spsl}, 
+  		#{dj}, #{je}, #{zzstsgl}, #{yfpdm}, #{yfphm}, #{qmcs}, #{hjje}, #{tspz}, #{skpbh}, #{skm}, #{jym}, #{ssyf}, #{zyspmc}, 
+  		#{zfrq}, #{zfr}, #{zxbm}, #{yhzcbs}, #{jmbbh}, #{bmbbbh}, #{hsslbs}, #{qmz}, #{status}, #{bz})
+	</insert>
+	<!-- 作废烟草发票 -->
+	<update id="updateStatus" parameterType="map">
+		update SXYC_TAX_INVOICE${suffix} 
+		set status='-1'
+		where fphm=#{fphm} and fpdm=#{fpdm}
+	</update>
+	
+<!-- 卷烟发票管理 -->
+	<!-- 查询烟草发票开具信息列表  -->
+	<select id="listCigaretteInvoice" parameterType="map" resultType="map">
+	</select>
+	<!-- 查询烟草发票开具信息列表  -->
+	<select id="cigaretteInvoiceCount" parameterType="map" resultType="int">
+	</select>
+	<!-- 获取烟草某一张发票开具信息 -->
+	<select id="getCigaretteInvoiceDetail" parameterType="map" resultType="map">
+	</select>
+	
+</mapper>

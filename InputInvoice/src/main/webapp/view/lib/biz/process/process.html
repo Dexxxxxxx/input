@@ -1,0 +1,124 @@
+<div class="col-md-12">
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase"> 流程定义</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row" id="data-main">
+	
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div aria-hidden="true" id="ajax-modal-nopass" class="modal fade" tabIndex="-1" role="dialog">
+	<div class="modal-dialog">
+		<form action="#" id="process_form" method="post" class="form-horizontal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="caption">
+						<i class="icon-settings font-red"></i> 
+						<span class="caption-subject font-red sbold uppercase">流程定义</span>
+					</div>
+				</div>
+				<div class="modal-body" id="write-examine">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-3">流程类型</label>
+							<div class="col-md-8">
+								<input class="form-control" name="TP" placeholder="流程类型" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">执行顺序
+								<span class="required"> * </span>
+							</label>
+							<div class="col-md-8">
+								<input class="form-control" name="BYORDER" placeholder="执行顺序"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">任务名称
+								<span class="required"> * </span>
+							</label>
+							<div class="col-md-8">
+								<input class="form-control" name="NAME" placeholder="任务名称"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">客户端名
+								<span class="required"> * </span>
+							</label>
+							<div class="col-md-8">
+								<input class="form-control" name="DISNAME" placeholder="客户端名"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">任务代码
+								<span class="required"> * </span>
+							</label>
+							<div class="col-md-8">
+								<input class="form-control" name="CODE" placeholder="任务代码"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">对应bean
+								<span class="required"> * </span>
+							</label>
+							<div class="col-md-8">
+								<input class="form-control" name="BEAN" placeholder="对应bean"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">是否启用</label>
+							<div class="col-md-8">
+								<select class="form-control" name="DISABLED" >
+									<option value="0">启用</option>
+									<option value="-1">禁用</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">是否显示</label>
+							<div class="col-md-8">
+								<select class="form-control" name="DISPLAYD"  >
+									<option value="0">显示</option>
+									<option value="-1">影藏</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">是否可跳过</label>
+							<div class="col-md-8">
+								<select class="form-control" name="DOCONTINUE" >
+									<option value="0">可以</option>
+									<option value="-1">不可以</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">说明</label>
+							<div class="col-md-8">
+								<textarea class="form-control" name="REMARKS" placeholder="可选"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input name="ID" type="hidden" readonly="readonly"/>
+					<input name="TASKID" type="hidden" readonly="readonly"/>
+					<button type="button" class="btn default" data-dismiss="modal">返 回</button>
+					<button type="button" class="btn blue" id="fomr_btn_submit">保 存</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
+

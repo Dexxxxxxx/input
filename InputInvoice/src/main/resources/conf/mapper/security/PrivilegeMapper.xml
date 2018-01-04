@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.security.PrivilegeMapper">
+	<sql id="list_where">
+		<if test="name !=null and name !=''">
+			AND (
+			t1.NAME LIKE CONCAT(CONCAT('%', #{name}), '%')
+			OR
+			t2.NAME LIKE CONCAT(CONCAT('%', #{name}), '%')
+			OR
+			t1.URL LIKE CONCAT(CONCAT('%', #{name}), '%')
+			)
+		</if>
+		<if test="url !=null and url !=''">
+			AND t1.URL LIKE CONCAT(CONCAT('%', #{url}), '%')
+		</if>
+		<if test="pid !=null and pid !=''">
+			AND t1.PID LIKE CONCAT(CONCAT('%', #{pid}), '%')
+		</if>
+		<if test="ptype !=null and ptype !=''">
+			AND T1.PTYPE LIKE CONCAT(CONCAT('%', #{ptype}), '%')
+		</if>
+	</sql>
+
+	<!-- 查询分页总条数 -->
+	<select id="listCount" resultType="int" parameterType="map">
+
+		SELECT COUNT(1) FROM BASE_PRIVILEGE T1
+		LEFT JOIN BASE_PRIVILEGE T2 ON T1.PID=T2.ID
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="list" resultType="map" parameterType="map">
+
+		SELECT * FROM (SELECT ROWNUM RN, T.* FROM (
+
+		SELECT T1.*,T2.NAME PNAME
+		FROM BASE_PRIVILEGE T1
+		LEFT JOIN BASE_PRIVILEGE T2 ON T1.PID=T2.ID
+		WHERE 1 = 1
+		<include refid="list_where"></include>
+		ORDER BY t1.PTYPE ASC,t1.PID ASC,t1.ORDERBY ASC
+
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+
+	</select>
+
+	<!-- 获取tree数据 -->
+	<select id="getTree" resultType="map" parameterType="map">
+
+<!-- 		SELECT T.*,T2.CHECKED -->
+<!-- 		FROM (SELECT ID, NAME, URL, PID, ICON, PTYPE, ORDERBY -->
+<!-- 		FROM BASE_PRIVILEGE T START WITH T.PID = '-1' -->
+<!-- 		CONNECT BY PRIOR T.ID = T.PID) T -->
+<!-- 		LEFT JOIN (SELECT DISTINCT RP.PRIVILEGE, -->
+<!-- 		<choose> -->
+<!-- 			<when test="roleId !=null and roleId !=''"> -->
+<!-- 				'true' -->
+<!-- 			</when> -->
+<!-- 			<otherwise> -->
+<!-- 				'' -->
+<!-- 			</otherwise> -->
+<!-- 		</choose> -->
+<!-- 		CHECKED FROM BASE_ROLE_PRIVILEGE RP -->
+<!-- 		WHERE 1=1 -->
+<!-- 		<if test="roleId !=null and roleId !=''"> -->
+<!-- 			AND RP.ROLE = #{roleId} -->
+<!-- 		</if> -->
+<!-- 		) T2 -->
+<!-- 		ON T.ID = T2.PRIVILEGE -->
+<choose> 
+			<when test="roleId !=null and roleId !=''">
+	SELECT S1.ID,S2.CHECKED,S1.NAME,S1.PID FROM(
+	<choose> 
+			<when test="id !=null and id !=''">
+	SELECT DISTINCT TT.PRIVILEGE ID,P.NAME,P.PID FROM BASE_ROLE_USER T
+	LEFT JOIN BASE_ROLE_PRIVILEGE TT ON T.ROLE=TT.ROLE
+	LEFT JOIN BASE_PRIVILEGE
+	P ON TT.PRIVILEGE=P.ID
+	WHERE TT.PRIVILEGE IS NOT NULL
+	AND T.USERID=#{id}
+			</when>
+			<otherwise>
+				SELECT ID, NAME, PID FROM BASE_PRIVILEGE
+			</otherwise>
+		</choose>
+	
+	)S1 LEFT JOIN
+	(
+	SELECT TTT.PRIVILEGE,'true' CHECKED FROM BASE_ROLE_PRIVILEGE TTT WHERE
+	TTT.ROLE=#{roleId}
+	)S2
+	ON S1.ID=S2.PRIVILEGE
+	</when>
+	<otherwise>
+				SELECT ID,NAME,PID FROM BASE_PRIVILEGE
+	</otherwise>
+	</choose>
+	</select>
+	
+	<!-- 获取tree数据 -->
+	<select id="getAllTree" resultType="map" parameterType="map">
+	
+	</select>
+
+	<!-- 根据ID获取信息 -->
+	<select id="getById" resultType="map" parameterType="map">
+		SELECT T.*,T1.NAME PNAME FROM BASE_PRIVILEGE T LEFT JOIN BASE_PRIVILEGE T1 ON T.PID=T1.ID WHERE T.ID=#{id}
+	</select>
+
+	<!-- 增加 -->
+	<insert id="add" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		INSERT INTO BASE_PRIVILEGE
+		(ID,NAME,URL,PID,ICON,ORDERBY,PTYPE)
+		VALUES
+		(#{id},#{name},#{url},
+		<choose>
+                <when test="pid!= null and pid!= ''">
+                       #{pid},
+                </when>
+                <otherwise>
+                       '-1',
+                 </otherwise>
+         </choose>
+		
+		
+		#{icon},#{orderby},#{ptype})
+	</insert>
+
+	<!-- 根据ID查出所有节点(包括子节点) -->
+	<select id="getListByPids" resultType="map" parameterType="map">
+		SELECT ID FROM BASE_PRIVILEGE T
+		START WITH T.ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		CONNECT BY PRIOR T.ID=T.PID
+	</select>
+
+	<!-- 删除 -->
+	<delete id="deleteByIds" parameterType="map">
+		DELETE BASE_PRIVILEGE T WHERE T.ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 删除 角色-权限 -->
+	<delete id="deleteRolePrivilege" parameterType="map">
+		DELETE BASE_ROLE_PRIVILEGE WHERE PRIVILEGE IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="map">
+		UPDATE BASE_PRIVILEGE
+		SET
+		ID=#{id},
+		NAME=#{name},
+		URL=#{url},
+		PID=#{pid},
+		ICON=#{icon},
+		ORDERBY=#{orderby},
+		PTYPE=#{ptype}
+		WHERE
+		ID=#{id}
+	</update>
+</mapper>

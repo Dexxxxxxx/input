@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang=cn>
+
+	<head>
+		<title>进项发票管理平台</title>
+		<meta name=description content="进项发票管理平台">
+		<meta name=keywords content="进项发票管理平台">
+		<meta name=apple-mobile-web-app-title content="进项发票管理平台">
+		<meta name=keywords content="进项发票管理平台">
+		<meta charset=utf-8>
+		<meta http-equiv=X-UA-Compatible content=IE=edge>
+		<meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<meta name=renderer content=webkit>
+		<link rel="stylesheet" href="view/lib/assets/global/plugins/bootstrap/css/css.css?family=Roboto:400,100,300,500">
+		<link rel="stylesheet" href="view/lib/assets/global/plugins/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="view/lib/assets/global/scripts/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="view/lib/assets/global/scripts/font-awesome/css/form-elements.css">
+		<link rel="stylesheet" href="view/lib/assets/global/scripts/font-awesome/css/style.css">
+		<link rel="icon" type="image/png" href="view/lib/assets/global/img/logo.jpg">
+		
+		<!--[if lt IE 9]><script src="view/lib/assets/global/plugins/bootstrap/js/html5shiv.js">
+		</script><script src="view/lib/assets/global/plugins/bootstrap/js/respond.min.js"></script><![endif]-->
+	</head>
+
+	<body >
+		<div class=top-content style="background-color: #0B61A4">
+			<div class=inner-bg>
+				<div class=container>
+					<div class=row>
+						<div class="col-sm-8 col-sm-offset-2 text">
+							<h1 style=color:black;>进项发票管理平台</h1></div>
+					</div>
+					<div class=row>
+						<div class="col-sm-6 col-sm-offset-3 form-box">
+							<div class=form-top>
+								<div class=form-top-left>
+									<h3>登录到我们的网站</h3>
+									<p>输入用户名和密码登录：</p>
+								</div>
+								<div class=form-top-right><i class="fa fa-key"></i></div>
+							</div>
+							<div class=form-bottom>
+								<form role=form id=loginForm action=security/login/login.do method=post class=login-form>
+									<div class=form-group>
+										<label class=sr-only for=form-username>用户名</label>
+										<input type=text name=username placeholder="用户名..." class="form-username form-control" id=form-username>
+									</div>
+									<div class=form-group>
+										<label class=sr-only for=form-password>密码</label>
+										<input type=password name=password placeholder="密码..." class="form-password form-control" id=form-password>
+									</div>
+									<div class="form-group">
+											<!-- <img src="randCodeImage" alt="..." id="randCodeImage" class="img-thumbnail" style="height: 32px;margin-bottom: 5px;">
+											<label>输入4位图片验证码</label>
+											<label class=sr-only  for=form-randCode>图片验证码</label>
+											<input type=text name=randCode placeholder="验图片证码..." class="form-randCode form-control" id=form-randCode value="1111"> -->
+									</div>
+									<button type=submit class=btn>登 录</button>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class=row>
+						<div class="col-sm-6 col-sm-offset-3 social-login">
+							<h4 id=login-with></h4>
+							<div class=social-login-buttons>
+								<p style=color:white;>Copyright ©.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="view/lib/assets/global/plugins/jquery.min.js"></script>
+		<script src="view/lib/assets/global/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script src="view/lib/assets/global/plugins/backstretch/jquery.backstretch.min.js"></script>
+		<script src="view/lib/assets/global/plugins/jquery.form.js"></script>
+		<script src="view/lib/assets/global/scripts/json2.js"></script>
+		<script src="view/lib/assets/global/scripts/scripts.js"></script>
+	</body>

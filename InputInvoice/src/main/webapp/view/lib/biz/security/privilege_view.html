@@ -1,0 +1,139 @@
+<div class="portlet light portlet-fit portlet-form bordered">
+	<div class="portlet-title">
+		<div class="caption">
+			<i class="icon-settings font-red"></i> <span
+				class="caption-subject font-red sbold uppercase" id="fn_tittle"></span>
+		</div>
+	</div>
+	<div class="portlet-body">
+		<!-- BEGIN FORM-->
+		<form action="security/privilege/update.do" method="post"
+			id="privilege_form" class="form-horizontal">
+			<div class="form-body">
+				<div class="alert alert-danger display-hide">
+					<button class="close" data-close="alert"></button>
+					You have some form errors. Please check below.
+				</div>
+				<div class="alert alert-success display-hide">
+					<button class="close" data-close="alert"></button>
+					Your form validation is successful!
+				</div>
+				<div class="form-group" style="display: none">
+					<label class="control-label col-md-3">id <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-4">
+						<input type="text" name="id" data-required="1"
+							class="form-control" id="id" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">名称 <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-4">
+						<input type="text" name="name" data-required="1"
+							class="form-control" id="name" />
+					</div>
+					<div class='col-md-4'>
+						<span id="name-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">请求地址 <span
+						class="required"></span>
+					</label>
+					<div class="col-md-4">
+						<input name="url" type="text" class="form-control" id="url" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">JS <span
+						class="required"></span>
+					</label>
+					<div class="col-md-4">
+						<input name="js" type="text" class="form-control" id="js" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">上级权限 <span
+						class="required"></span>
+					</label>
+					<div class="col-md-4">
+						<input name="pname" type="text" class="form-control" id="pname" readonly="readonly" placeholder="点击选择上级权限"/>
+						<input name="pid" type="hidden" class="form-control" id="pid"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">图标地址 <span
+						class="required"></span>
+					</label>
+					<div class="col-md-4">
+						<input name="icon" type="text" class="form-control" id="icon" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">排序 <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-4">
+						<input name="orderby" type="text" class="form-control"
+							id="orderby" />
+					</div>
+					<div class='col-md-4'>
+						<span id="orderby-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">类型<span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-4">
+						<input name="ptype" type="text" class="form-control" id="ptype" />
+					</div>
+					<div class='col-md-4'>
+						<span id="ptype-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-actions">
+				<div class="row">
+					<div class="col-md-offset-3 col-md-9">
+						<button type="submit" class="btn green">保 存</button>
+						<button type="button" id="cancel"
+							class="btn grey-salsa btn-outline">返 回</button>
+						<span id="submit-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!-- END FORM-->
+	</div>
+</div>
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <i class="icon-pencil"></i>
+                    <span id="lblAddTitle" style="font-weight:bold">设置机构</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+                       	<ul id="treeDemo" class="ztree" style="overflow-y:scroll;height: 700px">  
+            			</ul>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+				<button type="button" class="btn blue" id="saveprivilege"> 保 存 </button>
+			</div>
+		</div>
+	</div>
+</div>

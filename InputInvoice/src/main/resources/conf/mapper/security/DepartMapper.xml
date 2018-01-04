@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdhy.dao.security.DepartMapper">
+
+	<sql id="list_where">
+		<if test="name !=null and name !=''">
+			AND T1.NAME LIKE CONCAT(CONCAT('%', #{name}), '%')
+		</if>
+		<if test="code!=null and code!=''">
+			AND T1.CODE LIKE CONCAT(CONCAT('%', #{code}), '%')
+		</if>
+		<if test="search_key!=null and search_key!=''">
+			AND 
+			(
+				T1.NAME LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+				OR
+				T1.CODE LIKE CONCAT(CONCAT('%', #{search_key}), '%')
+			)	
+		</if>
+	</sql>
+
+	<!-- 查询是否存在子部门 -->
+	<select id="hasChild" resultType="int" parameterType="map">
+		
+		SELECT COUNT(*) FROM BASE_DEPART T WHERE 1 = 1
+		AND T.ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		AND EXISTS (SELECT 1 FROM BASE_DEPART T2 WHERE T2.PID = T.ID)
+
+	</select>
+
+	<!-- 查询当前部门中是否有人 -->
+	<select id="hasUser" resultType="int" parameterType="map">
+	
+		SELECT COUNT(*) FROM BASE_DEPART T WHERE 1 = 1
+		AND T.ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		AND EXISTS (SELECT 1 FROM BASE_USER T2 WHERE T2.DEPARTID=T.ID)
+
+	</select>
+
+	<!-- 查询分页总条数 -->
+	<select id="listCount" resultType="int" parameterType="map">
+
+		SELECT COUNT(*) FROM BASE_DEPART T1
+		WHERE 1 = 1
+		<if test="dpid != null and dpid !=''">
+			 AND T1.ID  IN(
+			SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY C.PID = PRIOR C.id
+			)
+			</if>
+		<include refid="list_where"></include>
+
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="list" resultType="map" parameterType="map">
+
+		SELECT
+		ID,NAME,PNAME,CODE,PID,ADDCODE,CONTACTS,DESCRIPTION,ADDRESS,PHONE,ORDERBY,TO_CHAR(CREATETIME,'yyyy-MM-dd
+		HH24:mi:ss') CREATETIME
+		FROM (SELECT ROWNUM RN, T.* FROM (
+
+		SELECT T1.*,T2.NAME PNAME FROM BASE_DEPART T1 LEFT JOIN BASE_DEPART T2 ON
+		T1.PID=T2.ID
+		WHERE 1 = 1
+		<if test="dpid != null and dpid !=''">
+			 AND T1.ID  IN(
+			SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY C.PID = PRIOR C.id
+			)
+			</if>
+		<include refid="list_where"></include>
+		ORDER BY T1.ORDERBY
+
+		) T WHERE 1=1
+		<if test="end !=null and end !=''">
+			AND ROWNUM &lt;= #{end}
+		</if>
+		) WHERE 1=1
+		<if test="start !=null and start !=''">
+			AND RN &gt;= #{start}
+		</if>
+
+	</select>
+
+	<!-- 获取下属部门的tree数据 -->
+	<select id="getTree" resultType="map" parameterType="map">
+		SELECT T.ID,T.PID,T.NAME, T2.CHECKED
+    	FROM BASE_DEPART T
+    	LEFT JOIN (SELECT DISTINCT DEPTID,
+        <choose>
+			<when test="userId !=null and userId !=''">
+				'true'
+			</when>
+			<otherwise>
+				''
+			</otherwise>
+		</choose>
+    	CHECKED
+    	FROM BASE_USER_DEPART RU
+		WHERE 1 = 1
+		<if test="userId !=null and userId !=''">
+			AND RU.USERID=#{userId}
+		</if>
+		) T2
+		ON T.ID = T2.DEPTID
+	</select>
+	<!-- 获取所属部门的tree数据 -->
+	<select id="getTree1" resultType="map" parameterType="map">
+			SELECT T.ID,T.NAME,T.PID FROM BASE_DEPART T
+			WHERE 1=1
+			 <if test="dpid != null and dpid !=''">
+			 AND T.ID  IN(
+			SELECT C.ID FROM BASE_DEPART C START WITH C.ID=#{dpid} CONNECT BY C.PID = PRIOR C.id
+			)
+			</if>
+	</select>
+	<!-- 根据ID获取信息 -->
+	<select id="getById" resultType="map" parameterType="map">
+		SELECT T.ID,T.NAME,T.CODE,T.PID,T.DESCRIPTION,T.ADDRESS,T.PHONE,T.CONTACTS,T.AREAS,T.ORDERBY,TO_CHAR(T.CREATETIME,'YYYY-MM-DD HH24:MI:SS') CREATETIME,
+		T.KPZDBS,T.NSRID,T1.NAME PNAME,T2.NAME NSRNAME
+		FROM BASE_DEPART T LEFT JOIN BASE_DEPART T1 ON T.PID=T1.ID 
+		LEFT JOIN BASE_NSRINFO T2 ON T.NSRID=T2.ID
+		WHERE T.ID=#{id}
+	</select>
+
+	<!-- 增加 -->
+	<insert id="add" parameterType="map">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT SYS_GUID() FROM DUAL
+		</selectKey>
+		INSERT INTO BASE_DEPART (
+		ID,NAME,PID,DESCRIPTION,ADDRESS,PHONE,ORDERBY,CONTACTS,CREATETIME
+		)
+		VALUES (
+		#{id},
+		#{name},
+
+		#{pid},
+		#{description},
+		#{address},
+		#{phone},
+		#{orderby},
+		#{contacts},
+
+		SYSDATE
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteByIds" parameterType="map">
+		DELETE BASE_DEPART T WHERE
+		T.ID IN
+		<foreach collection="array" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="map">
+		UPDATE BASE_DEPART SET
+		NAME=#{name},
+		PID=#{pid},
+		DESCRIPTION=#{description},
+		ADDRESS=#{address},
+		PHONE=#{phone},
+		ORDERBY=#{orderby},
+		CONTACTS=#{contacts} 
+		where ID = #{id}
+	</update>
+	<!-- 查看是否配置了数据权限 -->
+	<select id="hasPrivilege" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM BASE_USER_DEPART WHERE USERID=#{userid}
+	</select>
+</mapper>

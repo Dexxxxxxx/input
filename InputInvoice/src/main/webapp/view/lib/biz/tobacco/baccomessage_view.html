@@ -1,0 +1,138 @@
+<div class="portlet light portlet-fit portlet-form bordered">
+	<div class="portlet-title">
+		<div class="caption">
+			<i class="icon-settings font-red"></i> <span
+				class="caption-subject font-red sbold uppercase" id="fn_tittle"></span>
+		</div>
+	</div>
+	<div class="portlet-body">
+		<!-- BEGIN FORM-->
+		<form action="security/privilege/update.do" method="post"
+			id="baccomessage_form" class="form-horizontal">
+			<div class="form-body">
+				<div class="alert alert-danger display-hide">
+					<button class="close" data-close="alert"></button>
+					You have some form errors. Please check below.
+				</div>
+				<div class="alert alert-success display-hide">
+					<button class="close" data-close="alert"></button>
+					Your form validation is successful!
+				</div>
+				<div class="form-group" style="display: none">
+					<label class="control-label col-md-3">id <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-4">
+						<input type="text" name="id" data-required="1"
+							class="form-control" id="id" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">烟草商品名称 <span
+						class="required"> * </span>
+					</label>
+					<div class="col-md-4">
+						<input type="text" name="name" data-required="1"
+							class="form-control" id="name" />
+					</div>
+					<div class='col-md-4'>
+						<span id="name-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+	               <label class="control-label col-md-3">烟草商品类型
+	                   <span class="required"> * </span>
+	               </label>
+	               <div class="col-md-4">
+						<select class="form-control selector-status" name="type" id='type'>
+	                        <option value="1">烟草收购</option>
+	                        <option value="2">烟草转售</option>
+	                    </select>
+	               </div>
+           		</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">商品编码 <span
+						class="required">*</span>
+					</label>
+					<div class="col-md-4">
+						<input name="code" type="text" class="form-control" id="code" />
+					</div>
+					<div class='col-md-4'>
+						<span id="code-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">自行编码 <span
+						class="required">*</span>
+					</label>
+					<div class="col-md-4">
+						<input name="zxbm" type="text" class="form-control" id="zxbm" />
+					</div>
+					<div class='col-md-4'>
+						<span id="zxbm-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">单位<span
+						class="required">*</span>
+					</label>
+					<div class="col-md-4">
+						<input name="dw" type="text" class="form-control" id="dw" />
+					</div>
+					<div class='col-md-4'>
+						<span id="dw-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3">税率（%）<span
+						class="required">*</span>
+					</label>
+					<div class="col-md-4">
+						<input name="sl" type="text" class="form-control" id="sl" />
+					</div>
+					<div class='col-md-4'>
+						<span id="sl-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-actions">
+				<div class="row">
+					<div class="col-md-offset-3 col-md-9">
+						<button type="submit" class="btn green">保 存</button>
+						<button type="button" id="cancel"
+							class="btn grey-salsa btn-outline">返 回</button>
+						<span id="submit-error" class='span-text text-danger'></span>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!-- END FORM-->
+	</div>
+</div>
+<!-- <div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <i class="icon-pencil"></i>
+                    <span id="lblAddTitle" style="font-weight:bold">设置机构</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+                       	<ul id="treeDemo" class="ztree" style="overflow-y:scroll;height: 700px">  
+            			</ul>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+				<button type="button" class="btn blue" id="saveprivilege"> 保 存 </button>
+			</div>
+		</div>
+	</div>
+</div> -->

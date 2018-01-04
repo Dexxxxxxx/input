@@ -1,0 +1,91 @@
+<div class="col-md-12">
+	<div class="portlet light ">
+		<div class="portlet-title">
+			<div class="caption font-dark">
+				<i class="icon-settings font-dark"></i> <span
+					class="caption-subject bold uppercase"> 票证使用记录</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<form id="search-form" method="post">
+					<div class="col-md-10 col-sm-10">
+						<div class="dataTables_filter col-md-12">
+							<label>搜 索 : <input type="search" name="search_key" id="search_key"
+								class="form-control input-sm input-sm input-inline"
+								placeholder="查询条件">
+							</label>
+							<label>&nbsp;税票状态：</label> <select
+								class="form-control input-sm input-sm input-inline"
+								name="isdelete" id="isdelete">
+								<option value="999">全部</option>
+								<option value="-2">正常使用</option>
+								<option value="-1">作废</option>
+								
+							</select>
+							<label>&nbsp;使用时间：</label>
+								<input class="datePicker date-picker-cst" name="start_date" type="text" 
+								id="start_date" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'new Date()\'}'})">
+								<label class="input-inline">TO</label> 
+								<input class="datePicker date-picker-cst" name="end_date" type="text" 
+								id="end_date" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:new Date()})">
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2">
+						<button id="sample_editable_1_seach" class="btn sbold green">
+							查询&nbsp;<i class="glyphicon glyphicon-search"></i>
+						</button>
+						<button id="reSetTable" class="btn sbold green">
+							显示全部&nbsp;
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="table-toolbar">
+				<div class="dataTables_wrapper no-footer">
+					<div class="table-scrollable">
+						<table
+							class="table table-striped table-bordered table-hover  order-column dataTable no-footer"
+							id="sample_1" role="grid" aria-describedby="sample_1_info"
+							style="table-layout:fixed;word-break:break-all;overflow: hidden;word-wrap:break-word;">
+							<thead>
+								<tr role="row">
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 11%;">组织机构</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 11%;">TAM编号</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 11%;">TAM名称</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 11%;">票证种类代码</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 11%;">票证号码</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 11%;">票证字轨</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 12%;">使用时间</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 12%;">更新时间</th>
+									<th class="sorting_disabled" tabindex="0"
+										aria-controls="sample_1" rowspan="1" colspan="1"
+										style="width: 10%;">税票状态</th>
+									
+								</tr>
+							</thead>
+							<tbody id="data-tbody"></tbody>
+						</table>
+					</div>
+					<div class="row" id="page-div"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

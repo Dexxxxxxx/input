@@ -1,0 +1,153 @@
+<div class="portlet light portlet-fit portlet-form bordered">
+<div class="portlet-title">
+    <div class="caption">
+        <i class="icon-settings font-red"></i>
+        <span class="caption-subject font-red sbold uppercase" id="fn_tittle"></span>
+    </div>
+    <div class="actions">
+        <div class="btn-group btn-group-devided" data-toggle="buttons">
+        </div>
+    </div>
+</div>
+<div class="portlet-body">
+    <!-- BEGIN FORM-->
+   <form method="post" id="user_form" class="form-horizontal">
+       <div class="form-body">
+           <div class="alert alert-danger display-hide">
+               <button class="close" data-close="alert"></button> You have some form errors. Please check below. </div>
+           <div class="alert alert-success display-hide">
+               <button class="close" data-close="alert"></button> Your form validation is successful! </div>
+           <input type="hidden" name="id" id="id">
+           <div class="form-group">
+               <label class="control-label col-md-3">真实姓名
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='name' type="text" name="name" data-required="1" class="form-control" />
+               </div>
+               <div class="col-md-4">
+               		<span id="name-error" class="span-text text-danger"></span> 
+               </div>
+           </div>
+           
+            <div class="form-group">
+               <label class="control-label col-md-3">性别
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+					<select class="form-control selector-status" name="gender" id='gender'>
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">登录帐号
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='username' type="text" name="username" readonly="readonly" data-required="1" class="form-control" /> 
+               </div>
+               <div class="col-md-4">
+               		<span id="username-error" class="span-text text-danger"></span>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">联系电话
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='phone' name="phone" type="text" class="form-control" />
+               </div>
+               <div class="col-md-4">
+               		<span id="phone-error" class="span-text text-danger"></span>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">邮箱
+                   <span class="required">  </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='email' name="email" type="text" class="form-control" />
+               </div>
+               <div class="col-md-4">
+               		<span id="email-error" class="span-text text-danger"></span> 
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">所属机构名称
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+               	   <input id='departid' name="departid" type="hidden" class="form-control" />
+                   <input id='departname' name="departname" readonly="readonly" type="text" class="form-control" placeholder="点击选择机构"/>
+               </div>
+               <div class="col-md-4">
+               		<span id="departname-error" class="span-text text-danger"></span> 
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">备注
+               </label>
+               <div class="col-md-4">
+                   <input id='remarks' name="remarks" type="text" class="form-control" placeholder="选填..."/> </div>
+           </div>
+           <div class="form-group">
+               <label class="control-label col-md-3">创建时间
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='createtime' name="createtime" readOnly="readonly" type="text" class="form-control" placeholder="日期自动生成"/>
+               </div>
+           </div>
+           <div class="form-group" id="enabled-div">
+               <label class="control-label col-md-3">禁用标志
+                   <span class="required"> * </span>
+               </label>
+               <div class="col-md-4">
+                   <input id='enabled_1' readonly="readonly" type="text" class="form-control" placeholder="0为默认，-1为禁用"/>
+                   <input id='enabled' type="hidden" name="enabled">
+               </div>
+           </div>
+       <div class="form-actions">
+           <div class="row">
+               <div class="col-md-offset-3 col-md-4">
+                   <button id='submit_1' type="submit" class="btn green"> 保 存 </button>
+                   <button id='cancel' type="button" class="btn grey-salsa btn-outline"> 返 回 </button>
+                   <span id="submit-error" class="span-text text-danger"></span> 
+               </div>
+           </div>
+       </div>
+      </div>
+   </form>
+   <!-- END FORM-->
+    </div>
+</div>
+
+<div aria-hidden="true" id="ajax-modal" class="modal fade" tabIndex="-1" 
+	role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true"></button>
+				<h5 class="modal-title">
+                    <i class="icon-pencil"></i>
+                    <span id="lblAddTitle" style="font-weight:bold">设置机构</span>
+                </h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+                       	<ul id="treeDemo" class="ztree">  
+            			</ul>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn default" data-dismiss="modal"> 返 回 </button>
+				<button type="button" class="btn blue" id="saveDepart"> 保 存 </button>
+			</div>
+		</div>
+	</div>
+</div>
